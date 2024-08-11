@@ -1,36 +1,53 @@
-<x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
 
-        <x-validation-errors class="mb-4" />
+@extends('layouts.flowAuth')
 
-        <form method="POST" action="{{ route('password.update') }}">
-            @csrf
+@section('title')
 
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+@endsection
+    <title>FaithFlow -- Reset Password</title>
+@section('content')
 
-            <div class="block">
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            </div>
+<div class="col-lg-6 col-xl-5">
+    <h2 class="mb-6 fs-8 fw-bolder">Reset your password</h2>
+    <p class="text-dark fs-4 mb-7"></p>
 
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            </div>
+    @if ($errors->any())
+    <div class="text-danger">
+        <ul class="mb-3">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
-            <div class="mt-4">
-                <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
-                <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-            </div>
+    <form method="POST" action="{{ route('password.update') }}">
+        @csrf
 
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Reset Password') }}
-                </x-button>
-            </div>
-        </form>
-    </x-authentication-card>
-</x-guest-layout>
+        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+
+
+        <div class="mb-3">
+          <label for="email" class="form-label fw-bold">Email</label>
+          <input type="email" class="py-2 form-control" id="email" aria-describedby="email" name="email" :value="old('email')" required autocomplete="username">
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label fw-bold">Password</label>
+          <input type="password" class="py-2 form-control" id="password" name="password" required autocomplete="new-password" >
+        </div>
+
+        <div class="mb-4">
+            <label for="password_confirmation" class="form-label fw-bold">Confirm Password</label>
+            <input type="password" class="py-2 form-control" id="password_confirmation" name="password_confirmation" required autocomplete="new-password" >
+        </div>
+
+        <button type="submit" class="mb-3 btn btn-primary w-100 rounded-pill">Reset Password</button>
+
+    </form>
+
+</div>
+
+  @endsection
+
+

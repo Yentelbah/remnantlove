@@ -1,10 +1,10 @@
 <x-form-section submit="updateProfileInformation">
     <x-slot name="title">
-        {{ __('Profile Information') }}
+        <h4 class="mt-4 fs-6">Profile Information</h4>
     </x-slot>
 
     <x-slot name="description">
-        {{ __('Update your account\'s profile information and email address.') }}
+        <p>Update your account's profile information and email address.</p>
     </x-slot>
 
     <x-slot name="form">
@@ -28,12 +28,12 @@
 
                 <!-- Current Profile Photo -->
                 <div class="mt-2" x-show="! photoPreview">
-                    <img src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="rounded-full h-20 w-20 object-cover">
+                    <img src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="object-cover w-20 h-20 rounded-full">
                 </div>
 
                 <!-- New Profile Photo Preview -->
                 <div class="mt-2" x-show="photoPreview" style="display: none;">
-                    <span class="block rounded-full w-20 h-20 bg-cover bg-no-repeat bg-center"
+                    <span class="block w-20 h-20 bg-center bg-no-repeat bg-cover rounded-full"
                           x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
                     </span>
                 </div>
@@ -53,34 +53,45 @@
         @endif
 
         <!-- Name -->
-        <div class="col-span-6 sm:col-span-4">
-            <x-label for="name" value="{{ __('Name') }}" />
-            <x-input id="name" type="text" class="mt-1 block w-full" wire:model="state.name" required autocomplete="name" />
-            <x-input-error for="name" class="mt-2" />
-        </div>
+        <div class="row">
+            <div class="mb-3 col-lg-6">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="name" type="text" class="form-control @error('name') is-invalid @enderror" wire:model="state.name" required autocomplete="name">
+                @error('name')
+                    <small class="invalid-feedback" role="alert">
+                    {{ $message }}
+                    </small>
+                @enderror
+            </div>
 
-        <!-- Email -->
-        <div class="col-span-6 sm:col-span-4">
-            <x-label for="email" value="{{ __('Email') }}" />
-            <x-input id="email" type="email" class="mt-1 block w-full" wire:model="state.email" required autocomplete="username" />
-            <x-input-error for="email" class="mt-2" />
+            <div class="mb-3 col-lg-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" type="text" class="form-control @error('email') is-invalid @enderror" wire:model="state.email" required autocomplete="username">
+                @error('email')
+                    <small class="invalid-feedback" role="alert">
+                    {{ $message }}
+                    </small>
+                @enderror
 
-            @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()) && ! $this->user->hasVerifiedEmail())
-                <p class="text-sm mt-2">
-                    {{ __('Your email address is unverified.') }}
+                @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()) && ! $this->user->hasVerifiedEmail())
+                    <p class="mt-2 text-sm">
+                        {{ __('Your email address is unverified.') }}
 
-                    <button type="button" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" wire:click.prevent="sendEmailVerification">
-                        {{ __('Click here to re-send the verification email.') }}
-                    </button>
-                </p>
-
-                @if ($this->verificationLinkSent)
-                    <p class="mt-2 font-medium text-sm text-green-600">
-                        {{ __('A new verification link has been sent to your email address.') }}
+                        <button type="button" class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" wire:click.prevent="sendEmailVerification">
+                            {{ __('Click here to re-send the verification email.') }}
+                        </button>
                     </p>
+
+                    @if ($this->verificationLinkSent)
+                        <p class="mt-2 text-sm font-medium text-green-600">
+                            {{ __('A new verification link has been sent to your email address.') }}
+                        </p>
+                    @endif
                 @endif
-            @endif
+            </div>
         </div>
+
+
     </x-slot>
 
     <x-slot name="actions">
@@ -88,8 +99,8 @@
             {{ __('Saved.') }}
         </x-action-message>
 
-        <x-button wire:loading.attr="disabled" wire:target="photo">
+        <button wire:loading.attr="disabled" wire:target="photo" class="btn-primary btn">
             {{ __('Save') }}
-        </x-button>
+        </button>
     </x-slot>
 </x-form-section>
