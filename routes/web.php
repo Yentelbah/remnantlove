@@ -8,6 +8,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChurchBranchController;
 use App\Http\Controllers\ChurchController;
 use App\Http\Controllers\ChurchRoleController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommunicationController;
 use App\Http\Controllers\CreditsController;
 use App\Http\Controllers\DashboardController;
@@ -69,8 +70,7 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
         Route::delete('/church_branch',[ChurchBranchController::class, 'delete'] )->name('branch.delete');
     });
 
-
-    Route::middleware('role:1,2,3')->group(function () {
+    Route::middleware('role:1,2,3,4')->group(function () {
         //GROUPS
         Route::get('/group', [GroupController::class, 'index'])->name('group.index');
         Route::post('/group', [GroupController::class, 'create'])->name('group.create');
@@ -156,7 +156,6 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
 
         //Archieves Routes
         Route::get('/archives', [ArchiveController::class, 'index'])->name('archive.index');
-        Route::get('/archives/clients', [ArchiveController::class, 'Clients'])->name('archive.clients');
         Route::get('/archives/employees', [ArchiveController::class, 'Employees'])->name('archive.employees');
         Route::get('/archives/users', [ArchiveController::class, 'Users'])->name('archive.users');
 
@@ -200,7 +199,7 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     });
 
     //Accountant and Cashier
-    Route::middleware('role:2,3,5')->group(function () {
+    Route::middleware('role:2,3,5,6')->group(function () {
         //ACCOUNTING
             //Accounting routes
             Route::post('/account', [AccountingController::class, 'accountStore'])->name('account.store');
@@ -293,6 +292,13 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::get('/expense/{expenseId}/details', [ExpenseController::class, 'getExpenseDetails']);
     Route::put('/expense',[ExpenseController::class, 'expenseUpdate'] )->name('expense.update');
     Route::delete('/expense',[ExpenseController::class, 'expenseDelete'] )->name('expense.delete');
+
+    //SYSTEM ADMIN
+    Route::get('/client', [ClientController::class, 'index'])->name('client.index');
+    Route::post('/client', [ClientController::class, 'clientStore'])->name('client.store');
+    Route::get('/client/{clientId}/details', [ClientController::class, 'getDetails']);
+    Route::put('/client',[ClientController::class, 'clientUpdate'] )->name('client.update');
+
 
 });
 

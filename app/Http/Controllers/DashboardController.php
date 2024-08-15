@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Attendance;
+use App\Models\Church;
 use App\Models\Event;
 use App\Models\LedgerEntry;
 use App\Models\Member;
@@ -29,16 +30,34 @@ class DashboardController extends Controller
                 return $this->adminDashboard(); //Church_admin
             } elseif ($user->hasAnyRole(3)) {
                 return $this->adminDashboard(); //Branch_admin
-            } elseif ($user->hasAnyRole('User')) {
-                return $this->userDashboard();
-            } elseif ($user->hasAnyRole('System_admin')) {
-                return $this->superDashboard();
+            } elseif ($user->hasAnyRole(4)) {
+                return $this->adminDashboard(); //Accountant
+            } elseif ($user->hasAnyRole(6)) {
+                return $this->adminDashboard(); //Cashier
+            } elseif ($user->hasAnyRole(5)) {
+                return $this->leaderDashboard(); //Leader
+            } elseif ($user->hasAnyRole(7)) {
+                return $this->userDashboard(); //User
             }
+        }
+        elseif($user && $user->email=='faithflow@yensoftgh.com' && $user->phone=='0545055050')
+        {
+            return $this->superDashboard();
         }
 
         abort(403, 'Unauthorized - You do not have the appropriate role');
     }
 
+    private function superDashboard()
+    {
+        $user = Auth()->user();
+        $greeting = $this->greetings();
+
+        $projects = $this->projects();
+        $organisations = Church::orderBy('created_at', 'desc')->get()->take(5);
+
+        return view('dashboard.super', compact('greeting','organisations', 'projects'))->with('success', 'Welcome to FaithFlow');
+    }
 
     private function adminDashboard()
     {
@@ -111,6 +130,15 @@ class DashboardController extends Controller
         }else {
 
             $memberCount = Member::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->count();
+            $memberCountGender = Member::where('church_id', $user->church_id)
+            ->where('church_branch_id', $user->church_branch_id)
+            ->select(
+                'gender',
+                DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, dob, CURDATE()) >= 18 THEN 1 ELSE 0 END) as count_18_and_above'),
+                DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, dob, CURDATE()) < 18 THEN 1 ELSE 0 END) as count_below_18')
+            )
+            ->groupBy('gender')
+            ->get();
             $pastorCount = DB::table('pastors')->where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->distinct('member_id')->count('member_id');
             $leaderCount = DB::table('group_leaders')->where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->distinct('member_id')->count('member_id');
             $staffCount = DB::table('staff')->where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->distinct('member_id')->count('member_id');
@@ -331,16 +359,6 @@ class DashboardController extends Controller
     {
         return view('dashboard.user');
     }
-
-    private function superDashboard()
-    {
-        $role = auth()->user()->role;
-        $events = $this->events();
-        $projects = $this->projects();
-
-        return view('dashboard.admin', compact('role', 'events', 'projects'))->with('success', 'Welcome to FaithFlow');
-    }
-
 
     private function events()
     {

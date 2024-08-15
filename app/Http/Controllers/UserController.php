@@ -4,14 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Church;
 use App\Models\ChurchRole;
-use App\Models\Company;
 use App\Models\CreditsAccount;
 use App\Models\CreditsTransaction;
-use App\Models\Employee;
-use App\Models\GroupLeader;
 use App\Models\Log;
 use App\Models\Member;
-use App\Models\Role;
 use App\Models\User;
 use App\Notifications\accountCreationNotification;
 use Illuminate\Http\Request;

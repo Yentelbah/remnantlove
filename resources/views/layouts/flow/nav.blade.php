@@ -337,7 +337,7 @@
                   <img src="../assets/images/profile/user-1.jpg" alt="user" width="90" class="rounded-circle" />
                   <div class="ms-4">
                     <h4 class="mb-0 fs-5 fw-normal">{{ Auth()->user()->name }}</h4>
-                    <span class="text-muted">{{ Auth()->user()->churchRole->name }}</span>
+                    <span class="text-muted">{{ Auth()->user()->churchRole->name ?? '' }}</span>
                     <p class="mt-1 mb-0 text-muted d-flex align-items-center">
                       <iconify-icon icon="solar:mailbox-line-duotone" class="fs-4 me-1"></iconify-icon>
                       {{ Auth()->user()->email }}
