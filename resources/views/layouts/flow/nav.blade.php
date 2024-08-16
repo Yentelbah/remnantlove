@@ -187,7 +187,7 @@
           <!-- ------------------------------- -->
           <!-- start Notifications cart Dropdown -->
           <!-- ------------------------------- -->
-          <li class="nav-item dropdown nav-icon-hover-bg rounded-circle">
+          {{-- <li class="nav-item dropdown nav-icon-hover-bg rounded-circle">
             <a class="nav-link position-relative" href="javascript:void(0)" id="drop3" aria-expanded="false">
               <iconify-icon icon="solar:chat-dots-line-duotone" class="fs-6"></iconify-icon>
               <div class="pulse">
@@ -241,7 +241,7 @@
                 </button>
               </div>
             </div>
-          </li>
+          </li> --}}
           <!-- ------------------------------- -->
           <!-- end Notifications cart Dropdown -->
           <!-- ------------------------------- -->

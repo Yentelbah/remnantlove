@@ -4,13 +4,10 @@
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>FaithFlow -- No.1 Church Managment Application</title>
-    <meta name="description" content="" />
+    <meta name="description" content="FaithFlow is a comprehensive church management solution designed to simplify operations. Easily manage membership, track finances, coordinate events, and enhance communication—all in one intuitive platform. Empower your ministry and streamline your church’s day-to-day tasks with FaithFlow." />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="shortcut icon"
-      type="image/x-icon"
-      href="assets/img/favicon.png"
-    />
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
+
     <!-- Place favicon.ico in the root directory -->
 
     <!-- ======== CSS here ======== -->
