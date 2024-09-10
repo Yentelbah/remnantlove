@@ -2,22 +2,22 @@
 @extends('layouts.flow')
 
 @section('title')
-    <title>FaithFlow -- Visitors</title>
+    <title>FaithFlow -- Converts</title>
 @endsection
 
 @section('content')
   <div class="mb-3 overflow-hidden position-relative">
     <div class="px-3 d-sm-flex align-items-center justify-content-between">
-      <h4 class="mb-0 fs-6">Add Visitor</h4>
+      <h4 class="mb-0 fs-6">Add Convert</h4>
       <nav aria-label="breadcrumb">
         <ol class="mb-0 breadcrumb">
           <li class="breadcrumb-item">
             <a href="{{ route('dashboard') }}">Dashboard</a>
           </li>
           <li class="breadcrumb-item">
-            <a href="{{ route('visitors.index') }}">Visitors</a>
+            <a href="{{ route('converts.index') }}">Converts</a>
           </li>
-          <li class="breadcrumb-item" aria-current="page">Add Visitor</li>
+          <li class="breadcrumb-item" aria-current="page">Add Convert</li>
         </ol>
       </nav>
     </div>
@@ -26,9 +26,9 @@
 
   <div class="card">
     <div class="card-body wizard-content">
-      <h4 class="mb-6 card-title">New Visitor Information</h4>
+      <h4 class="mb-6 card-title">New Convert Information</h4>
       <br>
-      <form action="{{ route('visitors.store') }}" method="POST" class="tab-wizard wizard-circle">
+      <form action="{{ route('converts.store') }}" method="POST" class="tab-wizard wizard-circle">
         @csrf
 
             <div class="mx-auto row d-flex">
@@ -47,6 +47,18 @@
                     </div>
 
                     <div class="mb-3 form-group">
+                        <label for="gender">Gender</label>
+                        <select class="form-control @error('gender') is-invalid @enderror" id="gender" name="gender">
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                        @error('gender')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3 form-group">
                         <label class="form-label" for="phone">Phone</label>
                         <input class="form-control  @error('phone') is-invalid @enderror" name="phone" id="le_phone">
                         @error('phone')
@@ -57,11 +69,11 @@
                     </div>
 
                     <div class="mb-3 form-group">
-                        <label class="form-label" for="date_visited">Date Visited</label>
-                        <input type="date" name="date_visited" class="form-control  @error('name') is-invalid @enderror" id="date_visited">
-                        @error('date_visited')
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" class="form-control  @error('email') is-invalid @enderror" name="email" id="le_email">
+                        @error('email')
                         <small class="invalid-feedback" role="alert">
-                        {{ $message }}
+                          {{ $message }}
                         </small>
                         @enderror
                     </div>

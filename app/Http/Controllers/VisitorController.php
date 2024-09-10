@@ -35,7 +35,7 @@ class VisitorController extends Controller
             'location' => 'required|string|max:255',
         ], [
             'name.required' => 'Provide a name of the visitor',
-            'phpne.required' => 'Enter the phone number of the visitor',
+            'phone.required' => 'Enter the phone number of the visitor',
         ]);
 
         if ($validator->fails()) {

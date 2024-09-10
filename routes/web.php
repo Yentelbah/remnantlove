@@ -10,15 +10,20 @@ use App\Http\Controllers\ChurchController;
 use App\Http\Controllers\ChurchRoleController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommunicationController;
+use App\Http\Controllers\ConvertController;
 use App\Http\Controllers\CreditsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\EvangelismController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\FollowUpController;
+use App\Http\Controllers\FoundationSchoolController;
+use App\Http\Controllers\FoundationModuleController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupMemberController;
 use App\Http\Controllers\LeaderController;
@@ -226,6 +231,49 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::get('/visitors/create', [VisitorController::class, 'create'])->name('visitors.create');
     Route::post('/visitors', [VisitorController::class, 'store'])->name('visitors.store');
     Route::post('/visitors/{id}/convert', [VisitorController::class, 'convertToMember'])->name('visitors.convert');
+
+    // Evangelism Routes
+    Route::get('/evangelism', [EvangelismController::class, 'index'])->name('evangelism.index');  // List all evangelism events
+    Route::post('/evangelism', [EvangelismController::class, 'store'])->name('evangelism.store');  // Store a new evangelism event
+    Route::get('/evangelism/{id}', [EvangelismController::class, 'show']);  // View a specific evangelism event to json
+    Route::put('/evangelism', [EvangelismController::class, 'update'])->name('evangelism.update');  // Update an evangelism event
+    Route::delete('/evangelism', [EvangelismController::class, 'destroy'])->name('evangelism.destroy');  // Delete an evangelism event
+
+    // Converts Routes
+    Route::get('/converts', [ConvertController::class, 'index'])->name('converts.index');  // List all converts
+    Route::get('/converts/create', [ConvertController::class, 'create'])->name('converts.create');  // Show form to create a new convert
+    Route::post('/converts', [ConvertController::class, 'store'])->name('converts.store');  // Store a new convert
+    Route::get('/converts/{id}', [ConvertController::class, 'show']);  // View a specific convert
+    Route::put('/converts', [ConvertController::class, 'update'])->name('converts.update');  // Update a convert
+    Route::put('/converts/status', [ConvertController::class, 'status'])->name('converts.status');  // Update a convert
+    Route::delete('/converts', [ConvertController::class, 'destroy'])->name('converts.destroy');  // Delete a convert
+
+    // Foundation School Routes
+    Route::get('/foundation-school', [FoundationSchoolController::class, 'index'])->name('foundation-school.index');  // List all foundation school students
+    Route::get('/foundation-school/create', [FoundationSchoolController::class, 'create'])->name('foundation-school.create');  // Show form to enroll a new student
+    Route::post('/foundation-school', [FoundationSchoolController::class, 'store'])->name('foundation-school.store');  // Enroll a student in foundation school
+    Route::get('/foundation-school/{id}', [FoundationSchoolController::class, 'show'])->name('foundation-school.show');  // View a specific student's progress
+    Route::get('/foundation-school/{id}/edit', [FoundationSchoolController::class, 'edit'])->name('foundation-school.edit');  // Edit foundation school info
+    Route::put('/foundation-school/{id}', [FoundationSchoolController::class, 'update'])->name('foundation-school.update');  // Update foundation school info
+    Route::delete('/foundation-school/{id}', [FoundationSchoolController::class, 'destroy'])->name('foundation-school.destroy');  // Remove a student from foundation school
+
+    // Foundation School Modules Routes
+    Route::get('/foundation-school/modules', [FoundationModuleController::class, 'index'])->name('foundation-modules.index');  // List all foundation school modules
+    Route::get('/foundation-school/modules/create', [FoundationModuleController::class, 'create'])->name('foundation-modules.create');  // Show form to create a new module
+    Route::post('/foundation-school/modules', [FoundationModuleController::class, 'store'])->name('foundation-modules.store');  // Store a new foundation school module
+    Route::get('/foundation-school/modules/{id}', [FoundationModuleController::class, 'show'])->name('foundation-modules.show');  // View details of a specific module
+    Route::get('/foundation-school/modules/{id}/edit', [FoundationModuleController::class, 'edit'])->name('foundation-modules.edit');  // Edit a module
+    Route::put('/foundation-school/modules/{id}', [FoundationModuleController::class, 'update'])->name('foundation-modules.update');  // Update a module
+    Route::delete('/foundation-school/modules/{id}', [FoundationModuleController::class, 'destroy'])->name('foundation-modules.destroy');  // Delete a module
+
+    // Follow-Up Routes
+    Route::get('/follow-ups', [FollowUpController::class, 'index'])->name('follow-ups.index');  // List all follow-ups
+    Route::get('/follow-ups/create', [FollowUpController::class, 'create'])->name('follow-ups.create');  // Show form to schedule a new follow-up
+    Route::post('/follow-ups', [FollowUpController::class, 'store'])->name('follow-ups.store');  // Store a new follow-up
+    Route::get('/follow-ups/{id}', [FollowUpController::class, 'show'])->name('follow-ups.show');  // View a specific follow-up
+    Route::get('/follow-ups/{id}/edit', [FollowUpController::class, 'edit'])->name('follow-ups.edit');  // Edit a follow-up
+    Route::put('/follow-ups/{id}', [FollowUpController::class, 'update'])->name('follow-ups.update');  // Update a follow-up
+    Route::delete('/follow-ups/{id}', [FollowUpController::class, 'destroy'])->name('follow-ups.destroy');  // Delete a follow-up
 
 
     //PROJECTS

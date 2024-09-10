@@ -26,14 +26,14 @@
     <span class="hide-menu">Main</span>
   </li>
 
-  <li class="sidebar-item">
+  {{-- <li class="sidebar-item">
     <a class="sidebar-link primary-hover-bg  {{ request()->routeIs('branch.index', 'branch.create') ? 'active' : '' }}" href="{{ route('branch.index') }}" aria-expanded="false">
       <span class="p-2 aside-icon bg-primary-subtle rounded-1">
         <iconify-icon icon="solar:book-2-line-duotone" class="fs-6"></iconify-icon>
       </span>
       <span class="hide-menu ps-1">Branches</span>
     </a>
-  </li>
+  </li> --}}
 
 
   <li class="sidebar-item">
@@ -72,9 +72,59 @@
   </li>
 
   <li class="sidebar-item">
+    <a class="sidebar-link has-arrow primary-hover-bg   {{ request()->routeIs('evangelism.index','converts.create') ? 'active' : '' }}" href="javascript:void(0)" aria-expanded="false">
+      <span class="p-2 aside-icon bg-primary-subtle rounded-1">
+        <iconify-icon icon="solar:user-hands-line-duotone" class="fs-6"></iconify-icon>
+      </span>
+      <span class="hide-menu ps-1">Evangelism</span>
+    </a>
+    <ul aria-expanded="false" class="collapse first-level">
+      <li class="sidebar-item">
+        <a href="{{ route('evangelism.index') }}" class="sidebar-link">
+          <span class="sidebar-icon"></span>
+          <span class="hide-menu">Evangelism Events</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ route('converts.index') }}" class="sidebar-link   {{ request()->routeIs('converts.index','converts.create') ? 'active' : '' }}">
+          <span class="sidebar-icon"></span>
+          <span class="hide-menu">Converts</span>
+        </a>
+      </li>
+
+    </ul>
+  </li>
+
+
+  <li class="sidebar-item">
+    <a class="sidebar-link has-arrow primary-hover-bg   {{ request()->routeIs('foundation-school.index', 'foundation-modules.index') ? 'active' : '' }}" href="javascript:void(0)" aria-expanded="false">
+      <span class="p-2 aside-icon bg-primary-subtle rounded-1">
+        <iconify-icon icon="solar:square-academic-cap-2-line-duotone" class="fs-6"></iconify-icon>
+      </span>
+      <span class="hide-menu ps-1">Foundation School</span>
+    </a>
+    <ul aria-expanded="false" class="collapse first-level">
+      <li class="sidebar-item">
+        <a href="{{ route('foundation-school.index') }}" class="sidebar-link {{ request()->routeIs('foundation-school   .index') ? 'active' : '' }}">
+          <span class="sidebar-icon"></span>
+          <span class="hide-menu">Students</span>
+        </a>
+      </li>
+      {{-- <li class="sidebar-item">
+        <a href="{{ route('foundation-modules.index') }}" class="sidebar-link   {{ request()->routeIs('foundation-modules.index') ? 'active' : '' }}">
+          <span class="sidebar-icon"></span>
+          <span class="hide-menu">Modules</span>
+        </a>
+      </li> --}}
+
+    </ul>
+  </li>
+
+
+  <li class="sidebar-item">
     <a class="sidebar-link primary-hover-bg {{ request()->routeIs('group.index', 'group.members.list') ? 'active' : '' }}" href="{{ route('group.index') }}" aria-expanded="false">
       <span class="p-2 aside-icon bg-primary-subtle rounded-1">
-        <iconify-icon icon="solar:book-2-line-duotone" class="fs-6"></iconify-icon>
+        <iconify-icon icon="solar:users-group-two-rounded-line-duotone" class="fs-6"></iconify-icon>
       </span>
       <span class="hide-menu ps-1">Groups</span>
     </a>
@@ -102,7 +152,7 @@
   <li class="sidebar-item">
     <a class="sidebar-link primary-hover-bg {{ request()->routeIs('visitors.index', 'visitors.create') ? 'active' : '' }}" href="{{ route('visitors.index') }}" aria-expanded="false">
       <span class="p-2 aside-icon bg-primary-subtle rounded-1">
-        <iconify-icon icon="solar:phone-line-duotone" class="fs-6"></iconify-icon>
+        <iconify-icon icon="solar:user-hand-up-line-duotone" class="fs-6"></iconify-icon>
       </span>
       <span class="hide-menu ps-1">Visitors</span>
     </a>
