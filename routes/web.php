@@ -293,16 +293,15 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::delete('/converts', [ConvertController::class, 'destroy'])->name('converts.destroy');  // Delete a convert
 
     // Foundation School Routes
-    Route::get('/foundation-school', [FoundationSchoolController::class, 'index'])->name('foundation-school.index');  // List students
-    Route::get('/foundation-school/create', [FoundationSchoolController::class, 'create'])->name('foundation-school.create');  // Show form to enroll a new student
-    Route::post('/foundation-school', [FoundationSchoolController::class, 'store'])->name('foundation-school.store');  // Enroll a student in foundation school
-    Route::get('/foundation-school/{id}', [FoundationSchoolController::class, 'show']);  // View a specific student's progress
-    Route::post('/foundation-school/student-profile', [FoundationSchoolController::class, 'profile'])->name('foundation-school.profile');  // View a specific students
-    Route::delete('/foundation-school', [FoundationSchoolController::class, 'destroy'])->name('foundation-school.destroy');  // Remove a student from foundation school
+    Route::get('/foundation-school', [FoundationSchoolController::class, 'index'])->name('foundation-school.index');
+    Route::get('/foundation-school/create', [FoundationSchoolController::class, 'create'])->name('foundation-school.create');
+    Route::post('/foundation-school', [FoundationSchoolController::class, 'store'])->name('foundation-school.store');
+    Route::get('/foundation-school/{id}', [FoundationSchoolController::class, 'show']);
+    Route::get('/foundation-student-profile/{student}', [FoundationSchoolController::class, 'profile'])->name('foundation-school.profile');
+    Route::delete('/foundation-school', [FoundationSchoolController::class, 'destroy'])->name('foundation-school.destroy');
 
-        // Foundation School Modules Routes
-        Route::get('/foundation-school-modules/{id}', [FoundationSchoolModuleController::class, 'show']);// View details of a specific module
-        Route::put('/foundation-school-modules', [FoundationSchoolModuleController::class, 'update'])->name('foundation-school-modules.update');  // Update a module
+        Route::get('/foundation-school-modules/{id}', [FoundationSchoolModuleController::class, 'show']);
+        Route::put('/foundation-school-modules', [FoundationSchoolModuleController::class, 'update'])->name('foundation-school-modules.update');
 
         // Foundation Modules Routes
         Route::get('/foundation-modules', [FoundationModuleController::class, 'index'])->name('foundation-modules.index');  // List all foundation school modules
@@ -390,7 +389,6 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::post('/client', [ClientController::class, 'clientStore'])->name('client.store');
     Route::get('/client/{clientId}/details', [ClientController::class, 'getDetails']);
     Route::put('/client',[ClientController::class, 'clientUpdate'] )->name('client.update');
-
 
 });
 

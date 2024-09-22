@@ -59,16 +59,21 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
 
-                            <form method="POST" action="{{ route('foundation-school.profile') }}" x-data id="profileForm-{{ $value->id }}">
-                                @csrf
-                                <input type="hidden" value="{{ $value->id }}" name="student_id">
-                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" onclick="document.getElementById('profileForm-{{ $value->id }}').submit(); return false;">
-                                    View
-                                </a>
-                            </form>
-                              <li>
-                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" id="#modalCenter" onclick="openDeleteModal('{{ $value->id }}')">Delete</a>
-                              </li>
+                                {{-- <li>
+                                    <form method="POST" action="{{ route('foundation-school.profile') }}" x-data id="profileForm-{{ $value->id }}">
+                                        @csrf
+                                        <input type="hidden" value="{{ $value->id }}" name="student_id">
+                                        <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" onclick="document.getElementById('profileForm-{{ $value->id }}').submit(); return false;">
+                                            View
+                                        </a>
+                                    </form>
+                                </li> --}}
+                                <li>
+                                    <a href="{{ route('foundation-school.profile', $value->id) }}" class="dropdown-item" value="{{ $value->id }}">View 2</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" id="#modalCenter" onclick="openDeleteModal('{{ $value->id }}')">Delete</a>
+                                </li>
 
                             </ul>
                           </div>

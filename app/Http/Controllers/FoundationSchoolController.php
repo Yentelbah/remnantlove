@@ -18,15 +18,15 @@ class FoundationSchoolController extends Controller
         return view('foundation.index', compact('students'));
     }
 
-    public function profile(Request $request)
+    public function profile(Request $request, $student)
     {
         $foundationSchool = FoundationSchool::with(['foundationSchoolModules' => function($query) {
             $query->join('foundation_modules', 'foundation_school_modules.module_id', '=', 'foundation_modules.id')
                   ->select('foundation_school_modules.*', 'foundation_modules.module_name') // Include necessary fields
                   ->orderBy('foundation_modules.module_name', 'asc');
-        }])->findOrFail($request->student_id);
+        }])->findOrFail($student);
 
-        $student = FoundationSchool::with('foundationSchoolModules')->find($request->student_id);
+        $student = FoundationSchool::with('foundationSchoolModules')->find($student);
 
         if (!$student) {
             // Handle case where student is not found

@@ -68,15 +68,7 @@ class FoundationSchoolModuleController extends Controller
                     $student->save();
                 }
 
-        return view('foundation.show', compact('foundationSchool',
-            'student',
-            'totalModules',
-            'notStartedModules',
-            'inProgressModules',
-            'missedModules',
-            'completedModules',
-            'progressPercentage'
-        ))->with('success', 'Module updated successfully');
+        return redirect()->back()->with('success', 'Student foundation module progress updated');
 
     }
 

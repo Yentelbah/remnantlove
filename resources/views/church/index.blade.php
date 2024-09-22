@@ -32,7 +32,7 @@
             <div class="rounded-circle position-relative mb-9 mb-md-0 d-inline-block">
                 <img src="{{ $church->logo == '' ?  '../assets/images/profile/user-1.jpg' : asset('storage/' . $church->logo) }}" alt="spike-img" class="img-fluid rounded-1 preview" width="100" height="100">
 
-                <span class="bottom-0 p-1 text-white border border-2 border-white text-bg-primary rounded-circle d-flex align-items-center justify-content-center position-absolute end-0">
+                <span class="bottom-0 p-1 text-white border border-white text-bg-primary rounded-circle d-flex align-items-center justify-content-center position-absolute end-0">
                 <i class="ti ti-plus" data-bs-toggle="modal" data-bs-target="#imageModal" id="#modalCenter"></i>
               </span>
 
