@@ -36,23 +36,28 @@
     </a>
   </li>
 
-
   <li class="sidebar-item">
-    <a class="sidebar-link primary-hover-bg" href="{{ route('calendar.index') }}" aria-expanded="false">
+    <a class="sidebar-link has-arrow primary-hover-bg   {{ request()->routeIs('calendar.index', 'event.index') ? 'active' : '' }}" href="javascript:void(0)" aria-expanded="false">
       <span class="p-2 aside-icon bg-primary-subtle rounded-1">
         <iconify-icon icon="solar:calendar-add-line-duotone" class="fs-6"></iconify-icon>
       </span>
-      <span class="hide-menu ps-1">Calendar</span>
-    </a>
-  </li>
-
-  <li class="sidebar-item">
-    <a class="sidebar-link primary-hover-bg" href="{{ route('event.index') }}" aria-expanded="false">
-      <span class="p-2 aside-icon bg-primary-subtle rounded-1">
-        <iconify-icon icon="solar:notification-unread-lines-line-duotone" class="fs-6"></iconify-icon>
-      </span>
       <span class="hide-menu ps-1">Events</span>
     </a>
+    <ul aria-expanded="false" class="collapse first-level">
+      <li class="sidebar-item">
+        <a href="{{ route('event.index') }}" class="sidebar-link {{ request()->routeIs('event.index') ? 'active' : '' }}">
+          <span class="sidebar-icon"></span>
+          <span class="hide-menu">List</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ route('calendar.index') }}" class="sidebar-link   {{ request()->routeIs('calendar.index') ? 'active' : '' }}">
+          <span class="sidebar-icon"></span>
+          <span class="hide-menu">Calendar</span>
+        </a>
+      </li>
+
+    </ul>
   </li>
 
 </ul>

@@ -44,22 +44,29 @@
     </a>
   </li>
 
+
   <li class="sidebar-item">
-    <a class="sidebar-link primary-hover-bg" href="{{ route('calendar.index') }}" aria-expanded="false">
+    <a class="sidebar-link has-arrow primary-hover-bg   {{ request()->routeIs('calendar.index', 'event.index') ? 'active' : '' }}" href="javascript:void(0)" aria-expanded="false">
       <span class="p-2 aside-icon bg-primary-subtle rounded-1">
         <iconify-icon icon="solar:calendar-add-line-duotone" class="fs-6"></iconify-icon>
       </span>
-      <span class="hide-menu ps-1">Calendar</span>
-    </a>
-  </li>
-
-  <li class="sidebar-item">
-    <a class="sidebar-link primary-hover-bg" href="{{ route('event.index') }}" aria-expanded="false">
-      <span class="p-2 aside-icon bg-primary-subtle rounded-1">
-        <iconify-icon icon="solar:notification-unread-lines-line-duotone" class="fs-6"></iconify-icon>
-      </span>
       <span class="hide-menu ps-1">Events</span>
     </a>
+    <ul aria-expanded="false" class="collapse first-level">
+      <li class="sidebar-item">
+        <a href="{{ route('event.index') }}" class="sidebar-link {{ request()->routeIs('event.index') ? 'active' : '' }}">
+          <span class="sidebar-icon"></span>
+          <span class="hide-menu">List</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="{{ route('calendar.index') }}" class="sidebar-link   {{ request()->routeIs('calendar.index') ? 'active' : '' }}">
+          <span class="sidebar-icon"></span>
+          <span class="hide-menu">Calendar</span>
+        </a>
+      </li>
+
+    </ul>
   </li>
 
   <li class="sidebar-item">
@@ -71,7 +78,8 @@
     </a>
   </li>
 
-  <li class="sidebar-item">
+
+  {{-- <li class="sidebar-item">
     <a class="sidebar-link primary-hover-bg" href="{{ route('facility.index') }}" aria-expanded="false">
       <span class="p-2 aside-icon bg-primary-subtle rounded-1">
         <iconify-icon icon="solar:password-minimalistic-line-duotone" class="fs-6"></iconify-icon>
@@ -87,9 +95,7 @@
       </span>
       <span class="hide-menu ps-1">Equipment</span>
     </a>
-  </li>
-
-
+  </li> --}}
 
   <li class="sidebar-item">
     <a class="sidebar-link primary-hover-bg" href="{{ route('report.index') }}" aria-expanded="false">
@@ -101,12 +107,27 @@
   </li>
 
   <li class="sidebar-item">
-    <a class="sidebar-link primary-hover-bg" href="{{ route('preference.index') }}" aria-expanded="false">
+    <a class="sidebar-link has-arrow primary-hover-bg   {{ request()->routeIs('church.index', 'settings.index') ? 'active' : '' }}" href="javascript:void(0)" aria-expanded="false">
       <span class="p-2 aside-icon bg-primary-subtle rounded-1">
         <iconify-icon icon="solar:settings-line-duotone" class="fs-6"></iconify-icon>
       </span>
       <span class="hide-menu ps-1">Preferences</span>
     </a>
+    <ul aria-expanded="false" class="collapse first-level">
+      <li class="sidebar-item">
+        <a href="{{ route('church.index') }}" class="sidebar-link {{ request()->routeIs('church.index') ? 'active' : '' }}">
+          <span class="sidebar-icon"></span>
+          <span class="hide-menu">Church Profile</span>
+        </a>
+      </li>
+      {{-- <li class="sidebar-item">
+        <a href="{{ route('settings.index') }}" class="sidebar-link   {{ request()->routeIs('settings.index') ? 'active' : '' }}">
+          <span class="sidebar-icon"></span>
+          <span class="hide-menu">Settings</span>
+        </a>
+      </li> --}}
+
+    </ul>
   </li>
 
 </ul>

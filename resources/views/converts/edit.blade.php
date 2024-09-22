@@ -4,7 +4,8 @@
             <div class="modal-header modal-colored-header">
                 <h5 class=" modal-title" id="success-header-modalLabel">Update Convert Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>        <div class="modal-body">
+            </div>
+            <div class="modal-body">
 
             <form action="{{ route('converts.update') }}" method="POST">
                 @csrf

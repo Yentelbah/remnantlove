@@ -326,12 +326,12 @@
           <span class="hide-menu">Church Profile</span>
         </a>
       </li>
-      <li class="sidebar-item">
+      {{-- <li class="sidebar-item">
         <a href="{{ route('settings.index') }}" class="sidebar-link   {{ request()->routeIs('settings.index') ? 'active' : '' }}">
           <span class="sidebar-icon"></span>
           <span class="hide-menu">Settings</span>
         </a>
-      </li>
+      </li> --}}
 
     </ul>
   </li>
