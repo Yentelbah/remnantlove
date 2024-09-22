@@ -25,8 +25,8 @@ class ReportsController extends Controller
     public function balanceSheet(Request $request)
     {
         $user = Auth()->user();
-        $church = Church::where('id', $user->church_id)->first();
-        $branch = ChurchBranch::where('id', $user->church_branch_id)->first();
+        $church = Church::find($user->church_id);
+        $branch = ChurchBranch::find($user->church_branch_id);
 
         $period = $request->input('date');
 
@@ -57,8 +57,8 @@ class ReportsController extends Controller
     Public function profitAndLoss(Request $request)
     {
         $user = Auth::user();
-        $church = Church::where('id', $user->church_id)->first();
-        $branch = ChurchBranch::where('id', $user->church_branch_id)->first();
+        $church = Church::find($user->church_id);
+        $branch = ChurchBranch::find($user->church_branch_id);
         $period = $request->input('date');
 
         $revenues = Account::withSum('ledgerEntries as total_credit', 'credit')
@@ -91,8 +91,8 @@ class ReportsController extends Controller
     public function trialBalance(Request $request)
     {
         $user = Auth()->user();
-        $church = Church::where('id', $user->church_id)->first();
-        $branch = ChurchBranch::where('id', $user->church_branch_id)->first();
+        $church = Church::find($user->church_id);
+        $branch = ChurchBranch::find($user->church_branch_id);
         $period = $request->input('date');
 
         // Retrieve all accounts and their debit and credit balances
@@ -117,8 +117,8 @@ class ReportsController extends Controller
         // $role = $user->role->name;
         $role = $user->churchRole->name;;
 
-        $church = Church::where('id', $user->church_id)->first();
-        $branch = ChurchBranch::where('id', $user->church_branch_id)->first();
+        $church = Church::find($user->church_id);
+        $branch = ChurchBranch::find($user->church_branch_id);
 
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');

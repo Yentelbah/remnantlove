@@ -53,12 +53,31 @@
                     <td class="px-0">{{ formatShortDates($value->date_visited) }}</td>
 
                     <td>
-                        <form action="{{ route('visitors.convert', $value->id) }}" method="POST">
-                            @csrf
-                            <button class="btn btn-primary btn-sm" type="submit">Convert to Member</button>
-                        </form>
-                    </td>
+                        <div class="dropdown">
+                            <button id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" class="px-1 shadow-none rounded-circle btn-transparent btn-sm btn">
+                              <i class="ti ti-dots-vertical fs-4 d-block"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                              <li>
+                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#followModal" id="#modalCenter" onclick="openFollowupModal('{{ $value->id }}')">Follow-up</a>
+                              </li>
+                              <li>
+                                <form action="{{ route('visitors.convert', $value->id) }}" method="POST">
+                                    @csrf
+                                    <button class="dropdown-item" type="submit">Convert to Member</button>
+                                </form>
+                              </li>
 
+                              <li>
+                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#editModal" id="#modalCenter" onclick="openEditModal('{{ $value->id }}')">Edit</a>
+                              </li>
+                              <li>
+                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" id="#modalCenter" onclick="openDeleteModal('{{ $value->id }}')">Delete</a>
+                              </li>
+
+                            </ul>
+                          </div>
+                        </div>
                     </td>
                   </tr>
                 @endforeach
@@ -70,6 +89,8 @@
         </div>
       </div>
 
+      @include('visitors.edit')
+      @include('visitors.delete')
   </div>
 
 @endsection
@@ -79,13 +100,15 @@
     <script>
         function openEditModal(id) {
             $.ajax({
-                url: '/facility/' + id, // Replace with the appropriate route for fetching department details
+                url: '/visitors/' + id, // Replace with the appropriate route for fetching department details
                 type: 'GET',
                 success: function(response) {
                     // Update the modal content with the fetched department details
                     $('#ed_name').val(response.name);
-                    $('#ed_date_acquired').val(response.date_acquired);
-                    $('#ed_description').val(response.description);
+                    $('#ed_date_visited').val(response.date_visited);
+                    $('#ed_gender').val(response.gender);
+                    $('#ed_phone').val(response.phone);
+                    $('#ed_location').val(response.location);
                     $('#selectedId').val(response.id);
                 },
                 error: function(xhr) {
@@ -97,7 +120,7 @@
 
         function openDeleteModal(id) {
             $.ajax({
-                url: '/facility/' + id, // Replace with the appropriate route for fetching department details
+                url: '/visitors/' + id, // Replace with the appropriate route for fetching department details
                 type: 'GET',
                 success: function(response) {
                     // Update the modal content with the fetched department details

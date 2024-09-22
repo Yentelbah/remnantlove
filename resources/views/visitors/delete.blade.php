@@ -8,7 +8,7 @@
         <div class="modal-body">
           <h5 class="mb-4">Delete Confirmation</h5>
 
-        <form action="{{ route('facility.delete') }}" method="POST">
+        <form action="{{ route('visitor.delete') }}" method="POST">
           @csrf
           @method('DELETE')
 

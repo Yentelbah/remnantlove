@@ -66,73 +66,65 @@
             </div>
         </div> --}}
     @endforeach
-
-
-
 </div>
 
-    <div class="card">
+
+<div class="row">
+    <div class="col-md-5 col-lg-4">
         <div class="card card-body">
             <div class="justify-between mb-2 d-flex">
-                <h4 class="mb-0 card-title">Attendance Statistics</h4>
-
-
+                <h4 class="py-2 mb-0 card-title">Services</h4>
 
                 <div class="ms-auto">
 
                     <button type="button" class="px-4 mb-1 btn bg-success-subtle text-success fs-4 ms-auto" data-bs-target="#serviceModal" data-bs-toggle="modal"><i class="ti ti-home me-1 fs-5"></i>Add Service</button>
-
-
-                    <a href="{{ route('attendance.create') }}"  class="px-4 mb-1 btn bg-success-subtle text-success fs-4 ms-auto me-1" >Record Attendance</a>
                 </div>
             </div>
 
-            @include('attendance.service')
 
             <div class="p-3 table-responsive">
-                <table class="table align-middle search-table text-nowrap" id="table">
+                <table class="table align-middle search-table text-nowrap" id="service_table">
                 <thead class="header-item">
-                    <th>#</th>
                     <th>Service</th>
                     <th>Date</th>
-                    <th>C-M</th>
-                    <th>C-F</th>
-                    <th>A-M</th>
-                    <th>A-F</th>
-                    <th>Total</th>
+                    <th></th>
                 </thead>
                 <tbody>
                     <!-- start row -->
                     @php $i = 1; @endphp
-                    @foreach ($attendances as $item)
+                    @foreach ($services as $item)
 
                     <tr class="search-items">
-                    <th scope="row">{{ $i++ }}</th>
-                    <td>
-                        <span class="usr-ph-no" data-phone="{{ $item->service->name }}">{{ $item->service->name }}</span>
-                    </td>
-                    <td>
-                        <span class="usr-ph-no" data-phone="{{ $item->service->service_date }}">{{ $item->service->service_date }}</span>
-                    </td>
 
-                    <td>
-                        <span class="usr-location" data-location="{{ $item->children_males }}">{{ $item->children_males }}</span>
-                    </td>
-
-                    <td>
-                        <span class="usr-location" data-location="{{ $item->children_females }}">{{ $item->children_females }}</span>
-                    </td>
                         <td>
-                        <span class="usr-location" data-location="{{ $item->adult_males }}">{{ $item->adult_males }}</span>
+                            <span class="usr-ph-no">{{ $item->name }}</span>
+                        </td>
+                        <td>
+                            <span class="usr-ph-no">{{ \Carbon\Carbon::parse($item->service_date)->format('d M Y') }}</span>
                         </td>
 
                         <td>
-                        <span class="usr-location" data-location="{{ $item->adult_females }}">{{ $item->adult_females }}</span>
-                        </td>
+                            <div class="dropdown">
+                                <button id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" class="px-1 shadow-none rounded-circle btn-transparent btn-sm btn">
+                                  <i class="ti ti-dots-vertical fs-4 d-block"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
 
-                    <td>
-                        <span class="usr-location" data-location="{{ $item->tatal_attendance }}">{{ $item->total_attendance }}</span>
-                    </td>
+                                  <li>
+                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $item->id }}" data-bs-toggle="modal" data-bs-target="#recordModal" id="#modalCenter" onclick="openRecordModal('{{ $item->id }}')">Attendance</a>
+                                  </li>
+
+                                  <li>
+                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $item->id }}" data-bs-toggle="modal" data-bs-target="#ser_editModal" id="#modalCenter" onclick="openServiceEditModal('{{ $item->id }}')">Edit</a>
+                                  </li>
+                                  <li>
+                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $item->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" id="#modalCenter" onclick="openServiceDeleteModal('{{ $item->id }}')">Delete</a>
+                                  </li>
+
+                                </ul>
+                              </div>
+                            </div>
+                        </td>
 
                     </tr>
                     @endforeach
@@ -140,11 +132,88 @@
                 </table>
 
             </div>
-                <!--MODALS-->
-
-
-            </div>
+        </div>
     </div>
+    <div class="col-md-7 col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="justify-between mb-2 d-flex">
+                    <h4 class="mb-0 card-title">Service Attendance Statistics</h4>
+                </div>
+
+                <div class="p-3 table-responsive">
+                    <table class="table align-middle search-table text-nowrap" id="table">
+                    <thead class="header-item">
+                        <th>#</th>
+                        <th>Service</th>
+                        <th>C-M</th>
+                        <th>C-F</th>
+                        <th>A-M</th>
+                        <th>A-F</th>
+                        <th>Total</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <!-- start row -->
+                        @php $i = 1; @endphp
+                        @foreach ($attendances as $item)
+
+                        <tr class="search-items">
+                        <th scope="row">{{ $i++ }}</th>
+                        <td>
+                        <div class="d-flex align-items-center">
+                            <div>
+                              <h6 class="mb-1 fw-bolder">{{  $item->service->name  }}</h6>
+                              <p class="mb-0 fs-3">Category: {{ $item->service->category }}</p>
+                              <p class="mb-0 fs-3">{{ \Carbon\Carbon::parse($item->service->service_date)->format('d M Y') }}</p>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td>
+                            <span class="usr-location" data-location="{{ $item->children_males }}">{{ $item->children_males }}</span>
+                        </td>
+
+                        <td>
+                            <span class="usr-location" data-location="{{ $item->children_females }}">{{ $item->children_females }}</span>
+                        </td>
+                            <td>
+                            <span class="usr-location" data-location="{{ $item->adult_males }}">{{ $item->adult_males }}</span>
+                            </td>
+
+                            <td>
+                            <span class="usr-location" data-location="{{ $item->adult_females }}">{{ $item->adult_females }}</span>
+                            </td>
+
+                        <td>
+                            <span class="usr-location" data-location="{{ $item->tatal_attendance }}">{{ $item->total_attendance }}</span>
+                        </td>
+                        <td style="text-align: center;">
+
+                            <a type="button" value="{{ $item->id }}" class="text-info edit me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="openEditModal('{{ $item->id }}')">
+                                <i class="ti ti-pencil fs-5"></i>
+                            </a>
+
+                        </td>
+
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @include('attendance.service')
+    @include('attendance.record')
+    @include('attendance.edit')
+    @include('attendance.service.edit')
+    @include('attendance.service.delete')
+
+</div>
+
 
 
 
@@ -242,5 +311,82 @@
         ".buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel"
     ).addClass("btn btn-primary btn-sm");
 </script>
+
+
+<script>
+    function openServiceEditModal(id) {
+        $.ajax({
+            url: '/church_service/' + id, // Replace with the appropriate route for fetching service details
+            type: 'GET',
+            success: function(response) {
+                // Parse the service date to 'YYYY-MM-DD' format if it includes time
+                var serviceDate = response.service_date.split(' ')[0];  // Take only the date part
+
+                // Update the modal content with the fetched service details
+                $('#ser_ed_name').val(response.name);
+                $('#ser_ed_category').val(response.category);
+                $('#ser_ed_date').val(serviceDate);  // Set the date in 'YYYY-MM-DD' format
+                $('#ser_ed_selectedId').val(response.id);
+            },
+            error: function(xhr) {
+                // Handle error case
+                console.log(xhr);
+            }
+        });
+    }
+
+
+    function openRecordModal(id) {
+        $.ajax({
+            url: '/church_service/' + id, // Replace with the appropriate route for fetching department details
+            type: 'GET',
+            success: function(response) {
+                // Update the modal content with the fetched department details
+                $('#ser_name').text(response.name);
+                $('#ser_selectedId').val(response.id);
+            },
+            error: function(xhr) {
+                // Handle error case
+                console.log(xhr);
+            }
+        });
+    }
+
+    function openServiceDeleteModal(id) {
+        $.ajax({
+            url: '/church_service/' + id, // Replace with the appropriate route for fetching department details
+            type: 'GET',
+            success: function(response) {
+                // Update the modal content with the fetched department details
+                $('#del_name').text(response.name);
+                $('#del_selectedId').val(response.id);
+            },
+            error: function(xhr) {
+                // Handle error case
+                console.log(xhr);
+            }
+        });
+    }
+
+    function openEditModal(id) {
+        $.ajax({
+            url: '/attendance/' + id, // Replace with the appropriate route for fetching department details
+            type: 'GET',
+            success: function(response) {
+                // Update the modal content with the fetched department details
+                $('#ed_adult_females').val(response.adult_females);
+                $('#ed_adult_males').val(response.adult_males);
+                $('#ed_children_females').val(response.children_females);
+                $('#ed_children_males').val(response.children_males);
+                $('#ed_att_selectedId').val(response.id);
+            },
+            error: function(xhr) {
+                // Handle error case
+                console.log(xhr);
+            }
+        });
+    }
+</script>
+
 
 @endsection

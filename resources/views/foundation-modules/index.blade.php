@@ -26,7 +26,7 @@
         <h4 class="mb-0 card-title">Modules</h4>
 
         <div class="ms-auto">
-            <a href="{{ route('converts.create') }}" class="px-4 mb-1 btn bg-success-subtle text-success fs-4 ms-auto me-1">Add Module</a>
+            <a href="{{ route('foundation-modules.create') }}" class="px-4 mb-1 btn bg-success-subtle text-success fs-4 ms-auto me-1">Add Module</a>
         </div>
       </div>
     <div class="mb-3 row">
@@ -37,10 +37,7 @@
                 <tr>
                   <th>#</th>
                   <th>Name</th>
-                  <th>Phone</th>
-                  <th>Email</th>
-                  <th>Location</th>
-                  <th>Status</th>
+                  <th>Description</th>
                   <td>Action</td>
                 </tr>
               </thead>
@@ -48,12 +45,8 @@
                 @foreach($modules as $key => $value)
                 <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td>{{ $value->name }}</td>
-                    <td>{{ $value->phone }}</td>
-                    <td>{{ $value->email }}</td>
-                    <td>{{ $value->location }}</td>
-                    <td>{{ $value->status }}</td>
-                    {{-- <td class="px-0">{{ formatShortDates($value->created_at) }}</td> --}}
+                    <td>{{ $value->module_name }}</td>
+                    <td>{{ $value->description }}</td>
 
                     <td>
                         <div class="dropdown">
@@ -61,13 +54,6 @@
                               <i class="ti ti-dots-vertical fs-4 d-block"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                              <li>
-                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#followModal" id="#modalCenter" onclick="openFollowupModal('{{ $value->id }}')">Follow-up</a>
-                              </li>
-                              <li>
-                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#statusModal" id="#modalCenter" onclick="openStatusModal('{{ $value->id }}')">Status</a>
-                              </li>
-
                               <li>
                                 <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#editModal" id="#modalCenter" onclick="openEditModal('{{ $value->id }}')">Edit</a>
                               </li>
@@ -85,9 +71,8 @@
               </tbody>
             </table>
 
-            @include('converts.edit')
-            @include('converts.status')
-            @include('converts.delete')
+            @include('foundation-modules.edit')
+           @include('foundation-modules.delete')
 
           </div>
         </div>
@@ -102,12 +87,11 @@
     <script>
         function openEditModal(id) {
             $.ajax({
-                url: '/converts/' + id, // Replace with the appropriate route for fetching department details
+                url: '/foundation-modules/' + id, // Replace with the appropriate route for fetching department details
                 type: 'GET',
                 success: function(response) {
                     // Update the modal content with the fetched department details
-                    $('#ed_name').val(response.name);
-                    $('#ed_date_acquired').val(response.date_acquired);
+                    $('#ed_name').val(response.module_name);
                     $('#ed_description').val(response.description);
                     $('#selectedId').val(response.id);
                 },
@@ -118,31 +102,13 @@
             });
         }
 
-        function openStatusModal(id) {
-            $.ajax({
-                url: '/converts/' + id, // Replace with the appropriate route for fetching department details
-                type: 'GET',
-                success: function(response) {
-                    // Update the modal content with the fetched department details
-                    $('#sta_name').text(response.name);
-                    $('#status').val(response.status);
-                    $('#sta_selectedId').val(response.id);
-                },
-                error: function(xhr) {
-                    // Handle error case
-                    console.log(xhr);
-                }
-            });
-        }
-
-
         function openDeleteModal(id) {
             $.ajax({
-                url: '/facility/' + id, // Replace with the appropriate route for fetching department details
+                url: '/foundation-modules/' + id, // Replace with the appropriate route for fetching department details
                 type: 'GET',
                 success: function(response) {
                     // Update the modal content with the fetched department details
-                    $('#del_name').text(response.name);
+                    $('#del_name').text(response.module_name);
                     $('#del_selectedId').val(response.id);
                 },
                 error: function(xhr) {

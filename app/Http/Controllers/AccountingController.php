@@ -16,10 +16,16 @@ class AccountingController extends Controller
         $this->middleware('auth');
     }
 
+    public function accountIndex(Request $request)
+    {
+        $user = Auth::user();
+        $accounts = Account::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->orderBy('name', 'asc')->get();
+        return view('accounts.index', compact('accounts'));
+    }
+
     public function accountStore(Request $request)
     {
         $user = Auth::user();
-        $church =Church::first();
 
         $this->validate($request, [
             'type' => 'required',

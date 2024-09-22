@@ -89,14 +89,43 @@ class EvangelismController extends Controller
 
         $event = Evangelism::findOrFail($request->selectedId);
         $event->update($request->all());
+
+        //LOG
+
+        $description = "User ". $user->id . " updated an evangelism event:  ". $event->id;
+        $action = "Update";
+
+        $log = Log::create([
+            'user_id' => $user->id,
+            'church_id' => $user->church_id,
+            'church_branch_id' => $user->church_branch_id,
+            'action' => $action,
+            'description' => $description,
+        ]);
+
         return redirect()->route('evangelism.index')->with('success', 'Evangelism event updated successfully');
     }
 
     // Delete an evangelism event
     public function destroy(Request $request)
     {
+        $user = Auth()->user();
+
         $event = Evangelism::findOrFail($request->selectedId);
         $event->delete();
+
+            //LOG
+
+            $description = "User ". $user->id . " updated an evangelism event:  ". $event->id;
+            $action = "Delete";
+
+            $log = Log::create([
+                'user_id' => $user->id,
+                'church_id' => $user->church_id,
+                'church_branch_id' => $user->church_branch_id,
+                'action' => $action,
+                'description' => $description,
+            ]);
         return redirect()->route('evangelism.index')->with('success', 'Evangelism event deleted successfully');
     }
 }

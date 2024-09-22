@@ -6,13 +6,13 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-        <form action="{{ route('converts.destroy') }}" method="POST">
+        <form action="{{ route('foundation-modules.destroy') }}" method="POST">
           @csrf
           @method('DELETE')
 
               <input hidden type="text" name="selectedId" class="form-control" id="del_selectedId">
 
-              <p>Are you sure you want to delete <strong><span name="name" id="del_name"></span></strong>?</p>
+              <p>Are you sure you want to delete the module '<strong><span name="name" id="del_name"></span></strong>'?</p>
 
               <div class="col-12">
                 <div class="gap-6 mt-4 d-flex align-items-center justify-content-end">

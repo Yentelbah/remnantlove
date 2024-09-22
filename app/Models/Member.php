@@ -78,5 +78,8 @@ class Member extends Model
         return $this->belongsTo(ChurchBranch::class, 'church_branch_id');
     }
 
-
+    public function convert()
+    {
+        return $this->hasOne(Convert::class, 'member_id');
+    }
 }

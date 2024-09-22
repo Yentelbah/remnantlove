@@ -1,4 +1,30 @@
-<div class="">
+@extends('layouts.flow')
+
+@section('title')
+    <title>FaithFlow -- Books of Accounts</title>
+@endsection
+
+@section('content')
+
+<div class="mb-3 overflow-hidden position-relative">
+    <div class="px-3 d-sm-flex align-items-center justify-content-between">
+    <h4 class="mb-0 fs-6">Books of Accounts</h4>
+    <nav aria-label="breadcrumb">
+        <ol class="mb-0 breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ route('dashboard') }}">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ route('finance.index') }}">Finance</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">Books</li>
+        </ol>
+    </nav>
+    </div>
+</div>
+
+
+<div class="card card-body">
     <div class="mb-4 d-flex justify-content-between align-items-center">
         <h4 class="mb-0">Accounts & Journals</h4>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAccount_Modal">
@@ -33,7 +59,7 @@
                         <td style="text-align: center;">
 
                             <a type="button" value="{{ $item->id }}" class="text-info edit me-2" data-bs-toggle="modal" data-bs-target="#editAccount_Modal" onclick="openAccountModal('{{ $item->id }}')">
-                                <i class="ti ti-eye fs-5"></i>
+                                <i class="ti ti-edit fs-5"></i>
                             </a>
 
                             @if ($item->is_deleted == 1)
@@ -66,6 +92,8 @@
 
     @include('accounts.create')
 </div>
+
+@endsection
 
 <script>
     function openAccountModal(accountId) {

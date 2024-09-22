@@ -17,9 +17,11 @@ return new class extends Migration
             $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
             $table->date('entry_date');
             $table->text('description');
+            $table->string('reference')->nullable();
             $table->decimal('amount', 10, 2);
             $table->boolean('is_deleted')->default(false);
             $table->boolean('is_approved')->default(false);
+            $table->enum('type', ['expense', 'revenue', 'equity', 'liability', 'asset']);
             $table->foreignUuid('user_id')->constrained()->onDelete('no action');
             $table->timestamps();
         });

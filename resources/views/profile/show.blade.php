@@ -30,7 +30,12 @@
         <div class="text-center d-md-flex align-items-center justify-content-between text-md-start">
           <div class="d-md-flex align-items-center">
             <div class="rounded-circle position-relative mb-9 mb-md-0 d-inline-block">
-              <img src="../assets/images/profile/user-1.jpg" alt="spike-img" class="img-fluid rounded-circle" width="100" height="100">
+                <img src="{{ Auth()->user()->profile_photo_path == '' ?  '../assets/images/profile/user-1.jpg' : asset('storage/' .Auth()->user()->profile_photo_path) }}" alt="spike-img" class="img-fluid rounded-circle preview" width="100" height="100">
+
+                <span class="bottom-0 p-1 text-white border border-2 border-white text-bg-primary rounded-circle d-flex align-items-center justify-content-center position-absolute end-0">
+                <i class="ti ti-plus"  value="{{ Auth()->user()->id }}" data-bs-toggle="modal" data-bs-target="#imageModal" id="#modalCenter"></i>
+              </span>
+
             </div>
             <div class="ms-0 ms-md-3 mb-9 mb-md-0">
               <div class="mb-1 d-flex align-items-center justify-content-center justify-content-md-start">
@@ -48,6 +53,7 @@
       </div>
     </div>
   </div>
+  @include('users.uploadimage')
 
   <div class="mx-10 tab-content" id="pills-tabContent">
     <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">

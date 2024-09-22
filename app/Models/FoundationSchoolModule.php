@@ -42,16 +42,17 @@ class FoundationSchoolModule extends Model
     }
 
     protected $fillable = [
-        'module_name',
-        'description',
+        'foundation_school_id',
+        'module_id',
+        'progress_status',
+        'completion_date',
         'church_id',
         'church_branch_id'
 
     ];
 
-    // Relationship with FoundationSchool
-    public function foundationSchools()
+    public function module()
     {
-        return $this->belongsToMany(FoundationSchool::class)->withPivot('completed_at');
+        return $this->belongsTo(FoundationModule::class, 'module_id');
     }
 }

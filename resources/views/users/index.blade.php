@@ -23,11 +23,23 @@
 
       <div class="widget-content searchable-container list">
         <div class="card card-body">
+            <div class="mb-2 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 card-title">Users</h5>
+                <nav aria-label="breadcrumb">
+                    <ol class="mb-0 breadcrumb">
+                      <li class="breadcrumb-item">
+                        <a href="{{ route('role.index') }}">User Roles</a>
+                      </li>
+                      <li class="breadcrumb-item" aria-current="page">
+                        <a href="{{ route('logs.index') }}">User Logs</a>
+                      </li>
+                    </ol>
+                  </nav>
+            </div>
+
                 <div class="p-3 table-responsive">
                   <table class="table align-middle search-table text-nowrap" id="table">
-
                     <thead class="header-item">
-
                       <th>#</th>
                       <th>Name</th>
                       <th>Email</th>

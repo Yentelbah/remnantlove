@@ -6,49 +6,31 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>        <div class="modal-body">
 
-            <form action="{{ route('converts.update') }}" method="POST">
+            <form action="{{ route('foundation-modules.update') }}" method="POST">
                 @csrf
                 @method('PUT')
 
-                <input type="hidden" id="ed_selectedId" name="selectedId">
+                <input type="hidden" id="selectedId" name="selectedId">
 
                 <div class="row">
                     <div class="mt-6 col-md-12">
-                    <div>
-                        <label class="form-label">Event Name</label>
-                        <input id="ed_title" name="event_name" type="text" class="form-control @error('event_name') is-invalid @enderror" />
-                        @error('event_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    </div>
-
-                    <div class="mt-6 col-md-12">
                         <div>
-                            <label class="form-label">Date</label>
-                            <input id="ed_date" type="date" name="date" class="form-control @error('date') is-invalid @enderror" />
-                        </div>
-                        </div>
-
-                        <div class="mt-6 col-md-12">
-                            <div>
-                            <label class="form-label">Location</label>
-                            <input id="ed_location" name="location" type="text" class="form-control  @error('location') is-invalid @enderror" />
-                            @error('location')
+                            <label class="form-label">Module Name</label>
+                            <input id="ed_name" name="module_name" type="text" class="form-control @error('module_name') is-invalid @enderror" />
+                            @error('module_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            </div>
                         </div>
-
-                        <div class="mt-6 col-md-12">
-                            <div>
-                            <label class="form-label">Description</label>
-                            <input id="ed_description" name="description" type="text" class="form-control  @error('description') is-invalid @enderror" />
+                    </div>
+                    <div class="mt-6 col-md-12">
+                        <div class="mb-3 form-group">
+                            <label for="description"  class="form-label">Description</label>
+                            <textarea placeholder="" class="form-control @error('description') is-invalid @enderror" name="description" id="ed_description" rows="3"></textarea>
                             @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            </div>
                         </div>
+                    </div>
                 </div>
                 <div class="col-12">
                     <div class="gap-6 mt-4 d-flex align-items-center justify-content-end">

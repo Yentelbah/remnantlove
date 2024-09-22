@@ -107,9 +107,12 @@
                 success: function(response) {
                     // Update the modal content with the fetched department details
                     $('#ed_name').val(response.name);
-                    $('#ed_date_acquired').val(response.date_acquired);
+                    $('#ed_gender').val(response.gender);
+                    $('#ed_phone').val(response.phone);
+                    $('#ed_location').val(response.location);
+                    $('#ed_email').val(response.email);
                     $('#ed_description').val(response.description);
-                    $('#selectedId').val(response.id);
+                    $('#ed_selectedId').val(response.id);
                 },
                 error: function(xhr) {
                     // Handle error case
@@ -135,10 +138,9 @@
             });
         }
 
-
         function openDeleteModal(id) {
             $.ajax({
-                url: '/facility/' + id, // Replace with the appropriate route for fetching department details
+                url: '/converts/' + id, // Replace with the appropriate route for fetching department details
                 type: 'GET',
                 success: function(response) {
                     // Update the modal content with the fetched department details

@@ -27,10 +27,16 @@ class PreferencesController extends Controller
 
         $church = Church::where('id', $user->church_id)->first();
         $settings = Setting::where('church_id', $user->church_id)->first();
-        $accounts = Account::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->orderBy('name', 'asc')->get();
         $defaultRoles = Role::whereNotIn('id', [1,2])->orderBy('name', 'asc')->get();
         $churchRoles = ChurchRole::where('church_id', $user->church_id)->get();
-        return view('preference.index', compact('settings', 'role',  'defaultRoles', 'accounts', 'church', 'churchRoles'));
+        return view('preference.index', compact('settings', 'role',  'defaultRoles', 'church', 'churchRoles'));
+    }
+
+    public function settings()
+    {
+        $user = Auth()->user();
+        $settings = Setting::where('church_id', $user->church_id)->first();
+        return view('preference.settings', compact('settings'));
     }
 
     public function updateNotification(Request $request)
@@ -58,15 +64,11 @@ class PreferencesController extends Controller
 
         }
 
-        // Redirect back or return a response as needed
-        $anchor = $request->input('pane') ?? 'general';
-
-        return redirect()->route('preference.index', '#'.$anchor)->with('success', 'Payment SMS notification settings updated successfully.');
+        return redirect()->route('settings.index')->with('success', 'Payment SMS notification settings updated successfully.');
     }
 
     public function sms_notification(Request $request)
     {
-
         $user = Auth()->user();
 
         // Get the checkbox value (true if checked, false if unchecked)
@@ -91,10 +93,7 @@ class PreferencesController extends Controller
 
         }
 
-        // Redirect back or return a response as needed
-        $anchor = $request->input('pane') ?? 'general';
-
-        return redirect()->route('preference.index', '#'.$anchor)->with('success', 'SMS notification settings updated successfully.');
+        return redirect()->route('settings.index')->with('success', 'SMS notification settings updated successfully.');
     }
 
 

@@ -18,6 +18,15 @@ class ChurchController extends Controller
         $this->middleware('auth');
     }
 
+    public function churchIndex()
+    {
+        $user = Auth()->user();
+
+        $church = Church::find($user->church_id);
+        return view('church.index', compact('church'));
+
+    }
+
     public function getDetails($churchId)
     {
         $church = Church::find($churchId);
@@ -27,7 +36,7 @@ class ChurchController extends Controller
     public function churchUpdate(Request $request)
     {
         $user= Auth()->user();
-        $church =Church::where('id', $user->church_id)->first();
+        $church = Church::find($user->church_id);
 
         $this->validate($request, [
             'name' => 'required|max:100',

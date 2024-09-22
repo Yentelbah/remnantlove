@@ -312,7 +312,9 @@
             <a class="nav-link position-relative ms-6" href="javascript:void(0)" id="drop1" aria-expanded="false">
               <div class="flex-shrink-0 d-flex align-items-center">
                 <div class="user-profile me-sm-3 me-2">
-                  <img src="../assets/images/profile/user-1.jpg" width="40" class="rounded-circle" alt="spike-img">
+
+                  <img src="{{ Auth()->user()->profile_photo_path == '' ?  '../assets/images/profile/user-1.jpg' : asset('storage/' .Auth()->user()->profile_photo_path) }}" alt="user"class="img-fluid rounded-circle preview" width="40">
+
                 </div>
                 <span class="d-sm-none d-block"><iconify-icon icon="solar:alt-arrow-down-line-duotone"></iconify-icon></span>
 
@@ -334,7 +336,8 @@
                 </div>
 
                 <div class="d-flex align-items-center mx-7 py-9 border-bottom">
-                  <img src="../assets/images/profile/user-1.jpg" alt="user" width="90" class="rounded-circle" />
+                  <img src="{{ Auth()->user()->profile_photo_path == '' ?  '../assets/images/profile/user-1.jpg' : asset('storage/' .Auth()->user()->profile_photo_path) }}" alt="user"class="img-fluid rounded-circle preview" width="90" height="100">
+
                   <div class="ms-4">
                     <h4 class="mb-0 fs-5 fw-normal">{{ Auth()->user()->name }}</h4>
                     <span class="text-muted">{{ Auth()->user()->churchRole->name ?? '' }}</span>

@@ -49,5 +49,10 @@ class Account extends Model
         return $this->hasMany(LedgerEntry::class);
     }
 
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'expense_account');
+    }
+
 
 }

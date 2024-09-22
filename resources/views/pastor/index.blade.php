@@ -55,9 +55,9 @@
                         <div class="d-flex align-items-center">
                           <div class="me-3">
                             @if ($value->member->gender == 'Male')
-                            <img src="../assets/images/profile/male.png" width="50" class="rounded-circle" alt="spike-img" />
+                            <img src="{{ $value->member->photo == '' ?  '../assets/images/profile/male.png' : asset('storage/' .$value->member->photo) }}" class="rounded-circle" alt="img" class="img-fluid rounded-circle preview" width="50">
                             @else
-                            <img src="../assets/images/profile/female.png" width="50" class="rounded-circle" alt="spike-img" />
+                            <img src="{{ $value->member->photo == '' ?  '../assets/images/profile/female.png' : asset('storage/' .$value->member->photo) }}" class="rounded-circle" alt="img" class="img-fluid rounded-circle preview" width="50">
                             @endif
                           </div>
 

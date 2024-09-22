@@ -62,7 +62,6 @@
 
   </div>
 
-
   <div class="mb-4 card">
     <div class="card-body">
       <div class="justify-between mb-2 d-flex">
@@ -117,6 +116,9 @@
                                 </form>
 
                             </li>
+                            {{-- <li>
+                                <a href="{{ route('member.details', ['id' => $value->id]) }}" class="dropdown-item">Show</a>
+                            </li> --}}
                             <li>
                                 <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#editModal" id="#modalCenter" onclick="openEditModal('{{ $value->id }}')">Edit</a>
                             </li>

@@ -9,11 +9,14 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <link rel="stylesheet" href="{{ asset('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+  <script src="../assets/js/jquery.min.js"></script>
 
   <!-- Favicon icon-->
   <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
   <link rel="stylesheet" href="../assets/libs/quill/dist/quill.snow.css" />
+
+  <link rel="stylesheet" href="{{ asset('ijaboCropTool/ijaboCropTool.min.css') }}">
 
   @yield('head')
 
@@ -247,8 +250,10 @@
   <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
 
+  <script src="{{ asset('ijaboCropTool/ijaboCropTool.min.js') }}"></script>
+
   <!-- solar icons -->
-  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+  <script src="../assets/js/iconify-icon.min.js"></script>
 
   <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
   <script src="../assets/js/dashboards/dashboard2.js"></script>
@@ -337,7 +342,7 @@
                 <div class="gap-6 hstack align-items-start">
                     <i class="ti ti-info-circle fs-6"></i>
                     <div>
-                        <h5 class="mb-1 text-white fs-3">Success</h5>
+                        <h5 class="mb-1 text-white fs-3">Info</h5>
                         <h6 class="mb-0 text-white fs-2">${message}</h6>
                     </div>
                     <button type="button" class="m-0 shadow-none btn-close btn-close-white fs-2 ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -371,7 +376,7 @@
                 <div class="gap-6 hstack align-items-start">
                     <i class="ti ti-warning-circle fs-6"></i>
                     <div>
-                        <h5 class="mb-1 text-white fs-3">Success</h5>
+                        <h5 class="mb-1 text-white fs-3">Warning</h5>
                         <h6 class="mb-0 text-white fs-2">${message}</h6>
                     </div>
                     <button type="button" class="m-0 shadow-none btn-close btn-close-white fs-2 ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -392,10 +397,7 @@
       showErrorToast("{{ session('warning') }}");
 
     @endif
-
-
   </script>
-
 
   @yield('scripts')
 

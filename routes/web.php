@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountingController;
 use App\Http\Controllers\ArchieveController;
 use App\Http\Controllers\ArchiveController;
+use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChurchBranchController;
@@ -15,24 +16,30 @@ use App\Http\Controllers\CreditsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\EquityController;
 use App\Http\Controllers\EvangelismController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\FinanceTransactionsController;
 use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\FoundationSchoolController;
 use App\Http\Controllers\FoundationModuleController;
+use App\Http\Controllers\FoundationSchoolModuleController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupMemberController;
+use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\LegalController;
+use App\Http\Controllers\LiabilityController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PastorController;
 use App\Http\Controllers\PreferencesController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\RevenueContrller;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VisitorController;
@@ -115,10 +122,17 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
         Route::get('/members', [MemberController::class, 'index'])->name('member.index');
         Route::post('/member', [MemberController::class, 'create'])->name('member.create');
         Route::get('/members/{id}', [MemberController::class, 'details']);
+        // Route::get('/members/{id}/details', [MemberController::class, 'view'])->name('member.details');
         Route::put('/member', [MemberController::class, 'update'])->name('member.update');
         Route::delete('/member',[MemberController::class, 'delete'] )->name('member.delete');
         Route::get('/members-export', [MemberController::class, 'export'])->name('member.export');
         Route::post('/member/details', [MemberController::class, 'searchMember'])->name('member.search');
+
+        Route::post('/member_image_upload', [ImageUploadController::class,'member'])->name('member.image.upload');
+        Route::post('/student_image_upload', [ImageUploadController::class,'foundation_school'])->name('foundation.image.upload');
+        Route::post('/user_image_upload', [ImageUploadController::class,'user'])->name('user.image.upload');
+        Route::post('/church_logo_upload', [ImageUploadController::class,'uploadLogo'])->name('church.logo.upload');
+
 
         //PASTOR
         Route::get('/pastors', [PastorController::class, 'index'])->name('pastor.index');
@@ -158,6 +172,7 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
         Route::post('/financial/profit_and_loss', [ReportsController::class, 'profitAndLoss'])->name('profit_loss.generate');
         Route::post('/financial/trial_balance', [ReportsController::class, 'trialBalance'])->name('trial_balanec.generate');
         Route::post('/log', [ReportsController::class, 'Logs'])->name('logs.generate');
+        Route::get('/logs', [UserController::class, 'Logs'])->name('logs.index');
 
         //Archieves Routes
         Route::get('/archives', [ArchiveController::class, 'index'])->name('archive.index');
@@ -167,6 +182,7 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
 
         //System Preferences
         Route::get('/preferences', [PreferencesController::class, 'index'])->name('preference.index');
+        Route::get('/preferences/settings', [PreferencesController::class, 'settings'])->name('settings.index');
 
         Route::put('/setting/general-settings',[PreferencesController::class, 'settingUpdate'] )->name('setting.update');
         Route::post('/update-sms-notification', [PreferencesController::class, 'updateNotification'])->name('update.notification');
@@ -189,6 +205,7 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
         Route::post('/user/restore',[UserController::class, 'userRestore'] )->name('user.restore');
 
         //Church role routes
+        Route::get('/role', [ChurchRoleController::class, 'roleIndex'])->name('role.index');
         Route::post('/role', [ChurchRoleController::class, 'roleStore'])->name('role.store');
         Route::get('/role/{roleId}/details', [ChurchRoleController::class, 'getDetails']);
         Route::put('/role',[ChurchRoleController::class, 'roleUpdate'] )->name('role.update');
@@ -207,6 +224,7 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::middleware('role:2,3,5,6')->group(function () {
         //ACCOUNTING
             //Accounting routes
+            Route::get('/account', [AccountingController::class, 'accountIndex'])->name('account.index');
             Route::post('/account', [AccountingController::class, 'accountStore'])->name('account.store');
             Route::get('/account/{accountId}/details', [AccountingController::class, 'getDetails']);
             Route::put('/account',[AccountingController::class, 'accountUpdate'] )->name('account.update');
@@ -215,7 +233,6 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
 
             //Finance Routes
             Route::get('/finance', [FinanceController::class, 'financeIndex'])->name('finance.index');
-            Route::post('/finance/contra', [FinanceController::class, 'ContraEntry'])->name('contra.entry');
             Route::get('/finance/entry', [FinanceController::class, 'Entry'])->name('finance.entry');
             Route::post('/finance/record', [FinanceController::class, 'Transactions'])->name('finance.record');
 
@@ -224,13 +241,40 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
             Route::delete('/finance',[FinanceController::class, 'financeDelete'] )->name('finance.delete');
             Route::get('/finance/{journalID}', [FinanceController::class, 'financeShowDetails'])->name('financeShowDetails');
 
+            Route::get('/transactions', [FinanceTransactionsController::class, 'transactions'])->name('transactions.index');
+            Route::get('/transactions', [FinanceTransactionsController::class, 'transactions'])->name('transactions.index');
+
+            //Expenses Routes
+            Route::get('/expenses', [ExpenseController::class, 'expenseIndex'])->name('expense.index');
+            Route::post('/expense', [ExpenseController::class, 'expenseStore'])->name('expense.store');
+
+            //Revnue Routes
+            Route::get('/revenue', [RevenueContrller::class, 'revenueIndex'])->name('revenue.index');
+            Route::post('/revenue', [RevenueContrller::class, 'revenueStore'])->name('revenue.store');
+
+            //Equity Routes
+            Route::get('/equity', [EquityController::class, 'equityIndex'])->name('equity.index');
+            Route::post('/equity', [EquityController::class, 'equityStore'])->name('equity.store');
+
+            //Revnue Routes
+            Route::get('/asset', [AssetController::class, 'assetIndex'])->name('asset.index');
+            Route::post('/asset', [AssetController::class, 'assetStore'])->name('asset.store');
+
+            //Revnue Routes
+            Route::get('/liability', [LiabilityController::class, 'liabilityIndex'])->name('liability.index');
+            Route::post('/liability', [LiabilityController::class, 'liabilityStore'])->name('liability.store');
+
     });
+
 
     //VISSITORS
     Route::get('/visitors', [VisitorController::class, 'index'])->name('visitors.index');
     Route::get('/visitors/create', [VisitorController::class, 'create'])->name('visitors.create');
     Route::post('/visitors', [VisitorController::class, 'store'])->name('visitors.store');
+    Route::get('/visitors/{id}', [VisitorController::class, 'show']);  // Data to json
     Route::post('/visitors/{id}/convert', [VisitorController::class, 'convertToMember'])->name('visitors.convert');
+    Route::put('/visitor', [VisitorController::class, 'update'])->name('visitor.update');  // Update an evangelism event
+    Route::delete('/visitor', [VisitorController::class, 'delete'])->name('visitor.delete');  // Delete an evangelism event
 
     // Evangelism Routes
     Route::get('/evangelism', [EvangelismController::class, 'index'])->name('evangelism.index');  // List all evangelism events
@@ -249,22 +293,24 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::delete('/converts', [ConvertController::class, 'destroy'])->name('converts.destroy');  // Delete a convert
 
     // Foundation School Routes
-    Route::get('/foundation-school', [FoundationSchoolController::class, 'index'])->name('foundation-school.index');  // List all foundation school students
+    Route::get('/foundation-school', [FoundationSchoolController::class, 'index'])->name('foundation-school.index');  // List students
     Route::get('/foundation-school/create', [FoundationSchoolController::class, 'create'])->name('foundation-school.create');  // Show form to enroll a new student
     Route::post('/foundation-school', [FoundationSchoolController::class, 'store'])->name('foundation-school.store');  // Enroll a student in foundation school
-    Route::get('/foundation-school/{id}', [FoundationSchoolController::class, 'show'])->name('foundation-school.show');  // View a specific student's progress
-    Route::get('/foundation-school/{id}/edit', [FoundationSchoolController::class, 'edit'])->name('foundation-school.edit');  // Edit foundation school info
-    Route::put('/foundation-school/{id}', [FoundationSchoolController::class, 'update'])->name('foundation-school.update');  // Update foundation school info
-    Route::delete('/foundation-school/{id}', [FoundationSchoolController::class, 'destroy'])->name('foundation-school.destroy');  // Remove a student from foundation school
+    Route::get('/foundation-school/{id}', [FoundationSchoolController::class, 'show']);  // View a specific student's progress
+    Route::post('/foundation-school/student-profile', [FoundationSchoolController::class, 'profile'])->name('foundation-school.profile');  // View a specific students
+    Route::delete('/foundation-school', [FoundationSchoolController::class, 'destroy'])->name('foundation-school.destroy');  // Remove a student from foundation school
 
-    // Foundation School Modules Routes
-    Route::get('/foundation-school/modules', [FoundationModuleController::class, 'index'])->name('foundation-modules.index');  // List all foundation school modules
-    Route::get('/foundation-school/modules/create', [FoundationModuleController::class, 'create'])->name('foundation-modules.create');  // Show form to create a new module
-    Route::post('/foundation-school/modules', [FoundationModuleController::class, 'store'])->name('foundation-modules.store');  // Store a new foundation school module
-    Route::get('/foundation-school/modules/{id}', [FoundationModuleController::class, 'show'])->name('foundation-modules.show');  // View details of a specific module
-    Route::get('/foundation-school/modules/{id}/edit', [FoundationModuleController::class, 'edit'])->name('foundation-modules.edit');  // Edit a module
-    Route::put('/foundation-school/modules/{id}', [FoundationModuleController::class, 'update'])->name('foundation-modules.update');  // Update a module
-    Route::delete('/foundation-school/modules/{id}', [FoundationModuleController::class, 'destroy'])->name('foundation-modules.destroy');  // Delete a module
+        // Foundation School Modules Routes
+        Route::get('/foundation-school-modules/{id}', [FoundationSchoolModuleController::class, 'show']);// View details of a specific module
+        Route::put('/foundation-school-modules', [FoundationSchoolModuleController::class, 'update'])->name('foundation-school-modules.update');  // Update a module
+
+        // Foundation Modules Routes
+        Route::get('/foundation-modules', [FoundationModuleController::class, 'index'])->name('foundation-modules.index');  // List all foundation school modules
+        Route::get('/foundation-modules/create', [FoundationModuleController::class, 'create'])->name('foundation-modules.create');  // Show form
+        Route::post('/foundation-modules', [FoundationModuleController::class, 'store'])->name('foundation-modules.store');  // Store a new foundation school module
+        Route::get('/foundation-modules/{id}', [FoundationModuleController::class, 'show']);  // View details of a specific module
+        Route::put('/foundation-modules', [FoundationModuleController::class, 'update'])->name('foundation-modules.update');  // Update a module
+        Route::delete('/foundation-modules', [FoundationModuleController::class, 'destroy'])->name('foundation-modules.destroy');  // Delete a module
 
     // Follow-Up Routes
     Route::get('/follow-ups', [FollowUpController::class, 'index'])->name('follow-ups.index');  // List all follow-ups
@@ -311,11 +357,15 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
     //ATTENDANCE
-    Route::get('/attenance', [AttendanceController::class, 'index'])->name('attendance.index');
-    Route::get('/attenance/record', [AttendanceController::class, 'create'])->name('attendance.create');
-    Route::post('/attenance', [AttendanceController::class, 'store'])->name('attendance.store');
-    Route::get('/attenance/{id}/details', [AttendanceController::class, 'details'])->name('attendance.details');
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
+    Route::get('/attendance/{id}', [AttendanceController::class, 'details']);
+    Route::put('/attendance', [AttendanceController::class, 'update'])->name('attendance.update');
+
     Route::post('/church_service', [AttendanceController::class, 'storeService'])->name('church_service.store');
+    Route::get('/church_service/{id}', [AttendanceController::class, 'service_details']);
+    Route::put('/church_service', [AttendanceController::class, 'service_update'])->name('service.update');
+    Route::delete('/church_service',[AttendanceController::class, 'service_delete'] )->name('service.delete');
 
     //Legal Routes
     Route::get('privacy_policy', [LegalController::class, 'privacy_policy'])->name('privacy_policy');
@@ -334,12 +384,6 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::post('/sms_credits/confirmattion', [CreditsController::class, 'confirmation'])->name('sms.credits.confirm');
     Route::post('/sms/update_senderID', [CreditsController::class, 'updateSenderID'])->name('sms.senderID');
 
-    //Expenses Routes
-    Route::get('/expenses', [ExpenseController::class, 'expenseIndex'])->name('expense.index');
-    Route::post('/expense', [ExpenseController::class, 'expenseStore'])->name('expense.store');
-    Route::get('/expense/{expenseId}/details', [ExpenseController::class, 'getExpenseDetails']);
-    Route::put('/expense',[ExpenseController::class, 'expenseUpdate'] )->name('expense.update');
-    Route::delete('/expense',[ExpenseController::class, 'expenseDelete'] )->name('expense.delete');
 
     //SYSTEM ADMIN
     Route::get('/client', [ClientController::class, 'index'])->name('client.index');

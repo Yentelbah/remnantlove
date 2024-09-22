@@ -10,7 +10,7 @@
 
     <div class="mb-3 overflow-hidden position-relative">
         <div class="px-3 d-sm-flex align-items-center justify-content-between">
-        <h4 class="mb-0 fs-6">Events</h4>
+        <h4 class="mb-0 fs-6">Events List</h4>
         <nav aria-label="breadcrumb">
             <ol class="mb-0 breadcrumb">
             <li class="breadcrumb-item">

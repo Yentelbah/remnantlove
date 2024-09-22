@@ -56,7 +56,7 @@ class CreateNewUser implements CreatesNewUsers
             'role_id' => 2,
         ]);
 
-        $churchFolderPath = storage_path("app/public/churches/{$church->churchId}");
+        $churchFolderPath = storage_path("app/public/churches/{$church->churchID}");
         if (!file_exists($churchFolderPath)) {
             mkdir($churchFolderPath, 0777, true);
             mkdir("$churchFolderPath/logo", 0777, true);

@@ -4,7 +4,6 @@
   <title>FaithFlow -- Admin Dashboard</title>
 @endsection
 
-
 @section('content')
 
 <div class="row">

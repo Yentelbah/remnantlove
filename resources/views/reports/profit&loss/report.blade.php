@@ -56,14 +56,16 @@
                             <div>
                               <address>
                                 <div class="gap-2 mb-4 text-center d-flex flex-column flex-sm-row align-items-center justify-content-sm-start text-sm-start">
-                                    <img src="{{ asset('assets/images/logos/logo.png') }}" width="120px" alt="logo">
+                                    <img src="{{ $church->logo == '' ?  'assets/images/logos/logo.png' : asset('storage/' . $church->logo)}}" width="120px" alt="logo">
+
 
                                     <div class="">
                                         <h3>{{ $church->name }} - {{ $branch->name }}</h3>
-                                        <p class="ms-1">{{ $branch->address }}, {{ $branch->city }}, {{ $branch->region }}, {{ $branch->country }}. <br>
-                                        {{ $branch->phone }}, {{ $church->email }}, {{ $church->website }}</p>
+                                        <p class="ms-1">{{ $church->address }}, {{ $church->city }}, {{ $church->region }}, {{ $church->country }}. <br>
+                                        {{ $church->phone }}, {{ $church->email }}, {{ $church->website }}</p>
 
                                     </div>
+
 
                                 </div>
 

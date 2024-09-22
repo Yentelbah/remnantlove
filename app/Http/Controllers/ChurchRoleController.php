@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChurchRole;
 use App\Models\Log;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,6 +13,21 @@ class ChurchRoleController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    public function roleIndex()
+    {
+        $user = Auth()->user();
+        $role = $user->churchRole->role->name;
+
+        $SystemAdmin = [2];
+
+        $defaultRoles = Role::whereNotIn('id', [1,2])->orderBy('name', 'asc')->get();
+        $churchRoles = ChurchRole::where('church_id', $user->church_id)->get();
+        return view('roles.index', compact('role',  'defaultRoles', 'churchRoles'));
+
+        return view ('users.index', compact('users', 'roles'));
+
     }
 
     public function roleStore(Request $request)

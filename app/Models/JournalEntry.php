@@ -10,7 +10,7 @@ class JournalEntry extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['entry_date', 'description', 'church_id', 'user_id', 'amount', 'church_branch_id'];
+    protected $fillable = ['entry_date', 'description', 'church_id', 'user_id', 'amount', 'church_branch_id', 'reference', 'type'];
 
     public function ledgerEntries()
     {

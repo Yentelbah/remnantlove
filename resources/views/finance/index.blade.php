@@ -81,8 +81,6 @@
               </div>
         </div>
 
-
-
         <div class="col-lg-3">
             <div class="overflow-hidden card warning-card text-bg-success">
                 <div class="p-4 card-body">
@@ -100,76 +98,128 @@
     </div>
 </div>
 
+<div class="widget-content">
+    <div class="row">
+
+        <div class="col-lg-6">
             <div class="card">
-                <div class="card card-body">
-                    <div class="justify-between mb-2 d-flex">
-                        <h4 class="mb-0 card-title">Transactions</h4>
-
-                        <div class="ms-auto">
-                            <a href="{{ route('finance.entry') }}"  class="px-4 mb-1 btn bg-success-subtle text-success fs-4 ms-auto me-1" >Record Transaction</a>
-
-                            <button type="button" class="px-4 mb-1 btn bg-success-subtle text-success fs-4 ms-auto" data-bs-target="#contraModal" data-bs-toggle="modal"><i class="ti ti-coin me-1 fs-5"></i>Contra Entery</button>
-                        </div>
+                <div class="card-body">
+                  <div class="d-flex align-items-center ">
+                    <div>
+                      <h4 class="card-title">Books</h4>
+                      <p class="card-subtitle">All the books of accounts</p>
                     </div>
-
-                    <div class="p-3 table-responsive">
-                      <table class="table align-middle search-table text-nowrap" id="table">
-                        <thead class="header-item">
-                          <th>#</th>
-                          <th>Date</th>
-                          <th>Description</th>
-                          <th>Amount</th>
-                          <th><i class="ti ti-dots-vertical fs-6"></i>
-                          </th>
-                        </thead>
-                        <tbody>
-                          <!-- start row -->
-                          @php $i = 1; @endphp
-                          @foreach ($transactions as $item)
-
-                          <tr class="search-items">
-                            <th scope="row">{{ $i++ }}</th>
-                            <td>
-                                <span class="usr-ph-no" data-phone="{{ $item->entry_date }}">{{ $item->entry_date }}</span>
-                            </td>
-                            <td>
-                              <span class="usr-ph-no" data-phone="{{ $item->description }}">{{ $item->description }}</span>
-                            </td>
-                            <td>
-                              <span class="usr-location" data-location="{{ $item->amount }}">{{ $item->amount }}</span>
-                            </td>
-
-                            <td>
-                                <div class="dropdown dropstart">
-                                    <a href="javascript:void(0)" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                      <i class="ti ti-dots-vertical fs-6"></i>
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                      <li>
-                                        <a class="gap-3 dropdown-item d-flex align-items-center" href="{{ route('financeShowDetails',['journalID' => $item->id]) }}">
-                                          <i class="fs-4 ti ti-eye"></i>View
-                                        </a>
-                                      </li>
-
-                                    </ul>
-                                </div>
-                            </td>
-                          </tr>
-                          @endforeach
-                        </tbody>
-                      </table>
-
+                    <div class="ms-auto">
+                      <a class="btn btn-primary" href="{{ route('account.index') }}"><i class='bx bx-scan me-1'></i>View</a>
                     </div>
-                      <!--MODALS-->
-
-                      @include('finance.contra')
-
-
                   </div>
+                </div>
             </div>
         </div>
 
-      </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center ">
+                    <div>
+                      <h4 class="card-title">Transactions</h4>
+                      <p class="card-subtitle">Get all recorded transactions</p>
+                    </div>
+                    <div class="ms-auto">
+                      <a class="btn btn-primary" href="{{ route('transactions.index') }}"><i class='bx bx-scan me-1'></i>View</a>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center ">
+                    <div>
+                      <h4 class="card-title">Revenue</h4>
+                      <p class="card-subtitle">Get recorded revenues e.g. sales, offering, danations etc</p>
+                    </div>
+                    <div class="ms-auto">
+                      <a class="btn btn-primary" href="{{ route('revenue.index') }}"><i class='bx bx-scan me-1'></i>View</a>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex align-items-center ">
+                  <div>
+                    <h4 class="card-title">Expenses</h4>
+                    <p class="card-subtitle">Get all recorded expenses</p>
+                  </div>
+                  <div class="ms-auto">
+                    <a class="btn btn-primary" href="{{ route('expense.index') }}"><i class='bx bx-scan me-1'></i>View</a>
+                </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        {{-- <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center ">
+                    <div>
+                      <h4 class="card-title">Equity</h4>
+                      <p class="card-subtitle">Record all equities</p>
+                    </div>
+                    <div class="ms-auto">
+                        <a class="btn btn-primary" href="{{ route('equity.index') }}"><i class='bx bx-scan me-1'></i>View</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center ">
+                    <div>
+                      <h4 class="card-title">Assets</h4>
+                      <p class="card-subtitle">Record all asset related transactions</p>
+                    </div>
+                    <div class="ms-auto">
+                      <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#logsModal" href="javascript:void(0)"><i class='bx bx-scan me-1'></i>Record</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center ">
+                    <div>
+                      <h4 class="card-title">Liability</h4>
+                      <p class="card-subtitle">Record all liabilities</p>
+                    </div>
+                    <div class="ms-auto">
+                      <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#logsModal" href="javascript:void(0)"><i class='bx bx-scan me-1'></i>Record</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+        </div> --}}
+
+    </div>
+</div>
 
 @endsection
 
@@ -180,5 +230,29 @@
             $('#table').DataTable(); // ID From dataTable with Hover
         });
     </script>
+
+<script>
+    $(document).ready(function() {
+        $('#account_type').on('change', function() {
+            var selectedType = $(this).val();
+            $('#account_id').val('');
+            $('.account-option').hide();
+            if (selectedType) {
+                $('.account-option.' + selectedType).show();
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('#rec_account_type').on('change', function() {
+            var selectedType = $(this).val();
+            $('#rec_account_id').val('');
+            $('.rec_account-option').hide();
+            if (selectedType) {
+                $('.rec_account-option.' + selectedType).show();
+            }
+        });
+    });
+</script>
 
 @endsection

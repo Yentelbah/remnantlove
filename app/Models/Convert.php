@@ -59,6 +59,12 @@ class Convert extends Model
         return $this->belongsTo(Evangelism::class);
     }
 
+    // Relationship with member
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'member_id');
+    }
+
     // Relationship with FoundationSchool
     public function foundationSchool()
     {

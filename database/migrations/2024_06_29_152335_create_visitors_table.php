@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
             $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
             $table->string('name');
+            $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->string('phone');
             $table->date('date_visited');
             $table->string('location');

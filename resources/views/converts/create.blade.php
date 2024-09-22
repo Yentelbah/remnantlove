@@ -35,10 +35,9 @@
                 <!-- Input fields -->
                 <div class="order-2 col-lg-8 col-12 order-lg-1">
 
-
                     <div class="mb-3 form-group">
                         <label class="form-label" for="name">Name</label>
-                        <input class="form-control  @error('title') is-invalid @enderror" name="name" id="le_name">
+                        <input class="form-control  @error('name') is-invalid @enderror" name="name" id="le_name">
                         @error('name')
                         <small class="invalid-feedback" role="alert">
                           {{ $message }}
@@ -93,7 +92,7 @@
 
                 <!-- Image -->
                 <div class="order-1 col-lg-4 col-12 d-flex justify-content-center order-lg-2">
-                    <img src="../assets/images/backgrounds/new.svg" alt="" class="img-fluid" width="100%">
+                    <img src="../assets/images/backgrounds/convert.svg" alt="" class="img-fluid" width="100%">
                 </div>
 
 

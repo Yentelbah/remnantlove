@@ -1,4 +1,3 @@
-
 @extends('layouts.flow')
 
 @section('title')
@@ -38,7 +37,8 @@
                   <th>#</th>
                   <th>Name</th>
                   <th>Gender</th>
-                  <th>Progress</th>
+                  <th>Phone</th>
+                  <th>Email</th>
                   <td>Action</td>
                 </tr>
               </thead>
@@ -48,7 +48,8 @@
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $value->convert->name }}</td>
                     <td>{{ $value->convert->gender }}</td>
-                    <td>{{ $value->progress_status }}</td>
+                    <td>{{ $value->convert->phone }}</td>
+                    <td>{{ $value->convert->email }}</td>
                     {{-- <td class="px-0">{{ formatShortDates($value->created_at) }}</td> --}}
 
                     <td>
@@ -57,12 +58,14 @@
                               <i class="ti ti-dots-vertical fs-4 d-block"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                              <li>
-                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#progressModal" id="#modalCenter" onclick="openProgressModal('{{ $value->id }}')">Progress</a>
-                              </li>
-                              <li>
-                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#editModal" id="#modalCenter" onclick="openEditModal('{{ $value->id }}')">Edit</a>
-                              </li>
+
+                            <form method="POST" action="{{ route('foundation-school.profile') }}" x-data id="profileForm-{{ $value->id }}">
+                                @csrf
+                                <input type="hidden" value="{{ $value->id }}" name="student_id">
+                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" onclick="document.getElementById('profileForm-{{ $value->id }}').submit(); return false;">
+                                    View
+                                </a>
+                            </form>
                               <li>
                                 <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" id="#modalCenter" onclick="openDeleteModal('{{ $value->id }}')">Delete</a>
                               </li>
@@ -77,8 +80,6 @@
               </tbody>
             </table>
 
-            @include('foundation.edit')
-            @include('foundation.progress')
             @include('foundation.delete')
 
           </div>
@@ -92,32 +93,14 @@
 @section('scripts')
 
     <script>
-        function openEditModal(id) {
-            $.ajax({
-                url: '/converts/' + id, // Replace with the appropriate route for fetching department details
-                type: 'GET',
-                success: function(response) {
-                    // Update the modal content with the fetched department details
-                    $('#ed_name').val(response.name);
-                    $('#ed_date_acquired').val(response.date_acquired);
-                    $('#ed_description').val(response.description);
-                    $('#selectedId').val(response.id);
-                },
-                error: function(xhr) {
-                    // Handle error case
-                    console.log(xhr);
-                }
-            });
-        }
-
         function openDeleteModal(id) {
             $.ajax({
-                url: '/facility/' + id, // Replace with the appropriate route for fetching department details
+                url: '/foundation-school/' + id, // Replace with the appropriate route for fetching department details
                 type: 'GET',
                 success: function(response) {
                     // Update the modal content with the fetched department details
-                    $('#del_name').text(response.name);
-                    $('#del_selectedId').val(response.id);
+                    $('#del_name').text(response.convert.name);
+                    $('#del_selectedId').val(response.student.id);
                 },
                 error: function(xhr) {
                     // Handle error case

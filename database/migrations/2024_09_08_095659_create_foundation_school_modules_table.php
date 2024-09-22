@@ -15,10 +15,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
             $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
-            $table->uuid('convert_id')->unique();
-            $table->string('module_name');
-            // $table->date('completion_date');
-            // $table->enum('progress_status', ['In Progress', 'Completed', 'Not Started']);
+            $table->uuid('foundation_school_id');
+            $table->uuid('module_id');
+            $table->date('completion_date')->nullable();
+            $table->enum('progress_status', ['In Progress','Missed', 'Completed', 'Not Started'])->default('Not Started');
             $table->timestamps();
         });
     }

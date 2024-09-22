@@ -64,103 +64,37 @@ class FinanceController extends Controller
             ->where('church_branch_id', $user->church_branch_id)
             ->count();
 
-        return view ('finance.index', compact('transactions', 'accountBalances','accountsCount'));
+            $accountTypes = ['Asset', 'Liability', 'Equity', 'Revenue', 'Expense'];
+
+            // Fetch accounts grouped by type
+            $accounts = Account::where('church_id', $user->church_id)
+                                ->where('church_branch_id', $user->church_branch_id)
+                                ->select('id', 'name', 'type')
+                                ->get()
+                                ->groupBy('type');
+
+            $expenseAccounts = Account::where('church_id', $user->church_id)
+                    ->where('church_branch_id', $user->church_branch_id)
+                    ->where('type', 'Expense')
+                    ->select('id', 'name', 'type')
+                    ->get();
+
+            $assetAccounts = Account::where('church_id', $user->church_id)
+                    ->where('church_branch_id', $user->church_branch_id)
+                    ->where('type', 'Asset')
+                    ->select('id', 'name', 'type')
+                    ->get();
+
+            $revenueAccounts = Account::where('church_id', $user->church_id)
+                    ->where('church_branch_id', $user->church_branch_id)
+                    ->where('type', 'Revenue')
+                    ->select('id', 'name', 'type')
+                    ->get();
+
+
+
+        return view ('finance.index', compact('transactions', 'accountBalances','accountsCount', 'accountTypes', 'accounts', 'expenseAccounts', 'assetAccounts','revenueAccounts'));
     }
-
-    public function ContraEntry(Request $request)
-    {
-        $user = Auth()->user();
-
-        $validator = Validator::make($request->all(), [
-            'amount' => 'required|numeric',
-            'from' => 'required|string|in:cash,mobile_money,bank',
-            'to' => 'required|string|in:cash,mobile_money,bank',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-            ->withErrors($validator)
-            ->withInput()
-            ->with('error', 'Check your inputs.');
-        }
-
-        // Find relevant accounts
-        $amount = $request->amount;
-        $from = $request->from;
-        $to = $request->to;
-        $entry_date = now();
-
-
-        $cashAccountFrom = Account::where('name', $from == 'cash' ? 'Cash Accounts' : ($from == 'bank' ? 'Bank Accounts' : 'Mobile Money Accounts'))
-        ->where('church_id', $user->church_id)
-        ->where('church_branch_id', $user->church_branch_id)
-        ->firstOrFail();
-
-        $cashAccountTo = Account::where('name', $to == 'cash' ? 'Cash Accounts' : ($to == 'bank' ? 'Bank Accounts' : 'Mobile Money Accounts'))
-        ->where('church_id', $user->church_id)
-        ->where('church_branch_id', $user->church_branch_id)
-        ->firstOrFail();
-        //JOURNAL ENTRY
-
-        $description = 'Contra entry of ' .$amount. ' from ' . $cashAccountFrom->name . ' to ' . $cashAccountTo->name;
-
-        DB::transaction(function() use ($user, $amount, $cashAccountTo, $cashAccountFrom, $entry_date, $description) {
-
-            $journalEntry = JournalEntry::create([
-                'church_id' => $user->church_id,
-                'church_branch_id' => $user->church_branch_id,
-                'entry_date' => $entry_date,
-                'description' => $description,
-                'amount' => $amount,
-                'is_deleted' => false,
-                'is_approved' => false,
-                'user_id' => auth()->id(),
-            ]);
-
-            // Create Ledger Entries
-            // Debit Cash/Bank
-            LedgerEntry::create([
-                'church_id' => $user->church_id,
-                'church_branch_id' => $user->church_branch_id,
-                'journal_entry_id' => $journalEntry->id,
-                'account_id' => $cashAccountTo->id,
-                'debit' => $amount,
-                'credit' => 0,
-                'is_deleted' => false,
-                'is_approved' => false,
-                'user_id' => auth()->id(),
-            ]);
-
-            // Credit Source Account (Equity or Liability)
-            LedgerEntry::create([
-                'church_id' => $user->church_id,
-                'church_branch_id' => $user->church_branch_id,
-                'journal_entry_id' => $journalEntry->id,
-                'account_id' => $cashAccountFrom->id,
-                'debit' => 0,
-                'credit' => $amount,
-                'is_deleted' => false,
-                'is_approved' => false,
-                'user_id' => auth()->id(),
-            ]);
-
-            $description = "User ". $user->id . " conducted an contra entry: ". $journalEntry->id;
-            $action = "Contra Entry";
-
-            $log = Log::create([
-                'user_id' => $user->id,
-                'church_id' => $user->church_id,
-                'church_branch_id' => $user->church_branch_id,
-                'action' => $action,
-                'description' => $description,
-            ]);
-
-        });
-
-        return redirect()->back()->with('success', 'Contra Entry recorded successfully.');
-
-    }
-
 
     public function Entry(Request $request)
     {
@@ -259,7 +193,7 @@ class FinanceController extends Controller
 
         });
 
-        return redirect()->route('finance.index')->with('success', 'Finanncial transaction recorded successfully.');
+        return redirect()->route('finance.index')->with('success', 'Financial transaction recorded successfully.');
 
     }
 
@@ -305,6 +239,6 @@ class FinanceController extends Controller
             'description' => $description,
         ]);
 
-        return redirect()->route('finance.index')->with('success', 'Journal Entry deleted successfully.');
+        return redirect()->route('transactions.index')->with('success', 'Journal Entry deleted successfully.');
     }
 }

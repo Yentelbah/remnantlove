@@ -27,7 +27,8 @@
         <div class="p-4 card-body">
           <div class="gap-3 d-flex align-items-center justify-content-between">
             <div class="gap-3 d-flex align-items-center">
-              <img src="../assets/images/profile/user-1.jpg" width="45" height="45" class="img-fluid rounded-circle" alt="spike-img" />
+              <img src="{{ Auth()->user()->profile_photo_path == '' ?  '../assets/images/profile/user-1.jpg' : asset('storage/' .Auth()->user()->profile_photo_path) }}" alt="user"class="img-fluid rounded-circle preview" width="45">
+
               <div>
                 <h5 class="mb-1">{{ Auth()->user()->name }}</h5>
                 <p class="mb-0">{{ Auth()->user()->role }}</p>

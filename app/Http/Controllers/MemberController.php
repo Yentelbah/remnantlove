@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\MembersExport;
+use App\Models\Church;
 use App\Models\GroupLeader;
 use App\Models\GroupMember;
 use App\Models\Log;
@@ -123,6 +124,18 @@ class MemberController extends Controller
         return redirect()->route('member.index')->with('success', 'Member created successfully.');
     }
 
+    // public function view(Request $request, $id)
+    // {
+    //     $user = Auth()->user();
+    //     $member = Member::find($id);
+
+    //     $groups = GroupMember::where('member_id', $id)->count();
+    //     $groupDetails = GroupMember::with('group')->where('member_id', $id)->get();
+
+    //     return view('member.member_details', compact('member', 'groups', 'groupDetails'));
+    // }
+
+
     public function details($id)
     {
         $result = Member::find($id);
@@ -239,5 +252,20 @@ class MemberController extends Controller
         return view('member.member_details', compact('member', 'groups', 'groupDetails'));
     }
 
+    public function uploadImage(Request $request)
+    {
+        $path = 'files/';
+        if (!File::exists(public_path($path))) {
+             File::makeDirectory(public_path($path),0777,true);
+        }
+        $file = $request->file('file');
+        $new_image_name = 'UIMG'.date('Ymd').uniqid().'.jpg';
+        $upload = $file->move(public_path($path), $new_image_name);
+        if($upload){
+            return response()->json(['status'=>1, 'msg'=>'Image has been cropped successfully.', 'name'=>$new_image_name]);
+        }else{
+              return response()->json(['status'=>0, 'msg'=>'Something went wrong, try again later']);
+        }
+    }
 
 }

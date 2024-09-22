@@ -286,6 +286,21 @@ class UserController extends Controller
 
     }
 
+    public function Logs(Request $request)
+    {
+        $user = Auth::user();
+        $role = $user->churchRole->name;;
+
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $logs = Log::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->get();
+
+        $totalLogs = $logs->count();
+
+        return view('users.logs', compact('totalLogs', 'logs'));
+    }
+
     // public function userRestore(Request $request)
     // {
     //     $user = Auth()->user();
@@ -340,7 +355,7 @@ class UserController extends Controller
         // Upload the new logo
         if ($request->hasFile('logo')) {
 
-            $churchFolderPath = "companies/{$church->churchId}/profile_pics";
+            $churchFolderPath = "churches/{$church->churchID}/profile_pics";
             $imagePath = $request->file('logo')->store("public/{$churchFolderPath}");
             $profile->profile_pic = str_replace('public/', '', $imagePath);
             $profile->save();

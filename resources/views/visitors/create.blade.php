@@ -47,6 +47,18 @@
                     </div>
 
                     <div class="mb-3 form-group">
+                        <label for="gender">Gender</label>
+                        <select class="form-control @error('gender') is-invalid @enderror" id="gender" name="gender">
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                        @error('gender')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3 form-group">
                         <label class="form-label" for="phone">Phone</label>
                         <input class="form-control  @error('phone') is-invalid @enderror" name="phone" id="le_phone">
                         @error('phone')

@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\AcademicYear;
+use App\Models\Account;
 use App\Models\Expense;
+use App\Models\JournalEntry;
+use App\Models\LedgerEntry;
 use App\Models\Log;
 use App\Models\Term;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ExpenseController extends Controller
@@ -21,79 +25,75 @@ class ExpenseController extends Controller
 
     public function expenseIndex(Request $request)
     {
+        $user = Auth()->user();
+
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-        $termId = $request->input('term_id');
-        $academicYearId = $request->input('academic_year_id');
 
-        $schoolId=Auth()->user()->school_id;
-        $role=Auth()->user()->role;
-
-        $academicYears=AcademicYear::where('school_id', $schoolId)->orderBy('name', 'asc')->get();
-        $terms=Term::where('school_id', $schoolId)->orderBy('name', 'asc')->get();
-
-        if ($role == "Cashier")
+        if ($user->church_role == 3)
         {
-            $userId = Auth()->user()->id;
-
-            $expensesQuery = Expense::where('school_id', $schoolId)->where('user_id', $userId )->orderBy('created_at', 'desc');
+            $journalEntry = JournalEntry::where('is_deleted', false)
+            ->where('church_id', $user->church_id)
+            ->where('church_branch_id', $user->church_branch_id)
+            ->where('type', 'expense')
+            ->with('ledgerEntries')
+            ->orderBy('created_at', 'desc')->get();
 
             // Apply filters if provided
             if ($startDate && $endDate) {
-                $expensesQuery->whereBetween('payment_date', [$startDate, $endDate]);
+                $journalEntry->whereBetween('date', [$startDate, $endDate]);
             }
-
-            if ($termId) {
-                $expensesQuery->where('term_id', $termId);
-            }
-
-            if ($academicYearId) {
-                $expensesQuery->where('academic_year_id', $academicYearId);
-            }
-
-            // Now paginate the filtered expenses
-            $expenses = $expensesQuery->paginate(50);
 
         }else{
 
+            $journalEntry = JournalEntry::with('ledgerEntries')->where('is_deleted', false)
+            ->where('church_id', $user->church_id)
+            ->where('church_branch_id', $user->church_branch_id)
+            ->where('type', 'expense')
+            ->orderBy('created_at', 'desc')->get();
 
-        $expensesQuery = Expense::where('school_id', $schoolId)->orderBy('created_at', 'desc');
 
             // Apply filters if provided
             if ($startDate && $endDate) {
-                $expensesQuery->whereBetween('payment_date', [$startDate, $endDate]);
+                $journalEntry->whereBetween('payment_date', [$startDate, $endDate]);
             }
 
-            if ($termId) {
-                $expensesQuery->where('term_id', $termId);
-            }
-
-            if ($academicYearId) {
-                $expensesQuery->where('academic_year_id', $academicYearId);
-            }
-
-            // Now paginate the filtered expenses
-            $expenses = $expensesQuery->paginate(50);
         }
 
-        return view('accounts.expenses.index', compact('expenses', 'startDate', 'endDate', 'termId', 'academicYearId', 'terms', 'academicYears','role'));
+        $expenseAccounts = Account::where('church_id', $user->church_id)
+        ->where('church_branch_id', $user->church_branch_id)
+        ->where('type', 'Expense')
+        ->select('id', 'name', 'type')
+        ->get();
+
+        $assetAccounts = Account::where('church_id', $user->church_id)
+                ->where('church_branch_id', $user->church_branch_id)
+                ->where('type', 'Asset')
+                ->select('id', 'name', 'type')
+                ->get();
+
+        $revenueAccounts = Account::where('church_id', $user->church_id)
+                ->where('church_branch_id', $user->church_branch_id)
+                ->where('type', 'Revenue')
+                ->select('id', 'name', 'type')
+                ->get();
+
+        return view('finance.expenses.index', compact('journalEntry', 'startDate', 'endDate','expenseAccounts', 'assetAccounts','revenueAccounts'));
     }
 
     public function expenseStore(Request $request)
     {
+
+        $user = Auth()->user();
+
+        // dd($request);
         $validator = Validator::make($request->all(), [
             'amount' => 'required',
-            'payment_date' => 'required',
-            'term_id' => 'required',
-            'academic_year_id' => 'required',
-            'category' => 'required|in:1, 2, 3',
+            'entry_date' => 'required',
             'description' => 'required',
         ], [
             'amount.required' => 'State the expense amount',
-            'payment_date.required' => 'State the expense date',
-            'term_id.required' => 'Term is required',
-            'academic_year_id.required' => 'Year is required',
-            'category.required' => 'Select an apporpirate category',
+            'entry_date.required' => 'State the expense date',
             'description.required' => 'Description is required',
         ]);
 
@@ -104,34 +104,80 @@ class ExpenseController extends Controller
             ->with('error', 'Check your inputs.');
         }
 
-        $input = $request->all();
+        $amount = $request->amount;
+        $debit_account = $request->rec_account_id;
+        $credit_account = $request->account_id;
 
-        $expense = Expense::create($input);
+        $entry_date = $request->entry_date;
+        $description = $request->description;
 
-            //LOG
-            $user = Auth::user()->id;
-            $staff_no = User::where('id', $user)->value('staff_number');
-            $description = "User ". $staff_no . " created a expense ". $expense->id;
-            $action = "Create";
+        //JOURNAL ENTRY
+
+        DB::transaction(function() use ($user, $amount, $debit_account, $credit_account, $entry_date, $description, $request) {
+
+            $journalEntry = JournalEntry::create([
+                'church_id' => $user->church_id,
+                'church_branch_id' => $user->church_branch_id,
+                'entry_date' => $entry_date,
+                'description' => $description,
+                'amount' => $amount,
+                'is_deleted' => false,
+                'is_approved' => false,
+                'user_id' => auth()->id(),
+            ]);
+
+            // Debit accuonts
+            LedgerEntry::create([
+                'church_id' => $user->church_id,
+                'church_branch_id' => $user->church_branch_id,
+                'journal_entry_id' => $journalEntry->id,
+                'account_id' => $debit_account,
+                'debit' => $amount,
+                'credit' => 0,
+                'is_deleted' => false,
+                'is_approved' => false,
+                'user_id' => auth()->id(),
+            ]);
+
+            // Credit cccount
+            LedgerEntry::create([
+                'church_id' => $user->church_id,
+                'church_branch_id' => $user->church_branch_id,
+                'journal_entry_id' => $journalEntry->id,
+                'account_id' => $credit_account,
+                'debit' => 0,
+                'credit' => $amount,
+                'is_deleted' => false,
+                'is_approved' => false,
+                'user_id' => auth()->id(),
+            ]);
+
+            $description = "User ". $user->id . " recored a transaction. Journal entry: ". $journalEntry->id;
+            $action = "Contra Entry";
 
             $log = Log::create([
-                'school_id'=> $request->school_id,
-                'user_id' => $user,
+                'user_id' => $user->id,
+                'church_id' => $user->church_id,
+                'church_branch_id' => $user->church_branch_id,
                 'action' => $action,
                 'description' => $description,
             ]);
 
+            $input = $request->all();
+            $input['date'] = $request->entry_date;
+            $input['expense_account'] = $request->rec_account_id;
+            $input['paid_through'] = $request->account_id;
+            $input['journal_id'] = $journalEntry->id;
+            $input['church_id'] = $user->church_id;
+            $input['church_branch_id'] = $user->church_branch_id;
 
-        return redirect()->route('expense.index')->with('success', 'Expense added successfully.');
+            // $expense = Expense::create($input);
+
+        });
+
+
+        return redirect()->route('expense.index')->with('success', 'Expense recorded successfully.');
     }
-
-    public function getExpenseDetails($expenseId)
-    {
-        $expense = Expense::find($expenseId);
-        return response()->json($expense);
-    }
-
-
 
     public function expenseUpdate (Request $request)
     {
@@ -183,28 +229,6 @@ class ExpenseController extends Controller
 
         return redirect()->route('expense.index')->with('success', 'Expense updated successfully.');
 
-    }
-
-    public function expenseDelete(Request $request)
-    {
-        $expense_id = $request->input('selectedExpenseId');
-        $expense = Expense::find($expense_id);
-        $expense->delete();
-
-        $user = Auth::user()->id;
-        $staff_no = User::where('id', $user)->value('staff_number');
-        $description = "User ". $staff_no . " deleted expense " .$expense->expense_number;
-        $action = "Delete";
-
-        $log = Log::create([
-            'school_id'=> $request->school_id,
-            'user_id' => $user,
-            'action' => $action,
-            'description' => $description,
-        ]);
-
-
-        return redirect()->route('expense.index')->with('success', 'Expense deleted successfully.');
     }
 
 }

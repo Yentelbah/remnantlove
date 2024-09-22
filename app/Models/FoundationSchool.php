@@ -59,8 +59,15 @@ class FoundationSchool extends Model
     }
 
     // Relationship with Modules
-    public function modules()
+    public function foundationSchoolModules()
     {
-        return $this->belongsToMany(FoundationSchoolModule::class)->withPivot('completed_at');
+        return $this->hasMany(FoundationSchoolModule::class, 'foundation_school_id');
+    }
+
+    public function foundation_modules()
+    {
+        return $this->belongsToMany(FoundationModule::class)
+                    ->withPivot('status', 'completed_at')
+                    ->withTimestamps();
     }
 }

@@ -1,4 +1,28 @@
-        <div class="">
+@extends('layouts.flow')
+
+@section('title')
+    <title>FaithFlow -- Church User Roles</title>
+@endsection
+
+@section('content')
+<div class="mb-3 overflow-hidden position-relative">
+    <div class="px-3 d-sm-flex align-items-center justify-content-between">
+      <h4 class="mb-0 fs-6">Church User Roles</h4>
+      <nav aria-label="breadcrumb">
+        <ol class="mb-0 breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{{ route('dashboard') }}">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="{{ route('user.index') }}">User Accounts</a>
+          </li>
+          <li class="breadcrumb-item" aria-current="page">Church User Roles</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="card card-body">
             <div class="mb-4 d-flex justify-content-between align-items-center">
                 <h4>Role Roles & Permissions</h4>
 
@@ -70,6 +94,9 @@
             @include('roles.restore')
             @include('roles.delete')
 
+@endsection
+
+@section('scripts')
     <script>
         function openRoleEditModal(roleId) {
             $.ajax({
@@ -133,3 +160,4 @@
         }
     </script>
 
+@endsection
