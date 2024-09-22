@@ -22,7 +22,7 @@
     </div>
 
     <div class="overflow-hidden position-relative rounded-3">
-      <img src="../assets/images/backgrounds/profilebg-2.jpg" alt="spike-img" class="w-100">
+      <img src="../assets/images/backgrounds/profilebg.jpg" alt="spike-img" class="w-100">
     </div>
 
     <div class="card mx-9 mt-n5">
