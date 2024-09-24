@@ -69,7 +69,7 @@
                                     </form>
                                 </li> --}}
                                 <li>
-                                    <a href="{{ route('foundation-school.profile', $value->id) }}" class="dropdown-item" value="{{ $value->id }}">View 2</a>
+                                    <a href="{{ route('foundation-school.profile', $value->id) }}" class="dropdown-item" value="{{ $value->id }}">View</a>
                                 </li>
                                 <li>
                                     <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" id="#modalCenter" onclick="openDeleteModal('{{ $value->id }}')">Delete</a>

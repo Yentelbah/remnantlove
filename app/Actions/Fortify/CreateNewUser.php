@@ -47,6 +47,8 @@ class CreateNewUser implements CreatesNewUsers
         $branch = ChurchBranch::create([
             'name' => 'Main',
             'church_id' => $church->id,
+            'name' => $input['church'],
+            'phone' => $input['phone'],
             'Status' => 'main',
         ]);
 

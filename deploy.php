@@ -26,6 +26,7 @@ host('production')
         // 'deploy:unlock',
         'deploy:prepare',
         'deploy:vendors',
+        'artisan:storage:unlink',
         'artisan:storage:link',
         'artisan:view:cache',
         'artisan:config:cache',
