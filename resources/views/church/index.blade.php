@@ -51,7 +51,7 @@
       </div>
     </div>
 
-    @include('church.uploadimage')
+    @include('church.uploadImage')
     @include('church.edit')
 
     <div class="card">

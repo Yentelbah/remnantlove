@@ -53,7 +53,7 @@
           </div>
         </div>
 
-        @include('foundation.uploadimage')
+        @include('foundation.uploadImage')
 
       </div>
     </div>

@@ -55,7 +55,7 @@
         </div>
       </div>
       @include('member.edit')
-      @include('member.uploadimage')
+      @include('member.loadimage')
       @include('member.delete')
 
     <div class="">

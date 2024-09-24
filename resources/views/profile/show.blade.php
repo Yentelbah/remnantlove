@@ -53,7 +53,7 @@
       </div>
     </div>
   </div>
-  @include('users.uploadimage')
+  @include('users.uploadImage')
 
   <div class="mx-10 tab-content" id="pills-tabContent">
     <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
