@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('follow_up_status')->nullable();
             $table->text('notes')->nullable();
             $table->uuid('member_id')->unique()->nullable();
-            $table->uuid('shepherd')->nullable();
             $table->timestamps();
         });
     }
