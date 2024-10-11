@@ -63,8 +63,8 @@
                     <th>#</th>
                     <th>Date</th>
                     <th>Description</th>
-                    <th>Expense Account</th>
-                    <th>Paid Through</th>
+                    {{-- <th>Expense Account</th>
+                    <th>Paid Through</th> --}}
                     <th>Reference</th>
                     <th>Amount</th>
                     <th style="text-align: center">Actions</th>
@@ -74,20 +74,20 @@
                     $i = 1;
                     @endphp
 
-                @forelse($journalEntry as $entry)
+                @foreach($journalEntry as $entry)
 
                     <tr>
 
                         <td scope="row">{{ $i++ }}</td>
                         <td>{{ \Carbon\Carbon::parse($entry->entry_date)->format('d/m/y') }}</td>
                         <td>{{ $entry->description }}</td>
-                        @foreach($entry->ledgerEntries as $ledgerEntry)
+                        {{-- @foreach($entry->ledgerEntries as $ledgerEntry)
                         <td>{{ $ledgerEntry->account->name }}</td>
-                        @endforeach
+                        @endforeach --}}
                         <td>{{ $entry->paid_through }}</td>
                         <td>{{ $entry->amount }}</td>
 
-                        <td>
+                        <td class="text-center">
                             <div class="dropdown">
                                 <button id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" class="px-1 shadow-none rounded-circle btn-transparent btn-sm btn">
                                   <i class="ti ti-dots-vertical fs-4 d-block"></i>
@@ -95,7 +95,7 @@
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
 
                                     <li>
-                                        <a class="gap-3 dropdown-item d-flex align-items-center" href="{{ route('financeShowDetails',['journalID' => $entry->id]) }}">
+                                        <a class="gap-3 dropdown-item d-flex align-items-center" href="{{ route('expenseShowDetails',['journalID' => $entry->id]) }}">
                                             <i class="fs-4 ti ti-eye"></i>View
                                         </a>
                                     </li>
@@ -103,9 +103,9 @@
                                   <li>
                                         <a class="gap-3 dropdown-item d-flex align-items-center" href="javascript:void(0)" class="dropdown-item" value="{{ $entry->id }}" data-bs-toggle="modal" data-bs-target="#editModal" onclick="openEditModal('{{ $entry->id }}')"><i class="fs-4 ti ti-edit"></i>Edit</a>
                                   </li>
-                                  <li>
+                                  {{-- <li>
                                         <a class="gap-3 dropdown-item d-flex align-items-center" href="javascript:void(0)" class="dropdown-item" value="{{ $entry->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="openDeleteModal('{{ $entry->id }}')"><i class="fs-4 ti ti-trash"></i>Delete</a>
-                                  </li>
+                                  </li> --}}
 
                                 </ul>
                               </div>
@@ -114,11 +114,7 @@
 
 
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="9">No expenses recorded.</td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
 
                 </table>
@@ -129,6 +125,7 @@
 
 
         @include('finance.expenses.create')
+        @include('finance.expenses.edit')
 
     </div>
 
@@ -140,21 +137,43 @@
         $('#table').DataTable(); // ID From dataTable with Hover
         });
     </script>
+
     <script>
-        function openEditModal(expenseId) {
+        function openEditModal(id) {
             $.ajax({
-                url: '/expense/' + expenseId + '/details', // Replace with the appropriate route for fetching expense details
+                url: '/expense/' + id + '/details',
                 type: 'GET',
                 success: function(response) {
-                    // Update the modal content with the fetched expense details
-                    $('#ed_date').val(response.date);
-                    $('#ed_rec_account_id').val(response.expense_account);
-                    $('#ed_account_id').val(response.paid_through);
+                    // Assuming ledgerEntries has debit and credit entries
+                    let debitEntry = null;
+                    let creditEntry = null;
+
+                    // Loop through the ledger entries to find debit and credit
+                    response.ledger_entries.forEach(function(entry) {
+                        if (entry.debit === response.amount) {
+                            debitEntry = entry;
+                        }
+                        if (entry.credit === response.amount) {
+                            creditEntry = entry;
+                        }
+                    });
+
+                    // Populate modal fields with the response data
+                    $('#ed_date').val(response.entry_date);
                     $('#ed_reference').val(response.reference);
                     $('#ed_description').val(response.description);
                     $('#ed_amount').val(response.amount);
                     $('#selectedExpenseId').val(response.id);
 
+                    // Set the debit account to ed_rec_account_id (Expense Account)
+                    if (debitEntry) {
+                        $('#ed_rec_account_id').val(debitEntry.account_id);
+                    }
+
+                    // Set the credit account to ed_account_id (Paid Through)
+                    if (creditEntry) {
+                        $('#ed_account_id').val(creditEntry.account_id);
+                    }
                 },
                 error: function(xhr) {
                     // Handle error case
@@ -164,50 +183,5 @@
         }
     </script>
 
-
-    <script>
-        function openDeleteModal(expenseId) {
-            $.ajax({
-                url: '/expense/' + expenseId + '/details', // Replace with the appropriate route for fetching expense details
-                type: 'GET',
-                success: function(response) {
-                    // Update the modal content with the fetched expense details
-
-                    $('#del_name').text(response.description);
-
-                    $('#del_selectedExpenseId').val(response.id);
-
-                    // Set the selected category without clearing existing options
-                    var selectCategory = $('#select_category');
-                    selectCategory.val(response.category_id);
-                },
-                error: function(xhr) {
-                    // Handle error case
-                    console.log(xhr);
-                }
-            });
-        }
-    </script>
-
-    <script>
-        function openRestoreModal(expense) {
-            $.ajax({
-                url: '/expense/' + expense + '/details', // Replace with the appropriate route for fetching expense details
-                type: 'GET',
-                success: function(response) {
-                    // Update the modal content with the fetched expense details
-
-                    $('#res_name').text(response.name);
-
-                    $('#res_selectedExpenseId').val(response.id);
-
-                },
-                error: function(xhr) {
-                    // Handle error case
-                    console.log(xhr);
-                }
-            });
-        }
-    </script>
 
 @endsection

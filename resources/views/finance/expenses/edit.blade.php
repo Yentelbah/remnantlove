@@ -23,7 +23,7 @@
                         <select class="form-select" name="rec_account_id" id="ed_rec_account_id" aria-label="Default select example">
                             <option>Select an account</option>
                             @foreach($expenseAccounts as $account)
-                                <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
+                                <option value="{{ $account->id }}">{{ $account->name }}</option>
                             @endforeach
                         </select>
                         @error('rec_account_id')
@@ -32,7 +32,6 @@
                         </span>
                         @enderror
                     </div>
-
 
                     <div class="mb-3">
                         <label for="account_type" class="form-label">Amount</label>
@@ -50,7 +49,7 @@
                         <select class="form-select" name="account_id" id="ed_account_id" aria-label="Default select example">
                             <option>Select an account</option>
                             @foreach($assetAccounts as $account)
-                                <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
+                                <option value="{{ $account->id }}">{{ $account->name }}</option>
                             @endforeach
                         </select>
                         @error('account_id')
@@ -60,6 +59,7 @@
                         @enderror
                     </div>
 
+
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
                         <textarea class="form-control" name="description" id="ed_description" required></textarea>
@@ -68,8 +68,8 @@
 
                     <div class="col-12">
                         <div class="gap-6 d-flex align-items-center justify-content-end">
-                        <a href="{{ route('finance.index') }}" class="btn bg-danger-subtle text-danger">Cancel</a>
-                        <button class="btn btn-primary">Update</button>
+                            <a class="btn bg-danger-subtle text-danger" class="btn-close" data-bs-dismiss="modal" >Cancel</a>
+                            <button class="btn btn-primary">Update</button>
                         </div>
                     </div>
                 </form>

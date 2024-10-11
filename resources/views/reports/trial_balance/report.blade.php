@@ -46,7 +46,7 @@
 
 
                                 <div class="">
-                                    <h3>{{ $church->name }} - {{ $branch->name }}</h3>
+                                    <h3>{{ $church->name }}</h3>
                                     <p class="ms-1">{{ $church->address }}, {{ $church->city }}, {{ $church->region }}, {{ $church->country }}. <br>
                                     {{ $church->phone }}, {{ $church->email }}, {{ $church->website }}</p>
 

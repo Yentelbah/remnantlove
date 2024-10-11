@@ -1,12 +1,11 @@
 <div id="deleteModal" class="modal fade" tabindex="-1" aria-labelledby="danger-header-modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered ">
       <div class="modal-content">
-        <div class="text-white modal-header modal-colored-header bg-danger">
-          <h4 class="text-white modal-title" id="danger-header-modalLabel"></h4>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <h5 class="mb-4">Delete Confirmation</h5>
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalCenterTitle">Delete Confirmation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
 
           <form action="{{ route('family.delete') }}" method="POST">
             @csrf

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
-            $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
+            $table->uuid('church_branch_id')->nullable();
             $table->boolean('sms_notification')->default(false);
             $table->boolean('pay_notification')->default(false);
             $table->timestamps();

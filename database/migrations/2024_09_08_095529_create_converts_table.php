@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('converts', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
-            $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
+            $table->uuid('church_branch_id')->nullable();
             $table->string('name');
             $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->string('phone');
@@ -22,10 +22,11 @@ return new class extends Migration
             $table->string('location');
             $table->enum('status', ['Joined ', 'Pending', 'Not Interested'])->default('Pending');
             $table->date('joined_at')->nullable();
-            $table->uuid('evangelism_id')->unique()->nullable();
+            $table->uuid('evangelism_id')->nullable();
             $table->string('follow_up_status')->nullable();
             $table->text('notes')->nullable();
             $table->uuid('member_id')->unique()->nullable();
+            $table->uuid('shepherd')->nullable();
             $table->timestamps();
         });
     }

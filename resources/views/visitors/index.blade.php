@@ -108,6 +108,7 @@
                     $('#ed_date_visited').val(response.date_visited);
                     $('#ed_gender').val(response.gender);
                     $('#ed_phone').val(response.phone);
+                    $('#ed_email').val(response.email);
                     $('#ed_location').val(response.location);
                     $('#selectedId').val(response.id);
                 },

@@ -35,8 +35,9 @@
                 <!-- Input fields -->
                 <div class="order-2 col-lg-8 col-12 order-lg-1">
 
+                    <div class="row">
 
-                    <div class="mb-3 form-group">
+                    <div class="mb-3 col-lg-6">
                         <label class="form-label" for="name">Name</label>
                         <input class="form-control  @error('title') is-invalid @enderror" name="name" id="le_name">
                         @error('name')
@@ -46,8 +47,8 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3 form-group">
-                        <label for="gender">Gender</label>
+                    <div class="mb-3 col-lg-6">
+                        <label class="form-label" for="gender">Gender</label>
                         <select class="form-control @error('gender') is-invalid @enderror" id="gender" name="gender">
                             <option value="">Select gender</option>
                             <option value="Male">Male</option>
@@ -58,34 +59,44 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3 form-group">
-                        <label class="form-label" for="phone">Phone</label>
-                        <input class="form-control  @error('phone') is-invalid @enderror" name="phone" id="le_phone">
-                        @error('phone')
-                        <small class="invalid-feedback" role="alert">
-                          {{ $message }}
-                        </small>
-                        @enderror
-                    </div>
+                        <div class="mb-3 col-lg-6">
+                            <label class="form-label" for="phone">Phone</label>
+                            <input class="form-control  @error('phone') is-invalid @enderror" name="phone" id="le_phone">
+                            @error('phone')
+                            <small class="invalid-feedback" role="alert">
+                              {{ $message }}
+                            </small>
+                            @enderror
+                        </div>
 
-                    <div class="mb-3 form-group">
-                        <label class="form-label" for="date_visited">Date Visited</label>
-                        <input type="date" name="date_visited" class="form-control  @error('name') is-invalid @enderror" id="date_visited">
-                        @error('date_visited')
-                        <small class="invalid-feedback" role="alert">
-                        {{ $message }}
-                        </small>
-                        @enderror
-                    </div>
+                        <div class="mb-3 col-lg-6">
+                            <label class="form-label" for="email">Email</label>
+                            <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="">
+                            @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-                    <div class="mb-3 form-group">
-                        <label class="form-label" for="location">Location</label>
-                        <input class="form-control  @error('location') is-invalid @enderror" name="location" id="le_location">
-                        @error('location')
-                        <small class="invalid-feedback" role="alert">
-                          {{ $message }}
-                        </small>
-                        @enderror
+
+                        <div class="mb-3 col-lg-6">
+                            <label class="form-label" for="date_visited">Date Visited</label>
+                            <input type="date" name="date_visited" class="form-control  @error('name') is-invalid @enderror" id="date_visited">
+                            @error('date_visited')
+                            <small class="invalid-feedback" role="alert">
+                            {{ $message }}
+                            </small>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3 col-lg-6">
+                            <label class="form-label" for="location">Location</label>
+                            <input class="form-control  @error('location') is-invalid @enderror" name="location" id="le_location">
+                            @error('location')
+                            <small class="invalid-feedback" role="alert">
+                            {{ $message }}
+                            </small>
+                            @enderror
+                        </div>
                     </div>
 
 

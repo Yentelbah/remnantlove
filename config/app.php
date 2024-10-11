@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\NavBarServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -170,6 +171,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
+        App\Providers\NavBarServiceProvider::class,
     ])->toArray(),
 
     /*

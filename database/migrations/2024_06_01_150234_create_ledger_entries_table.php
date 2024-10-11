@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ledger_entries', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
-            $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
+            $table->uuid('church_branch_id')->nullable();
             $table->foreignUuid('journal_entry_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('account_id')->constrained()->onDelete('cascade');
             $table->decimal('debit', 15, 2)->default(0);

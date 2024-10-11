@@ -7,11 +7,12 @@
 @section('content')
 
 <div class="row">
-    <div class="col-lg-12 col-xl-6">
+    <div class="col-lg-12 col-xl-12">
       <div class="card">
         <div class="card-body position-relative">
           <div>
-            <h3 class="mb-3 card-title ">{{ $greeting[0] }} {{ Auth()->user()->name }},</h3>
+            <h3 class="mb-3 card-title ">{{ $greeting[0] }},</h3>
+            <h3 class="mb-3 card-title ">{{ Auth()->user()->name }},</h3>
             <p class="pb-0 mb-0 card-subtitle fs-3 col-lg-7 col-md-7 col-sm-7">{{ $greeting[1] }}</p>
           </div>
           <div class="school-img d-none d-sm-block">
@@ -24,7 +25,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-12 col-xl-6">
+    {{-- <div class="col-lg-12 col-xl-6">
       <div class="row">
         @foreach ($financeStats as $groupName => $balance)
         <div class="col-sm-4">
@@ -43,7 +44,7 @@
         @endforeach
 
 
-        {{-- <div class="col-sm-4">
+        <div class="col-sm-4">
           <div class="overflow-hidden card danger-card text-bg-primary">
             <div class="p-4 card-body">
               <div class="mb-7">
@@ -69,9 +70,9 @@
               <p class="mb-0 opacity-50">Earnings</p>
             </div>
           </div>
-        </div> --}}
+        </div>
       </div>
-    </div>
+    </div> --}}
 
 
     {{-- MEMBERSHIP --}}
@@ -241,10 +242,10 @@
               </button>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                 <li>
-                  <a class="dropdown-item" href="{{ route('finance.index') }}">Financial Records</a>
+                  <a class="dropdown-item" href="{{ route('finance.index') }}">More Details</a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="{{ route('finance.entry') }}">Record Transactions</a>
+                  <a class="dropdown-item" href="{{ route('report.index') }}">Generat Reports</a>
                 </li>
               </ul>
             </div>
@@ -432,6 +433,65 @@
         </div>
       </div>
     </div>
+
+        {{-- Reminders  --}}
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+
+                <div class="">
+                    <h4 class="mb-0 card-title">Reminders</h4>
+
+                    <div class="table-responsive">
+                        <table class="table mb-1 align-middle table-borderless text-nowrap">
+                          <thead>
+                            <tr>
+                                <th>Member Name</th>
+                                <th>Birthday</th>                            </tr>
+                          </thead>
+                          <tbody>
+                            @forelse ($birthdayCelebrants as $item)
+                            <tr>
+                                <td>{{ $item->name }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->dob)->format('l, j') }}</td>
+                            </tr>
+                            @empty
+                                <tr>
+                                    <td><p>No visitors recorded</p></td>
+                                </tr>
+                            @endforelse
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {{-- Tasks --}}
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0 card-title">Pending tasks</h4>
+                    <div class="dropdown">
+                    <button id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" class="px-1 shadow-none rounded-circle btn-transparent btn-sm btn">
+                        <i class="ti ti-dots-vertical fs-7 d-block"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                        <li>
+                        <a class="dropdown-item" href="{{ route('tasks.index') }}">View all</a>
+                        </li>
+                    </ul>
+                    </div>
+                </div>
+
+            </div>
+            </div>
+        </div>
 
 </div>
 

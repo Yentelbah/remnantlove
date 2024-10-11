@@ -124,17 +124,6 @@ class MemberController extends Controller
         return redirect()->route('member.index')->with('success', 'Member created successfully.');
     }
 
-    // public function view(Request $request, $id)
-    // {
-    //     $user = Auth()->user();
-    //     $member = Member::find($id);
-
-    //     $groups = GroupMember::where('member_id', $id)->count();
-    //     $groupDetails = GroupMember::with('group')->where('member_id', $id)->get();
-
-    //     return view('member.member_details', compact('member', 'groups', 'groupDetails'));
-    // }
-
 
     public function details($id)
     {

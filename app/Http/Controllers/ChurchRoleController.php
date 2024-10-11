@@ -25,9 +25,6 @@ class ChurchRoleController extends Controller
         $defaultRoles = Role::whereNotIn('id', [1,2])->orderBy('name', 'asc')->get();
         $churchRoles = ChurchRole::where('church_id', $user->church_id)->get();
         return view('roles.index', compact('role',  'defaultRoles', 'churchRoles'));
-
-        return view ('users.index', compact('users', 'roles'));
-
     }
 
     public function roleStore(Request $request)
@@ -73,7 +70,7 @@ class ChurchRoleController extends Controller
             ]);
 
         $anchor = $request->input('pane') ?? 'roles';
-        return redirect()->route('preference.index', '#'.$anchor)->with('success', 'Role created successfully.');
+        return redirect()->route('role.index')->with('success', 'Role created successfully.');
     }
 
     public function getDetails($roleId)
@@ -115,7 +112,7 @@ class ChurchRoleController extends Controller
 
 
         $anchor = $request->input('pane') ?? 'roles';
-        return redirect()->route('preference.index', '#'.$anchor)->with('success', 'Role updated successfully.');
+        return redirect()->route('role.index')->with('success', 'Role updated successfully.');
     }
 
     public function roleDelete(Request $request)
@@ -138,7 +135,7 @@ class ChurchRoleController extends Controller
         ]);
 
         $anchor = $request->input('pane') ?? 'roles';
-        return redirect()->route('preference.index', '#'.$anchor)->with('success', 'Role deleted successfully.');
+        return redirect()->route('role.index')->with('success', 'Role deleted successfully.');
 
     }
 

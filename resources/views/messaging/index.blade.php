@@ -56,11 +56,17 @@
                     <p class="card-subtitle">Credits Balance</p>
                     </div>
                     <div class="ms-auto">
+                        @if(Auth()->user()->churchRole->role->name == 'Church_admin' || Auth()->user()->churchRole->role->name == 'Branch_admin' || Auth()->user()->churchRole->role->name == 'Accountant')
+
+
                     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#purchaseModal" href="javascript:void(0)"><i class='bx bx-scan me-1'></i>Top Up</a>
+                        @endif
                     </div>
                 </div>
                 </div>
             </div>
+
+
 
             <div class="card">
                 <div class="card-body">
@@ -70,7 +76,10 @@
                     <p class="card-subtitle">Enter code</p>
                     </div>
                     <div class="ms-auto">
+                        @if(Auth()->user()->churchRole->role->name == 'Church_admin' || Auth()->user()->churchRole->role->name == 'Branch_admin' || Auth()->user()->churchRole->role->name == 'Accountant')
+
                     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" href="javascript:void(0)"><i class='bx bx-scan me-1'></i>Top Up</a>
+                    @endif
                     </div>
                 </div>
                 </div>
@@ -84,7 +93,10 @@
                     <p class="card-subtitle">SenderID</p>
                 </div>
                 <div class="ms-auto">
+                    @if(Auth()->user()->churchRole->role->name == 'Church_admin' || Auth()->user()->churchRole->role->name == 'Branch_admin' )
+
                     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#senderIdModal" href="javascript:void(0)"><i class='bx bx-scan me-1'></i>Udpdate</a>
+                    @endif
                 </div>
                 </div>
             </div>
@@ -98,15 +110,8 @@
                 <div class="d-md-flex align-items-center">
                 <div>
                     <h4 class="card-title">Recently Sent Messages</h4>
-                    {{-- <p class="card-subtitle"></p> --}}
                 </div>
-                {{-- <div class="mt-3 ms-auto mt-md-0">
-                    <select class="border-0 form-select theme-select" aria-label="Default select example">
-                    <option value="1">March 2024</option>
-                    <option value="2">March 2024</option>
-                    <option value="3">March 2024</option>
-                    </select>
-                </div> --}}
+
                 </div>
                 <div class="mt-1 table-responsive">
                     <table class="table align-middle search-table text-nowrap" id="multi_col_order">

@@ -231,7 +231,7 @@ class CreditsController extends Controller
         }
 
         $senderId = $request->sender_id;
-        $purpose = 'For business transactions';
+        $purpose = 'For reaching church members, visitors and others';
         $account = CreditsAccount::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->first();
 
         $oldSenderID = SenderID::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->where('name', 'LIKE', "%$senderId%")->first();
@@ -242,6 +242,7 @@ class CreditsController extends Controller
                 'church_id' => $user->church_id,
                 'church_branch_id' => $user->church_branch_id,
                 'name' => $senderId,
+                'purpose' => $purpose,
             ]);
 
             $account->senderID = $senderId;

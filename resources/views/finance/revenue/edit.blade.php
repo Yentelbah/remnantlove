@@ -8,7 +8,7 @@
 
             <div class="modal-body">
 
-                <form action="{{ route('expense.update') }}" method="POST">
+                <form action="{{ route('revenue.update') }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -19,10 +19,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="rec_account_id" class="form-label">Expense Account</label>
+                        <label for="rec_account_id" class="form-label">Revenue Account</label>
                         <select class="form-select" name="rec_account_id" id="ed_rec_account_id" aria-label="Default select example">
                             <option>Select an account</option>
-                            @foreach($expenseAccounts as $account)
+                            @foreach($revenueAccounts as $account)
+                                <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
+                            @endforeach
+                            @foreach($equityAccounts as $account)
                                 <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
                             @endforeach
                         </select>

@@ -59,7 +59,7 @@
                     </div>
 
 
-                    <div class="mt-6 col-md-12">
+                    <div class="mt-6 mb-3 col-md-12">
                         <div class="form-group">
                         <label class="form-label">Location</label>
                         <input id="ed_location" name="location" type="text" class="form-control  @error('location') is-invalid @enderror" />
@@ -67,6 +67,16 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                         </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="shepherd">Leader</label>
+                        <select class="form-select" name="shepherd_id" id="ed_shepherd" required>
+                            <option value="">Select member</option>
+                            @foreach ($members as $result)
+                                <option value="{{ $result->id }}">{{ $result->name }} ({{ $result->member_number }})</option>
+                            @endforeach
+                        </select>
                     </div>
 
                 </div>

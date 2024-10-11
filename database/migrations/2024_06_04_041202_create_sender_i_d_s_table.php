@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sender_i_d_s', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
-            $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
+            $table->uuid('church_branch_id')->nullable();
             $table->string('name');
             $table->string('purpose')->nullable();
             $table->enum('status', ['Pending', 'Approved'])->default('Pending');

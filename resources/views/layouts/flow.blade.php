@@ -9,14 +9,12 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <link rel="stylesheet" href="{{ asset('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
-  {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+
   <script src="../assets/js/jquery.min.js"></script>
 
   <!-- Favicon icon-->
   <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
   <link rel="stylesheet" href="../assets/libs/quill/dist/quill.snow.css" />
-
-  <link rel="stylesheet" href="{{ asset('ijaboCropTool/ijaboCropTool.min.css') }}">
 
   @yield('head')
 
@@ -84,6 +82,9 @@
           document.documentElement.setAttribute("data-color-theme", e);
         }
       </script>
+    {{-- <button class="p-3 btn btn-primary rounded-circle d-flex align-items-center justify-content-center customizer-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        <i class="icon ti ti-settings fs-7"></i>
+    </button> --}}
 
       <div class="offcanvas customizer offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
         <div class="p-3 d-flex align-items-center justify-content-between border-bottom">

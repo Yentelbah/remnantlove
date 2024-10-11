@@ -59,18 +59,21 @@
                                   <i class="ti ti-dots-vertical fs-4 d-block"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                                  <li>
-                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#editModal" id="#modalCenter" onclick="openEditModal('{{ $value->id }}')">Edit</a>
-                                  </li>
-                                  <li>
-                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" id="#modalCenter" onclick="openDeleteModal('{{ $value->id }}')">Delete</a>
-                                  </li>
+                                    <li>
+                                        <a href="{{ route('evangelism.converts', $value->id) }}" class="dropdown-item d-flex align-items-center">
+                                            <i class="fs-4 ti ti-user-plus me-2"></i>Souls</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="dropdown-item d-flex align-items-center" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#editModal" id="#modalCenter" onclick="openEditModal('{{ $value->id }}')">
+                                            <i class="fs-4 ti ti-edit me-2"></i>Edit</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" id="#modalCenter" onclick="openDeleteModal('{{ $value->id }}')"> <i class="fs-4 ti ti-trash me-2"></i> Delete</a>
+                                    </li>
 
                                 </ul>
                               </div>
-                            </div>
                         </td>
-
                     </tr>
                     @endforeach
 
@@ -93,7 +96,7 @@
     <script>
         function openEditModal(id) {
             $.ajax({
-                url: '/evangelism/' + id, // Replace with the appropriate route for fetching department details
+                url: '/evangelism_details/' + id, // Replace with the appropriate route for fetching department details
                 type: 'GET',
                 success: function(response) {
                     // Update the modal content with the fetched event details
@@ -115,7 +118,7 @@
 
         function openDeleteModal(id) {
             $.ajax({
-                url: '/evangelism/' + id, // Replace with the appropriate route for fetching department details
+                url: '/evangelism_details/' + id, // Replace with the appropriate route for fetching department details
                 type: 'GET',
                 success: function(response) {
                     // Update the modal content with the fetched department details

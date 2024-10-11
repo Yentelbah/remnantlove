@@ -110,7 +110,7 @@
                       <p class="card-subtitle">All the books of accounts</p>
                     </div>
                     <div class="ms-auto">
-                      <a class="btn btn-primary" href="{{ route('account.index') }}"><i class='bx bx-scan me-1'></i>View</a>
+                      <a class="btn btn-success" href="{{ route('account.index') }}"><i class='bx bx-scan me-1'></i>View</a>
                     </div>
                   </div>
                 </div>

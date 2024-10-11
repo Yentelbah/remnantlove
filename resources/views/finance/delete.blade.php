@@ -3,12 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalCenterTitle">Confirm Deletion</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
       </div>
       <div class="modal-body">
         <form action="{{ route('finance.delete') }}" method="POST">
@@ -19,7 +14,7 @@
 
 
         <div class="row">
-          <div class="col mb-3">
+          <div class="mb-3 col">
             <p>Are you sure you want to delete <strong><span name="name" id="del_name">{{ $journalEntry->description }}</span></strong>?</p>
           </div>
         </div>

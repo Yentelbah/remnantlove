@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
-            $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
+            $table->foreignUuid('church_branch_id')->nullable()->constrained('church_branches')->onDelete('set null');
             $table->string('subject');
             $table->string('recipient');
             $table->string('message');

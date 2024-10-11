@@ -5,6 +5,8 @@
 @endsection
 
 @section('content')
+
+
 <div class="container-fluid">
     <div class="mb-3 page-titles">
       <div class="row">
@@ -47,6 +49,8 @@
       @if (Auth::user()->churchRole->role_id == 1 || Auth::user()->churchRole->role_id == 2 )
 
       <div class="d-flex justify-content-center">
+
+
         <button type="button" value="{{ $journalEntry->id }}" class="bg-danger-subtle btn me-2 text-danger d-flex align-items-center" data-bs-target="#deleteModal" data-bs-toggle="modal" onclick="openDeleteModal('{{ $journalEntry->id }}')"><i class="ti ti-trash me-1 fs-5"></i> Delete Journal Entry</button>
       </div>
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
-            $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
+            $table->uuid('church_branch_id')->nullable();
             $table->string('name');
             $table->enum('type', ['Asset', 'Liability', 'Equity', 'Revenue', 'Expense']);
             $table->timestamps();

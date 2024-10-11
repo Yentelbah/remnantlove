@@ -39,7 +39,8 @@ class AccountingController extends Controller
         $account = Account::create([
             'name' => $request->name,
             'type' => $request->type,
-            'church_id' => $church->id,
+            'church_id' => $user->church_id,
+            'church_branch_id' => $user->church_branch_id,
         ]);
 
             //LOG
@@ -48,13 +49,14 @@ class AccountingController extends Controller
 
             $log = Log::create([
                 'user_id' => $user->id,
-                'church_id' => $church->id,
+                'church_id' => $user->church_id,
+                'church_branch_id' => $user->church_branch_id,
                 'action' => $action,
                 'description' => $description,
             ]);
 
         $anchor = $request->input('pane') ?? 'accounts';
-        return redirect()->route('preference.index', '#'.$anchor)->with('success', 'Account created successfully.');
+        return redirect()->route('account.index')->with('success', 'Account created successfully.');
     }
 
     public function getDetails($accountId)
@@ -85,7 +87,8 @@ class AccountingController extends Controller
             $action = "Update";
 
             $log = Log::create([
-                'church_id' => $church->id,
+                'church_id' => $user->church_id,
+                'church_branch_id' => $user->church_branch_id,
                 'user_id' => $user->id,
                 'action' => $action,
                 'description' => $description,
@@ -93,7 +96,7 @@ class AccountingController extends Controller
 
 
         $anchor = $request->input('pane') ?? 'accounts';
-        return redirect()->route('preference.index', '#'.$anchor)->with('success', 'Account updated successfully.');
+        return redirect()->route('account.index')->with('success', 'Account updated successfully.');
     }
 
     public function accountDelete(Request $request)
@@ -109,14 +112,15 @@ class AccountingController extends Controller
         $action = "Delete";
 
         $log = Log::create([
-            'church_id' => $church->id,
+            'church_id' => $user->church_id,
+            'church_branch_id' => $user->church_branch_id,
             'user_id' => $user->id,
             'action' => $action,
             'description' => $description,
         ]);
 
         $anchor = $request->input('pane') ?? 'accounts';
-        return redirect()->route('preference.index', '#'.$anchor)->with('success', 'Account deleted successfully.');
+        return redirect()->route('account.index')->with('success', 'Account deleted successfully.');
 
     }
 
@@ -134,14 +138,15 @@ class AccountingController extends Controller
         $action = "Restore";
 
         $log = Log::create([
-            'church_id' => $church->id,
+            'church_id' => $user->church_id,
+            'church_branch_id' => $user->church_branch_id,
             'user_id' => $user->id,
             'action' => $action,
             'description' => $description,
         ]);
 
         $anchor = $request->input('pane') ?? 'accounts';
-        return redirect()->route('preference.index', '#'.$anchor)->with('success', 'Account retored successfully.');
+        return redirect()->route('account.index')->with('success', 'Account retored successfully.');
     }
 
 }

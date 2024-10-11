@@ -45,6 +45,15 @@
     </a>
   </li> --}}
 
+  <li class="sidebar-item">
+    <a class="sidebar-link primary-hover-bg {{ request()->routeIs('tasks.index', 'task.category.index', 'task.view') ? 'active' : '' }}" href="{{ route('tasks.index') }}" aria-expanded="false">
+      <span class="p-2 aside-icon bg-primary-subtle rounded-1">
+        <iconify-icon icon="solar:document-add-line-duotone" class="fs-6"></iconify-icon>
+      </span>
+      <span class="hide-menu ps-1">Tasks</span>
+    </a>
+  </li>
+
 
   <li class="sidebar-item">
     <a class="sidebar-link has-arrow primary-hover-bg   {{ request()->routeIs('calendar.index', 'event.index') ? 'active' : '' }}" href="javascript:void(0)" aria-expanded="false">

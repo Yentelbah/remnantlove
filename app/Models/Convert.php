@@ -49,7 +49,7 @@ class Convert extends Model
         'status', // e.g., 'joined', 'pending', 'not_interested'
         'joined_at',
         'follow_up_status',
-        'notes',
+        'notes', 'shepherd_id',
         'church_id','church_branch_id'
     ];
 
@@ -64,6 +64,12 @@ class Convert extends Model
     {
         return $this->belongsTo(Member::class, 'member_id');
     }
+
+    public function shepherd()
+    {
+        return $this->belongsTo(Member::class, 'shepherd_id', 'id'); // 'shepherd' column refers to 'id' in members table
+    }
+
 
     // Relationship with FoundationSchool
     public function foundationSchool()

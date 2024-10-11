@@ -63,8 +63,8 @@
                     <th>#</th>
                     <th>Date</th>
                     <th>Description</th>
-                    <th>Equity Account</th>
-                    <th>Paid Through</th>
+                    {{-- <th>Equity Account</th>
+                    <th>Paid Through</th> --}}
                     <th>Reference</th>
                     <th>Amount</th>
                     <th style="text-align: center">Actions</th>
@@ -74,20 +74,20 @@
                     $i = 1;
                     @endphp
 
-                @forelse($journalEntry as $entry)
+                @foreach($journalEntry as $entry)
 
                     <tr>
 
                         <td scope="row">{{ $i++ }}</td>
                         <td>{{ \Carbon\Carbon::parse($entry->entry_date)->format('d/m/y') }}</td>
                         <td>{{ $entry->description }}</td>
-                        @foreach($entry->ledgerEntries as $ledgerEntry)
+                        {{-- @foreach($entry->ledgerEntries as $ledgerEntry)
                         <td>{{ $ledgerEntry->account->name }}</td>
-                        @endforeach
+                        @endforeach --}}
                         <td>{{ $entry->paid_through }}</td>
                         <td>{{ $entry->amount }}</td>
 
-                        <td>
+                        <td class="text-center">
                             <div class="dropdown">
                                 <button id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" class="px-1 shadow-none rounded-circle btn-transparent btn-sm btn">
                                   <i class="ti ti-dots-vertical fs-4 d-block"></i>
@@ -114,11 +114,7 @@
 
 
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="9">No expenses recorded.</td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
 
                 </table>

@@ -37,7 +37,7 @@
                         <th>Date</th>
                         <th>Description</th>
                         <th>Amount</th>
-                        <th><i class="ti ti-dots-vertical fs-6"></i>
+                        <th><i class="ti ti-eye fs-6"></i>
                         </th>
                     </thead>
                     <tbody>
@@ -59,24 +59,9 @@
 
                         <td>
                             <div class="dropdown dropstart">
-                                <a href="javascript:void(0)" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="ti ti-dots-vertical fs-6"></i>
+                                <a class="gap-3 d-flex align-items-center" href="{{ route('financeShowDetails',['journalID' => $item->id]) }}">
+                                    <i class="fs-4 ti ti-eye"></i>
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li>
-                                    <a class="gap-3 dropdown-item d-flex align-items-center" href="{{ route('financeShowDetails',['journalID' => $item->id]) }}">
-                                        <i class="fs-4 ti ti-eye"></i>View
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a class="gap-3 dropdown-item d-flex align-items-center" href="javascript:void(0)" class="dropdown-item" value="{{ $item->id }}" data-bs-toggle="modal" data-bs-target="#editModal" onclick="openEditModal('{{ $item->id }}')"><i class="fs-4 ti ti-edit"></i>Edit</a>
-                                </li>
-                                <li>
-                                        <a class="gap-3 dropdown-item d-flex align-items-center" href="javascript:void(0)" class="dropdown-item" value="{{ $item->id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="openDeleteModal('{{ $item->id }}')"><i class="fs-4 ti ti-trash"></i>Delete</a>
-                                </li>
-
-                                </ul>
                             </div>
                         </td>
                         </tr>

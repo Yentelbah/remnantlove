@@ -72,7 +72,7 @@
   </li>
 
   <li class="sidebar-item">
-    <a class="sidebar-link has-arrow primary-hover-bg   {{ request()->routeIs('evangelism.index','converts.create') ? 'active' : '' }}" href="javascript:void(0)" aria-expanded="false">
+    <a class="sidebar-link has-arrow primary-hover-bg   {{ request()->routeIs('evangelism.index','converts.create','evangelism.converts') ? 'active' : '' }}" href="javascript:void(0)" aria-expanded="false">
       <span class="p-2 aside-icon bg-primary-subtle rounded-1">
         {{-- <i class="ti ti-circle-check text-primary fs-6"></i> --}}
         <iconify-icon icon="solar:user-hands-line-duotone" class="fs-6"></iconify-icon>
@@ -81,7 +81,7 @@
     </a>
     <ul aria-expanded="false" class="collapse first-level">
       <li class="sidebar-item">
-        <a href="{{ route('evangelism.index') }}" class="sidebar-link">
+        <a href="{{ route('evangelism.index') }}" class="sidebar-link {{ request()->routeIs('evangelism.converts') ? 'active' : '' }}">
           <span class="sidebar-icon"></span>
           <span class="hide-menu">Evangelism Events</span>
         </a>
@@ -148,6 +148,15 @@
   </li> --}}
 
   <li class="sidebar-item">
+    <a class="sidebar-link primary-hover-bg {{ request()->routeIs('tasks.index', 'task.category.index', 'task.view') ? 'active' : '' }}" href="{{ route('tasks.index') }}" aria-expanded="false">
+      <span class="p-2 aside-icon bg-primary-subtle rounded-1">
+        <iconify-icon icon="solar:document-add-line-duotone" class="fs-6"></iconify-icon>
+      </span>
+      <span class="hide-menu ps-1">Tasks</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item">
     <a class="sidebar-link primary-hover-bg {{ request()->routeIs('group.index', 'group.members.list') ? 'active' : '' }}" href="{{ route('group.index') }}" aria-expanded="false">
       <span class="p-2 aside-icon bg-primary-subtle rounded-1">
         <iconify-icon icon="solar:users-group-two-rounded-line-duotone" class="fs-6"></iconify-icon>
@@ -185,7 +194,7 @@
   </li>
 
   <li class="sidebar-item">
-    <a class="sidebar-link primary-hover-bg {{ request()->routeIs('finance.index', 'finance.entry', 'transactions.index', 'financeShowDetails') ? 'active' : '' }}" href="{{ route('finance.index') }}" aria-expanded="false">
+    <a class="sidebar-link primary-hover-bg {{ request()->routeIs('finance.index', 'finance.entry', 'transactions.index', 'financeShowDetails','expense.index','expenseShowDetails','revenue.index') ? 'active' : '' }}" href="{{ route('finance.index') }}" aria-expanded="false">
       <span class="p-2 aside-icon bg-primary-subtle rounded-1">
         <iconify-icon icon="solar:wallet-money-line-duotone" class="fs-6"></iconify-icon>
       </span>

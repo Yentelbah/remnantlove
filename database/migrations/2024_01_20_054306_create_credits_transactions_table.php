@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('credits_transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
-            $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
+            $table->foreignUuid('church_branch_id')->nullable()->constrained('church_branches')->onDelete('set null');
             $table->string('uniqueId')->nullable();
             $table->integer('number_of_credits')->nullable();
             $table->enum('type', ['Increase', 'Decrease']);

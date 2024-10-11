@@ -76,20 +76,14 @@
                                           <i class="ti ti-dots-vertical fs-4 d-block"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                                        @if( $value->pivot->status == 'Member')
+
                                           <li>
-                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#addPosition" id="#modalCenter" onclick="makeLeader('{{ $value->id }}')">Make Leader</a>
-                                          </li>
-                                        @else
-                                          <li>
-                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#updatePosition" id="#modalCenter" onclick="updateLeader('{{ $value->id }}')">Change Tile</a>
+                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#updatePosition" id="#modalCenter" onclick="updateLeader('{{ $value->id }}')">Relation</a>
                                           </li>
 
                                           <li>
-                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#revokePosition" id="#modalCenter" onclick="revokeLeader('{{ $value->id }}')">Revoke Leader</a>
+                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#revokePosition" id="#modalCenter" onclick="revokeLeader('{{ $value->id }}')">Delete</a>
                                           </li>
-
-                                          @endif
 
                                         </ul>
                                     </div>

@@ -24,9 +24,19 @@
                             <label for="rec_account_id" class="form-label">Equity Account</label>
                             <select class="form-select" name="rec_account_id" id="rec_account_id" aria-label="Default select example">
                                 <option>Select an account</option>
+                                @foreach($assetAccounts as $account)
+                                    <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
+                                @endforeach
+                                @foreach($revenueAccounts as $account)
+                                    <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
+                                @endforeach
                                 @foreach($equityAccounts as $account)
                                     <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
                                 @endforeach
+                                @foreach($liabilityAccounts as $account)
+                                    <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
+                                @endforeach
+
                             </select>
                             @error('rec_account_id')
                             <span class="invalid-feedback" role="alert">
@@ -54,6 +64,15 @@
                                 @foreach($assetAccounts as $account)
                                     <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
                                 @endforeach
+                                @foreach($revenueAccounts as $account)
+                                    <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
+                                @endforeach
+                                @foreach($equityAccounts as $account)
+                                    <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
+                                @endforeach
+                                @foreach($liabilityAccounts as $account)
+                                    <option value="{{ $account->id }}" {{ $account->type }}">{{ $account->name }}</option>
+                                @endforeach
                             </select>
                             @error('account_id')
                             <span class="invalid-feedback" role="alert">
@@ -71,8 +90,8 @@
 
                     <div class="col-12">
                         <div class="gap-6 d-flex align-items-center justify-content-end">
-                        <a href="{{ route('finance.index') }}" class="btn bg-danger-subtle text-danger">Cancel</a>
-                        <button class="btn btn-primary">Record</button>
+                            <a class="btn bg-danger-subtle text-danger" class="btn-close" data-bs-dismiss="modal" >Cancel</a>
+                            <button class="btn btn-primary">Record</button>
                         </div>
                     </div>
                 </form>

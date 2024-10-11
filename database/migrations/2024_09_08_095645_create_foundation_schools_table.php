@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('foundation_schools', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
-            $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
+            $table->uuid('church_branch_id')->nullable();
             $table->uuid('convert_id')->unique();
             $table->date('enrollment_date')->nullable();
             $table->date('graduation_date')->nullable();

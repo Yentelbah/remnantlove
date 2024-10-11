@@ -63,6 +63,14 @@
                               <i class="ti ti-dots-vertical fs-4 d-block"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                                <li>
+                                    <form action="{{ route('member.search') }}" method="POST" id="memberForm{{ $value->member->id }}">
+                                        @csrf
+                                        <input type="text" hidden value="{{ $value->member->id }}" name="query">
+                                        <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->member->id }}" onclick="document.getElementById('memberForm{{ $value->member->id }}').submit(); return false;">View</a>
+                                    </form>
+
+                                </li>
                                 @if ($nonExistingUsers->contains('member_id', $value->member_id))
                                 <li>
                                     <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#createModal" id="#modalCenter" onclick="openUserAccountModal('{{ $value->id }}')">+ User Account</a>

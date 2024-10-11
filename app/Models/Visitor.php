@@ -17,7 +17,7 @@ class Visitor extends Model
         'phone', 'gender',
         'date_visited',
         'location',
-        'church_id', 'church_branch_id'
+        'church_id', 'church_branch_id', 'email'
     ];
 
             /**

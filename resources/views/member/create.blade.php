@@ -2,13 +2,11 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
 
-        <div class="text-white modal-header modal-colored-header bg-success">
-          <h5 class="text-white modal-title" id="success-header-modalLabel"></h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-            <h5 class="mb-4">Add Member</h5>
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">Add Member</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
 
             <form action="{{ route('member.create') }}" method="POST">
                 @csrf
@@ -59,25 +57,7 @@
                     </div>
                 </div>
 
-
-                <div class="mb-3 form-group">
-                    <label for="address">Address</label>
-                    <textarea placeholder="Postal address and House number" class="form-control @error('address') is-invalid @enderror" name="address" id="address" rows="3"></textarea>
-                    @error('address')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3 form-group">
-                            <label for="location">Location</label>
-                            <input type="text" name="location" class="form-control @error('location') is-invalid @enderror" id="location" placeholder="">
-                            @error('location')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="email">Email</label>
@@ -87,6 +67,23 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="mb-3 form-group">
+                            <label for="location">Location</label>
+                            <input type="text" name="location" class="form-control @error('location') is-invalid @enderror" id="location" placeholder="">
+                            @error('location')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 form-group">
+                    <label for="address">Address</label>
+                    <textarea placeholder="Postal address and House number" class="form-control @error('address') is-invalid @enderror" name="address" id="address" rows="3"></textarea>
+                    @error('address')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="col-12">

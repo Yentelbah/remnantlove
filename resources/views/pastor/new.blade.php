@@ -94,12 +94,14 @@
                                   </div>
                             </div>
 
-                            <div class="mb-3 form-group">
-                                <label for="address">Address</label>
-                                <textarea placeholder="Postal address and House number" class="form-control @error('address') is-invalid @enderror" name="address" id="address" rows="3"></textarea>
-                                @error('address')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="">
+                                    @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -111,15 +113,16 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="">
-                                    @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+
+                            <div class="mb-3 form-group">
+                                <label for="address">Address</label>
+                                <textarea placeholder="Postal address and House number" class="form-control @error('address') is-invalid @enderror" name="address" id="address" rows="3"></textarea>
+                                @error('address')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
+
+
                         </div>
 
                     </div>

@@ -71,22 +71,12 @@ class DashboardController extends Controller
         $financeStats = $this->financeStats();
         $totalExpenses = $this->expenseStat();
         $totalRevenue = $this->revenueStat();
+        $birthdayCelebrants = $this->getMembersWithBirthdays();
 
         $excludedMemberIds = DB::table('pastors')
         ->pluck('member_id')
         ->merge(DB::table('group_leaders')->pluck('member_id'))
         ->merge(DB::table('staff')->pluck('member_id'));
-
-        // $excludedStaffIds = DB::table('staff')
-        // ->pluck('member_id')
-        // ->merge(DB::table('group_leaders')->pluck('member_id'))
-        // ->merge(DB::table('pastors')->pluck('member_id'));
-
-        //MEMBERSHIP STATISTICS
-
-        // if ($role === "Church_admin") {
-
-        // }elseif ($role === "Branch_admin") {
 
         if ($role === "Church_admin") {
             // dd($excludedMemberIds);
@@ -150,7 +140,7 @@ class DashboardController extends Controller
         //Finance statistics
         $financeData = $this->getFinanceData();
 
-        return view('dashboard.admin', compact('role', 'events', 'projects', 'memberCount', 'pastorCount', 'leaderCount', 'staffCount', 'statistics', 'visitors', 'greeting', 'financeStats', 'totalExpenses', 'totalRevenue','memberCountGender'))->with([
+        return view('dashboard.admin', compact('role', 'events', 'projects', 'memberCount', 'pastorCount', 'leaderCount', 'staffCount', 'statistics', 'visitors', 'greeting', 'financeStats', 'totalExpenses', 'totalRevenue','memberCountGender', 'birthdayCelebrants'))->with([
             'months' => json_encode($financeData['months']),
             'revenue' => json_encode($financeData['revenue']),
             'expense' => json_encode($financeData['expense']),
@@ -297,11 +287,9 @@ class DashboardController extends Controller
         $churchId = Auth::user()->church_id; // Assuming the church_id is available from the authenticated user
         $currentYear = now()->year;
 
-        $expenseAccounts = [
-            'Cost of Goods Sold', 'Donation Paid', 'Operating Expenses',
-            'Salaries and Wages', 'Rent Expense', 'Utilities Expense',
-            'Depreciation Expense', 'Advertising Expense', 'Insurance Expense'
-        ];
+        $expenseAccounts = Account::where('type', 'expense')->pluck('name');
+        // dd($expenseAccounts);
+
 
         $expenseAccountIds = Account::where('church_id', $churchId)
                                     ->where('church_id', $user->church_id)
@@ -329,10 +317,7 @@ class DashboardController extends Controller
         $churchId = $user->church_id; // Assuming the church_id is available from the authenticated user
         $currentYear = now()->year;
 
-        $revenueAccounts = [
-            'Interest Income', 'Tithes', 'Donation Received', 'Offering',
-            'Sales Revenue', 'Service Revenue'
-        ];
+        $revenueAccounts = Account::where('type', 'revenue')->pluck('name');
 
         $revenueAccountIds = Account::where('church_id', $churchId)
                                     ->whereIn('name', $revenueAccounts)
@@ -353,7 +338,22 @@ class DashboardController extends Controller
         return $totalRevenueAmount;
     }
 
+    private function leaderDashboard()
+    {
+        $user = Auth()->user();
+        $role = $user->churchRole->role->name;;
 
+        $events = $this->events();
+        $projects = $this->projects();
+        $greeting = $this->greetings();
+
+        //Finance statistics
+        $financeData = $this->getFinanceData();
+
+        return view('dashboard.leader', compact('role', 'events', 'projects',  'greeting', ))->with([
+            'success' => 'Welcome to FaithFlow',
+        ]);
+    }
 
     private function userDashboard()
     {
@@ -370,5 +370,17 @@ class DashboardController extends Controller
     {
         $projects = Project::all();
         return $projects;
+    }
+
+    private function getMembersWithBirthdays()
+    {
+        $currentMonth = Carbon::now()->month;
+
+        // Query members whose birthdays are in the current month
+        $members = Member::whereMonth('dob', $currentMonth)
+            ->orderByRaw("DATE_FORMAT(dob, '%m-%d')") // Order by the nearest birthday (day of the month)
+            ->get();
+
+        return $members;
     }
 }

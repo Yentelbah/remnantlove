@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Evangelism;
 use App\Models\Log;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,6 +15,7 @@ class EvangelismController extends Controller
         $user = Auth()->user();
 
         $events = Evangelism::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->get();
+
         return view('evangelism.index', compact('events'));
     }
 
@@ -65,6 +67,16 @@ class EvangelismController extends Controller
 
         $result = Evangelism::findOrFail($id);
         return response()->json($result);
+    }
+
+    public function converts($id)
+    {
+        $user = Auth()->user();
+
+        $members = Member::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->orderBy('name', 'desc')->get();
+        $evangelism = Evangelism::with('converts')->findOrFail($id);
+        $count = $evangelism->converts->count();
+        return view('evangelism.converts', compact('evangelism', 'count', 'members'));
     }
 
     // Update an evangelism event

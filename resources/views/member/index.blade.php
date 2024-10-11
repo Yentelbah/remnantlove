@@ -109,16 +109,13 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                             <li>
-                                <form action="{{ route('member.search') }}" method="POST" id="memberFomr{{ $value->id }}">
+                                <form action="{{ route('member.search') }}" method="POST" id="memberForm{{ $value->id }}">
                                     @csrf
                                     <input type="text" hidden value="{{ $value->id }}" name="query">
-                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" onclick="document.getElementById('memberFomr{{ $value->id }}').submit(); return false;">View</a>
+                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" onclick="document.getElementById('memberForm{{ $value->id }}').submit(); return false;">View</a>
                                 </form>
 
                             </li>
-                            {{-- <li>
-                                <a href="{{ route('member.details', ['id' => $value->id]) }}" class="dropdown-item">Show</a>
-                            </li> --}}
                             <li>
                                 <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#editModal" id="#modalCenter" onclick="openEditModal('{{ $value->id }}')">Edit</a>
                             </li>

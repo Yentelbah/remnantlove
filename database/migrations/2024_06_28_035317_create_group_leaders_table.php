@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('group_leaders', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
-            $table->foreignUuid('church_branch_id')->contrained('church_branches')->onDelete('set null');
+            $table->uuid('church_branch_id')->nullable();
             $table->foreignUuid('group_id')->constrained('groups')->onDelete('cascade');
             $table->foreignUuid('member_id')->constrained('members')->onDelete('cascade');
             $table->string('title')->nullable();

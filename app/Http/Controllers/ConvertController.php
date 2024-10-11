@@ -17,8 +17,17 @@ class ConvertController extends Controller
     {
         $user = Auth()->user();
 
-        $converts = Convert::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->where('status', '!=', 'Joined')->get();
-        return view('converts.index', compact('converts'));
+
+
+        $converts = Convert::where('church_id', $user->church_id)
+        ->where('church_branch_id', $user->church_branch_id)
+        ->where('status', '!=', 'Joined')
+        ->with('shepherd')  // Eager load the 'shepherd' relationship
+        ->get();
+
+        $members = Member::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->orderBy('name', 'desc')->get();
+
+        return view('converts.index', compact('converts', 'members'));
     }
 
     // Show form to create a new convert
@@ -37,6 +46,7 @@ class ConvertController extends Controller
             'phone' => 'required|string|max:255',
             'email' => 'required|email',
             'location' => 'required|string|max:255',
+            'shepherd_id' => 'required',
         ], [
             'name.required' => 'Provide a name of the visitor',
             'phone.required' => 'Enter the phone number of the visitor',
@@ -52,6 +62,7 @@ class ConvertController extends Controller
         $input = $request->all();
         $input['church_id'] = $user->church_id;
         $input['church_branch_id'] = $user->church_branch_id;
+        $input['evangelism_id'] = $request->evangelism_id;
 
         $input = Convert::create($input);
         //LOG
@@ -67,7 +78,7 @@ class ConvertController extends Controller
             'description' => $description,
         ]);
 
-        return redirect()->route('converts.index')->with('success', 'Convert created successfully');
+        return redirect()->back()->with('success', 'Convert created successfully');
     }
 
     // View a specific convert
@@ -151,7 +162,6 @@ class ConvertController extends Controller
 
         }
 
-
     }
 
 
@@ -172,6 +182,7 @@ class ConvertController extends Controller
             'phone' => 'required|string|max:255',
             'email' => 'required|email',
             'location' => 'required|string|max:255',
+            'shepherd_id' =>'required'
         ], [
             'name.required' => 'Provide a name of the visitor',
             'phone.required' => 'Enter the phone number of the visitor',
@@ -200,7 +211,7 @@ class ConvertController extends Controller
             'description' => $description,
         ]);
 
-        return redirect()->route('converts.index')->with('success', 'Convert updated successfully');
+        return redirect()->back()->with('success', 'Convert updated successfully');
     }
 
     // Delete a convert
@@ -225,6 +236,6 @@ class ConvertController extends Controller
             'description' => $description,
         ]);
 
-        return redirect()->route('converts.index')->with('success', 'Convert deleted successfully');
+        return redirect()->back()->with('success', 'Convert deleted successfully');
     }
 }

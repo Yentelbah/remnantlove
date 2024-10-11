@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Church;
+use App\Models\Convert;
+use App\Models\FoundationModule;
+use App\Models\FoundationSchool;
+use App\Models\FoundationSchoolModule;
 use App\Models\Log;
 use App\Models\Member;
 use App\Models\Visitor;
@@ -51,9 +55,10 @@ class VisitorController extends Controller
             'gender' => $request->gender,
             'date_visited' => $request->date_visited,
             'location' => $request->location,
+            'email'=>$request->email,
             'church_id' => $user->church_id,
             'church_branch_id' => $user->church_branch_id,
-    ]);
+        ]);
 
             //LOG
             $description = "User ". $user->id . " added a visitor information:  ". $input->id;
@@ -122,21 +127,55 @@ class VisitorController extends Controller
 
         $visitor = Visitor::findOrFail($id);
 
+        $convert['name'] = $visitor->name;
+        $convert['gender']= $visitor->gender;
+        $convert['phone']= $visitor->phone;
+        $convert['email']= $visitor->email;
+        $convert['location']= $visitor->location;
+        $convert['church_id'] = $user->church_id;
+        $convert['church_branch_id'] = $user->church_branch_id;
+        // $convert['joined_at'] = $visitor->updated_at;
+
+        $convert = Convert::create($convert);
+
         $member = Member::create([
             'church_id' => $visitor->church_id, // Assuming you have a way to get church_id
             'church_branch_id' => $visitor->church_branch_id, // Assuming you have a way to get church_id
-            'member_number' => null, // You can generate or leave it null
             'name' => $visitor->name,
             'gender' =>  $visitor->gender, // This should be collected from user input
-            'dob' => null, // This should be collected from user input
-            'marital_status' => null, // This should be collected from user input
-            'email' => null, // This should be collected from user input
+            'email' => $visitor->email, // This should be collected from user input
             'phone' => $visitor->phone,
-            'address' => null, // This should be collected from user input
             'location' => $visitor->location,
-            'photo' => null, // This should be collected from user input
             'is_deleted' => false,
         ]);
+
+        $convert->member_id = $member->id;
+        $convert->status = 'Joined';
+        $convert->save();
+
+        $student['convert_id'] = $convert->id;
+        $student['enrollment_date'] = $convert->updated_at;
+        $student['gender']= $convert->gender;
+        $student['church_id'] = $user->church_id;
+        $student['church_branch_id'] = $user->church_branch_id;
+
+        $student = FoundationSchool::create($student);
+
+        $modules = FoundationModule::where('church_id', $user->church_id)
+        ->where('church_branch_id', $user->church_branch_id)
+        ->get();
+
+        // Loop through each module and create a record for the student
+        foreach ($modules as $module) {
+            FoundationSchoolModule::create([
+                'foundation_school_id' => $student->id, // Student ID or Convert ID
+                'module_id' => $module->id,             // Module ID
+                'progress_status' => 'Not Started',              // Initial status can be 'not_started'
+                'church_id' => $user->church_id,
+                'church_branch_id' => $user->church_branch_id
+            ]);
+
+        }
 
         $visitor->delete();
 
@@ -152,7 +191,7 @@ class VisitorController extends Controller
                 'description' => $description,
             ]);
 
-        return redirect()->back()->with('success', 'Visitor converted to member successfully.');
+        return redirect()->back()->with('success', 'Visitor converted successfully.');
     }
 
     public function delete(Request $request)

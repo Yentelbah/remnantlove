@@ -67,6 +67,11 @@ class User extends Authenticatable
         return $this->belongsTo(ChurchRole::class, 'church_role_id');
     }
 
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'assignees', 'user_id', 'task_id');
+    }
+
     public function hasAnyRole($roles)
     {
         if (!$this->churchRole) {

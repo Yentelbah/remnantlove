@@ -132,7 +132,7 @@
                     <a class="fw-semibold text-dark bg-hover-primary" href="#">User Profile</a>
                   </li>
                   <li class="mb-3">
-                    <a class="fw-semibold text-dark bg-hover-primary" href="{{ route('preference.index') }}">Preferences</a>
+                    <a class="fw-semibold text-dark bg-hover-primary" href="{{ route('tasks.index') }}">Tasks</a>
                   </li>
                 </ul>
               </div>
@@ -184,13 +184,13 @@
             </a>
           </li>
 
-          <!-- ------------------------------- -->
-          <!-- start Notifications cart Dropdown -->
+                    <!-- ------------------------------- -->
+          <!-- start Messages cart Dropdown -->
           <!-- ------------------------------- -->
           {{-- <li class="nav-item dropdown nav-icon-hover-bg rounded-circle">
             <a class="nav-link position-relative" href="javascript:void(0)" id="drop3" aria-expanded="false">
-              <iconify-icon icon="solar:chat-dots-line-duotone" class="fs-6"></iconify-icon>
-              <div class="pulse">
+                <iconify-icon icon="solar:chat-dots-line-duotone" class="fs-6"></iconify-icon>
+                <div class="pulse">
                 <span class="heartbit border-warning"></span>
                 <span class="point text-bg-warning"></span>
               </div>
@@ -198,46 +198,35 @@
             <div class="dropdown-menu content-dd dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop3">
               <!--  Messages -->
               <div class="py-3 d-flex align-items-center px-7">
-                <h3 class="mb-0 fs-5">Notifications</h3>
-                <span class="badge bg-info ms-3">5 new</span>
+                <h3 class="mb-0 fs-5">Messages</h3>
+                <span class="badge bg-info ms-3">{{ $messagesCount }} New</span>
               </div>
 
               <div class="message-body" data-simplebar>
-                <a href="javascript:void(0)" class="py-6 dropdown-item px-7 d-flex align-items-center">
-                  <span class="flex-shrink-0">
-                    <img src="../assets/images/profile/user-5.jpg" alt="user" width="45" class="rounded-circle" />
-                  </span>
-                  <div class="w-100 ps-3">
-                    <div class="d-flex align-items-center justify-content-between">
-                      <h5 class="mb-0 fs-3 fw-normal">
-                        New message received
-                      </h5>
-                      <span class="fs-2 text-nowrap d-block text-muted">9:08 AM</span>
-                    </div>
-                    <span class="mt-1 fs-2 d-block text-muted">Salma sent you new
-                      message</span>
-                  </div>
-                </a>
+                @foreach($messages as $notification)
+                <a href="{{ route('task.view', $notification->task->id) }}" class="py-6 dropdown-item px-7 d-flex align-items-center">
+                    <span class="flex-shrink-0">
+                        <iconify-icon icon="solar:case-round-minimalistic-line-duotone" class="fs-6"></iconify-icon>
+                        <img src="{{ $notification->task->creator->profile_photo_path == '' ?  '../assets/images/profile/user-1.jpg' : asset('storage/' .$notification->task->creator->profile_photo_path) }}" alt="user"class="rounded-circle" width="45">
 
-                <a href="javascript:void(0)" class="py-6 dropdown-item px-7 d-flex align-items-center">
-                  <span class="flex-shrink-0">
-                    <img src="../assets/images/profile/user-6.jpg" alt="user" width="45" class="rounded-circle" />
-                  </span>
+                      </span>
                   <div class="w-100 ps-3">
                     <div class="d-flex align-items-center justify-content-between">
                       <h5 class="mb-0 fs-3 fw-normal">
-                        Roman Joined the Team!
+                        {{ $notification->task->title }}
                       </h5>
-                      <span class="fs-2 text-nowrap d-block text-muted">9:08 AM</span>
+                      <span class="fs-2 text-nowrap d-block text-muted">{{ $notification->created_at->diffForHumans() }}</span>
                     </div>
-                    <span class="mt-1 fs-2 d-block text-muted">Congratulate him</span>
+                    <span class="mt-1 fs-2 d-block text-muted">{{ $notification->task->category->name }}</span>
+                    <span class="mt-1 fs-2 d-block text-muted">{{ $notification->created_at->diffForHumans() }}</span>
                   </div>
                 </a>
+                @endforeach
               </div>
 
               <div class="py-6 mb-1 px-7">
                 <button class="btn btn-primary w-100">
-                  See All Notifications
+                  See All Messages
                 </button>
               </div>
             </div>
@@ -247,9 +236,61 @@
           <!-- ------------------------------- -->
 
           <!-- ------------------------------- -->
-          <!-- start shortcut Dropdown -->
+          <!-- start Taks cart Dropdown -->
           <!-- ------------------------------- -->
           <li class="nav-item dropdown nav-icon-hover-bg rounded-circle">
+            <a class="nav-link position-relative" href="javascript:void(0)" id="drop3" aria-expanded="false">
+                <iconify-icon icon="solar:case-round-minimalistic-line-duotone" class="fs-6"></iconify-icon>
+                <div class="pulse">
+                <span class="heartbit border-warning"></span>
+                <span class="point text-bg-warning"></span>
+              </div>
+            </a>
+            <div class="dropdown-menu content-dd dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop3">
+              <!--  Messages -->
+              <div class="py-3 d-flex align-items-center px-7">
+                <h3 class="mb-0 fs-5">Tasks</h3>
+                <span class="badge bg-info ms-3">{{ $unreadCount }} New Tasks</span>
+              </div>
+
+              <div class="message-body" data-simplebar>
+                @foreach($taskNotifications as $notification)
+                <a href="{{ route('task.view', $notification->task->id) }}" class="py-6 dropdown-item px-7 d-flex align-items-center">
+                    <span class="flex-shrink-0">
+                        {{-- <iconify-icon icon="solar:chat-dots-line-duotone" class="fs-6"></iconify-icon> --}}
+                        <iconify-icon icon="solar:case-round-minimalistic-line-duotone" class="fs-6"></iconify-icon>
+                        {{-- <img src="{{ $notification->task->creator->profile_photo_path == '' ?  '../assets/images/profile/user-1.jpg' : asset('storage/' .$notification->task->creator->profile_photo_path) }}" alt="user"class="rounded-circle" width="45"> --}}
+
+                      </span>
+                  <div class="w-100 ps-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <h5 class="mb-0 fs-3 fw-normal">
+                        {{ $notification->task->title }}
+                      </h5>
+                      {{-- <span class="fs-2 text-nowrap d-block text-muted">{{ $notification->created_at->diffForHumans() }}</span> --}}
+                    </div>
+                    <span class="mt-1 fs-2 d-block text-muted">{{ $notification->task->category->name }}</span>
+                    <span class="mt-1 fs-2 d-block text-muted">{{ $notification->created_at->diffForHumans() }}</span>
+                  </div>
+                </a>
+                @endforeach
+              </div>
+
+              <div class="py-6 mb-1 px-7">
+                <a href="{{ route('tasks.index') }}" class="btn btn-primary w-100">
+                  See All Tasks
+                </a>
+              </div>
+            </div>
+          </li>
+          <!-- ------------------------------- -->
+          <!-- end Notifications cart Dropdown -->
+          <!-- ------------------------------- -->
+
+          <!-- ------------------------------- -->
+          <!-- start shortcut Dropdown -->
+          <!-- ------------------------------- -->
+          {{--  <li class="nav-item dropdown nav-icon-hover-bg rounded-circle">
             <a class="nav-link position-relative" href="javascript:void(0)" id="drop2" aria-expanded="false">
               <iconify-icon icon="solar:widget-add-line-duotone" class="fs-6"></iconify-icon>
             </a>
@@ -300,7 +341,7 @@
                 </div>
               </div>
             </div>
-          </li>
+          </li>  --}}
           <!-- ------------------------------- -->
           <!-- end shortcut Dropdown -->
           <!-- ------------------------------- -->

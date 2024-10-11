@@ -1,13 +1,13 @@
 <div class="modal fade" id="bulkSMSModal" tabindex="-1" role="dialog"daria-labelledby="Edit Group" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="text-white modal-header modal-colored-header bg-primary">
-                <h5 class="text-white modal-title" id="primary-header-modalLabel"></h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-        <div class="modal-body">
-            <h5 class="mb-4">Send Bulk SMS</h5>
-            <form action="{{ route('sms.sendBulk') }}" method="POST">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">Send Bulk SMS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+
+                <form action="{{ route('sms.sendBulk') }}" method="POST">
                 @csrf
 
                 <input hidden type="text" value="" name="phone_number">

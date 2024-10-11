@@ -181,54 +181,107 @@ class ExpenseController extends Controller
 
     public function expenseUpdate (Request $request)
     {
+        $user = Auth()->user();
+        // dd($request);
         $validator = Validator::make($request->all(), [
-            'amount' => 'required',
-            'payment_date' => 'required',
-            'term_id' => 'required',
-            'academic_year_id' => 'required',
-            'category' => 'required|in:1, 2, 3',
-            'description' => 'required',
-        ], [
-            'amount.required' => 'State the expense amount',
-            'payment_date.required' => 'State the expense date',
-            'term_id.required' => 'Term is required',
-            'academic_year_id.required' => 'Year is required',
-            'category.required' => 'Select an apporpirate category',
-            'description.required' => 'Description is required',
+            'entry_date' => 'required|date',
+            'rec_account_id' => 'required|exists:accounts,id', // Debit account
+            'account_id' => 'required|exists:accounts,id',      // Credit account
+            'reference' => 'nullable|string',
+            'description' => 'nullable|string',
+            'amount' => 'required|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()
-            ->withErrors($validator)
-            ->withInput()
-            ->with('error', 'Check your inputs.');
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Validation error.');
         }
 
-        $id = $request->input('selectedExpenseId');
-        $expense = Expense::findOrFail($id);
-        $expense->academic_year_id = $request->academic_year_id;
-        $expense->payment_date = $request->payment_date;
-        $expense->description = $request->description;
-        $expense->category = $request->category;
-        $expense->amount = $request->amount;
-        $expense->save();
+        // Find the existing journal entry
+        $journalEntry = JournalEntry::with('ledgerEntries')->find($request->selectedExpenseId);
 
-            //LOG
-            $user = Auth::user()->id;
-            $staff_no = User::where('id', $user)->value('staff_number');
-            $description = "User ". $staff_no . " updated a expense ". $expense->serial_no;
-            $action = "Update";
+        if (!$journalEntry) {
+            return redirect()->back()->with('error', 'Journal Entry not found.');
+        }
 
-            $log = Log::create([
-                'school_id'=> $request->school_id,
-                'user_id' => $user,
-                'action' => $action,
-                'description' => $description,
-            ]);
+        $newAmount = $request->input('amount');
+        $currentDebitEntry = $journalEntry->ledgerEntries->where('debit', '>', 0)->first();
+        $currentCreditEntry = $journalEntry->ledgerEntries->where('credit', '>', 0)->first();
 
+        // Update the journal entry fields
+        $journalEntry->entry_date = $request->input('entry_date');
+        $journalEntry->reference = $request->input('reference');
+        $journalEntry->description = $request->input('description');
+        $journalEntry->amount = $request->input('amount');
+        $journalEntry->save();
 
-        return redirect()->route('expense.index')->with('success', 'Expense updated successfully.');
+        // Update debit entry (Expense Account)
+        if ($currentDebitEntry) {
+            // If the amount has changed, update the debit value and account
+            $currentDebitEntry->account_id = $request->input('rec_account_id');
+            $currentDebitEntry->debit = $newAmount;  // Update with the new amount
+            $currentDebitEntry->save();
+        }
+
+        // Update credit entry (Paid Through Account)
+        if ($currentCreditEntry) {
+            // If the amount has changed, update the credit value and account
+            $currentCreditEntry->account_id = $request->input('account_id');
+            $currentCreditEntry->credit = $newAmount;  // Update with the new amount
+            $currentCreditEntry->save();
+        }
+
+        return redirect()->back()->with('success', 'Expense updated successfully.');
 
     }
+
+    public function getDetails($id)
+    {
+
+        $account = JournalEntry::with('ledgerEntries')->find($id);
+        return response()->json($account);
+    }
+
+    public function financeShowDetails(Request $request, $journalID)
+    {
+        $user = Auth::user();
+
+        $journalEntry = JournalEntry::with('ledgerEntries')
+        ->find($journalID);
+
+        // Check if no finances were found
+        if ($journalEntry == null) {
+            return back()->with('error', 'No matching records found.');
+        }
+
+        // Calculate total debit and credit balances
+        $totalDebit = $journalEntry->ledgerEntries->sum('debit');
+        $totalCredit = $journalEntry->ledgerEntries->sum('credit');
+
+        $expenseAccounts = Account::where('church_id', $user->church_id)
+        ->where('church_branch_id', $user->church_branch_id)
+        ->where('type', 'Expense')
+        ->select('id', 'name', 'type')
+        ->get();
+
+        $assetAccounts = Account::where('church_id', $user->church_id)
+                ->where('church_branch_id', $user->church_branch_id)
+                ->where('type', 'Asset')
+                ->select('id', 'name', 'type')
+                ->get();
+
+        $revenueAccounts = Account::where('church_id', $user->church_id)
+                ->where('church_branch_id', $user->church_branch_id)
+                ->where('type', 'Revenue')
+                ->select('id', 'name', 'type')
+                ->get();
+
+        return view('finance.expenses.journal_details', compact('journalEntry', 'expenseAccounts', 'assetAccounts','revenueAccounts'));
+    }
+
+
+
 
 }

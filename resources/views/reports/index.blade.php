@@ -78,6 +78,23 @@
                 </div>
 
             </div>
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                      <div class="d-flex align-items-center ">
+                        <div>
+                          <h4 class="card-title">Report on Tasks</h4>
+                          <p class="card-subtitle">See details on assigned tasks </p>
+                        </div>
+                        <div class="ms-auto">
+                          <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tasksModal" href="javascript:void(0)"><i class='bx bx-scan me-1'></i>Generate</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+
             <div class="col-lg-6">
 
                 <div class="card">
@@ -103,6 +120,7 @@
 @include('reports.trial_balance.query')
 @include('reports.profit&loss.query')
 @include('reports.logs.query')
+@include('reports.tasks.query')
 
 @endsection
 

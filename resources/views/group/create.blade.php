@@ -2,13 +2,13 @@
 
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="text-white modal-header modal-colored-header bg-success">
-          <h5 class="text-white modal-title" id="success-header-modalLabel"></h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <h5 class="mb-4">Add Group</h5>
-          <form action="{{ route('group.create') }}" method="POST">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalCenterTitle">Add Group</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+            <form action="{{ route('group.create') }}" method="POST">
             @csrf
             <div class="mb-3 form-group">
               <label class="form-label" for="name">Name</label>

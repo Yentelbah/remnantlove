@@ -71,8 +71,8 @@
 
                     <div class="col-12">
                         <div class="gap-6 d-flex align-items-center justify-content-end">
-                        <a href="{{ route('finance.index') }}" class="btn bg-danger-subtle text-danger">Cancel</a>
-                        <button class="btn btn-primary">Record</button>
+                            <a class="btn bg-danger-subtle text-danger" class="btn-close" data-bs-dismiss="modal" >Cancel</a>
+                            <button class="btn btn-primary">Record</button>
                         </div>
                     </div>
                 </form>

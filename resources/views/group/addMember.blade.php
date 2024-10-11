@@ -2,13 +2,11 @@
 
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-        <div class="text-white modal-header modal-colored-header bg-success">
-            <h5 class="text-white modal-title" id="success-header-modalLabel"></h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <h5 class="mb-4">Add Member to <span name="name" id="add_group_name"></span></h5>
-
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">Add Member to <span name="name" id="add_group_name"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
 
             <form action="{{ route('group.member') }}" method="POST" id="addMemberForm">
                 @csrf

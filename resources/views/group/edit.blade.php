@@ -1,13 +1,12 @@
 <div id="editModal" class="modal fade" tabindex="-1" aria-labelledby="info-header-modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-        <div class="text-white modal-header modal-colored-header bg-info">
-            <h5 class="text-white modal-title" id="info-header-modalLabel"></h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">Update Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
 
-            <h5 class="mb-4">Update Group</h5>
+            <h5 class="mb-4"></h5>
             <form action="{{ route('group.update') }}" method="POST">
                 @csrf
                 @method('PUT')
