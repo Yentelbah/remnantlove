@@ -30,7 +30,7 @@ host('production')
         'artisan:view:cache',
         'artisan:config:cache',
         'artisan:migrate',
-        // 'artisan:db:seed',
+        'artisan:db:seed',
         // 'npm:install',
         // 'npm:run:prod',
         'deploy:publish',

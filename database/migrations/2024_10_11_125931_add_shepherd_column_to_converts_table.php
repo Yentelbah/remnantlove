@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('shepherd_id')->nullable();  // Nullable in case not every convert has a shepherd
 
             // Adding the foreign key constraint to the members table (assuming 'id' is UUID in members table)
-            $table->foreign('shepherd')->references('id')->on('members')->onDelete('set null');
+            $table->foreign('shepherd_id')->references('id')->on('members')->onDelete('set null');
         });
     }
 

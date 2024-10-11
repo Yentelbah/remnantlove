@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(RoleSeeder::class);
         // $this->call(SystemSeeder::class);
-        $this->call(TaskTemplateSeeder::class);
-        $this->call(TaskTemplateStepSeeder::class);
+        // $this->call(TaskTemplateSeeder::class);
+        // $this->call(TaskTemplateStepSeeder::class);
     }
 }
