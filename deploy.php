@@ -29,7 +29,7 @@ host('production')
         'artisan:storage:link',
         'artisan:view:cache',
         'artisan:config:cache',
-        'artisan:migrate',
+        'artisan:migrate:fresh',
         'artisan:db:seed',
         // 'npm:install',
         // 'npm:run:prod',
