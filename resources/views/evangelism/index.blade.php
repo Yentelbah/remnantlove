@@ -40,7 +40,6 @@
                     <th>Name</th>
                     <th>Date</th>
                     <th>Location</th>
-                    <th>Description</th>
                     <th></th>
                     </tr>
                 </thead>
@@ -51,7 +50,6 @@
                         <td>{{ $value->event_name }}</td>
                         <td>{{ $value->date }}</td>
                         <td>{{ $value->location }}</td>
-                        <td>{{ $value->description }}</td>
 
                         <td>
                             <div class="dropdown">

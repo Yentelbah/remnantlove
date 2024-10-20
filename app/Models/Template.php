@@ -6,13 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
-class Message extends Model
+class Template extends Model
 {
-    protected $table = 'messages';
-
-    protected $fillable = [
-        'recipient','content', 'schedule', 'sender', 'title', 'type', 'credits', 'response', 'church_id','church_branch_id','send_at',
-    ];
+    use HasFactory;
 
     protected static function boot()
     {
@@ -45,5 +41,15 @@ class Message extends Model
     {
         return false;
     }
+
+
+
+    protected $fillable = [
+        'title',
+        'content',
+        'user_id',
+        'church_id',
+        'church_branch_id'
+    ];
 
 }

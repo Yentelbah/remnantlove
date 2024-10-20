@@ -15,6 +15,9 @@
           <li class="breadcrumb-item">
             <a href="{{ route('dashboard') }}">Dashboard</a>
           </li>
+          <li class="breadcrumb-item">
+            <a href="{{ route('event.index') }}">Events</a>
+          </li>
           <li class="breadcrumb-item" aria-current="page">Calendar</li>
         </ol>
       </nav>
@@ -197,6 +200,16 @@
                     start: '{{ $event->start_date }}',
                     end: '{{ $event->end_date }}',
                     extendedProps: { calendar: "Primary" },
+                },
+                @endforeach
+
+                @foreach($evangelism as $event)
+                {
+                    title: '{{ $event->event_name }}',
+                    description: '{{ $event->description }}',
+                    start: '{{ $event->date }}',
+                    end: '{{ $event->date }}',
+                    extendedProps: { calendar: "Success" },
                 },
                 @endforeach
             ];

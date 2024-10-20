@@ -111,6 +111,8 @@ class ConvertController extends Controller
         if ($request->status ==='Joined')
         {
             $convert = Convert::findOrFail($request->selectedId);
+            $convert->joined_at = now();
+            $convert->save();
 
             $member['name'] = $convert->name;
             $member['gender']= $convert->gender;

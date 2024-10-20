@@ -172,7 +172,20 @@ class TaskController extends Controller
 
         $step = TaskStep::find($request->selectedId);
         $step->update($request->all());
-        return redirect()->back()->with('success', 'Step updated successfully.');    }
+        return redirect()->back()->with('success', 'Step updated successfully.');
+    }
+
+    public function updateComment(Request $request)
+    {
+        $validated = $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+
+        $comment = TaskComment::find($request->selectedId);
+        $comment->update($request->all());
+        return redirect()->back()->with('success', 'Comment updated successfully.');
+    }
 
     public function show($id)
     {
@@ -183,19 +196,28 @@ class TaskController extends Controller
 
     public function step($id)
     {
-        $category = TaskStep::findOrFail($id);
-        return response()->json($category);
+        $step = TaskStep::findOrFail($id);
+        return response()->json($step);
 
     }
+
+    public function comment($id)
+    {
+        $comment = TaskComment::findOrFail($id);
+        return response()->json($comment);
+
+    }
+
 
     public function view($task)
     {
         $user = Auth()->user();
 
-        $task = Task::with('steps', )->findOrFail($task);
+        $task = Task::with('steps', 'comments' )->findOrFail($task);
 
         // Calculate total steps and completed steps
         $totalSteps = $task->steps->count();
+        $countComments = $task->comments->count();
         $completedSteps = $task->steps->where('is_completed', 1)->count();
 
         // Calculate the completion percentage (avoid division by zero)
@@ -220,7 +242,7 @@ class TaskController extends Controller
         $notification->save();
 
         // Pass task, totalSteps, completedSteps, and completionPercentage to the view
-        return view('tasks.show', compact('task', 'totalSteps', 'completedSteps', 'completionPercentage', 'availableUsers', 'removeUser', 'task_category'));
+        return view('tasks.show', compact('task', 'totalSteps', 'completedSteps', 'completionPercentage', 'availableUsers', 'removeUser', 'task_category', 'countComments'));
 
     }
 
@@ -415,6 +437,25 @@ class TaskController extends Controller
         return redirect()->back()->with('success', 'Task steps added successfully.');
     }
 
+    public function addComment(Request $request)
+    {
+
+        $validated = $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        TaskComment::create([
+            'task_id' => $request->selectedId,
+            'comment' => $request->comment,
+            'user_id' => auth()->user()->id,
+            'church_id' => auth()->user()->church_id,
+            'church_branch_id' => auth()->user()->church_branch_id,
+        ]);
+
+        return redirect()->back()->with('success', 'Comment added successfully.');
+    }
+
+
 
     public function destroyStep(Request $request)
     {
@@ -437,5 +478,25 @@ class TaskController extends Controller
         return redirect()->back()->with('success', 'Task step deleted.');
     }
 
+    public function destroyComment(Request $request)
+    {
+        $user = Auth()->user();
+
+        $comment = TaskComment::find($request->selectedId);
+        $comment->delete();
+
+        //LOG
+        $description = "User ". $user->id . " deleted a comment : ". $comment->id;
+        $action = "Delete";
+
+        $log = Log::create([
+            'user_id' => $user->id,
+            'church_id' => $user->church_id,
+            'church_branch_id' => $user->church_branch_id,
+            'action' => $action,
+            'description' => $description,
+        ]);
+        return redirect()->back()->with('success', 'Task comment deleted.');
+    }
 
 }

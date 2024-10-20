@@ -27,7 +27,7 @@ class PastorController extends Controller
 
             $pastors = Pastor::where('church_id', $user->church_id)->get();
             $memberIds = $pastors->pluck('member_id');
-            $existingUsers = User::whereIn('member_id', $memberIds)->get();
+            $existingUsers = User::whereIn('member_id', $memberIds)->where('is_deleted', false)->get();
             $nonExistingUsers = $pastors->whereNotIn('member_id', $existingUsers->pluck('member_id'));
 
             $churchRoles = ChurchRole::where('church_id', $user->church_id)->get();
@@ -37,8 +37,7 @@ class PastorController extends Controller
         }elseif ($role === "Branch_admin") {
             $pastors = Pastor::where('church_id', $user->church_id)->where('church_branch_id',$user->church_branch_id)->get();
             $memberIds = $pastors->pluck('member_id');
-            $existingUsers = User::whereIn('member_id', $memberIds)->get();
-            $nonExistingUsers = $pastors->whereNotIn('member_id', $existingUsers->pluck('member_id'));
+            $existingUsers = User::whereIn('member_id', $memberIds)->where('is_deleted', false)->get();
             $churchRoles = ChurchRole::where('church_id', $user->church_id)->whereNotIn('role_id', [1,2])->get();
 
 
@@ -46,8 +45,7 @@ class PastorController extends Controller
 
             $pastors = Pastor::where('church_id', $user->church_id)->where('church_branch_id',$user->church_branch_id)->get();
             $memberIds = $pastors->pluck('member_id');
-            $existingUsers = User::whereIn('member_id', $memberIds)->get();
-            $nonExistingUsers = $pastors->whereNotIn('member_id', $existingUsers->pluck('member_id'));
+            $existingUsers = User::whereIn('member_id', $memberIds)->where('is_deleted', false)->get();
             $churchRoles = ChurchRole::where('church_id', $user->church_id)->whereNotIn('role_id', [1,2])->get();
 
 

@@ -30,6 +30,7 @@
         <div class="col-lg-4">
           <div class="card ">
             <div class="pt-4 pb-1 card-body">
+
               <h4 class="mb-2 fs-6">{{ $task->title }}</h4>
                 <span class="border  badge fs-2 mb-9 fw-bold rounded-pill  @if($task->priority == 'high') bg-danger-subtle text-danger border-danger  @elseif($task->priority == 'medium') bg-warning-subtle text-warning border-warning @else bg-primary-subtle text-success border-success @endif ">{{ $task->priority }} priority</span>
                 @if($task->status == 'completed')
@@ -39,6 +40,7 @@
                 @else
                     <span class="badge bg-primary">Not Started</span>
                 @endif
+
               <div class="py-9 border-top">
 
                 <div class="mt-1 mb-4 border-bottom">
@@ -78,7 +80,6 @@
                         <a href="javascript:void(0);" class="cursor-pointer justify-content-center me-2 d-flex align-items-center badge rounded-pill fw-light ms-1 bg-danger-subtle text-danger border-danger" data-bs-toggle="modal" data-bs-target="#removeModal" id="#modalCenter"><iconify-icon icon="solar:user-minus-rounded-bold-duotone" class="fs-6"></iconify-icon> Remove assignee</a>
                         @endif
 
-
                       </p>
                     </li>
 
@@ -100,6 +101,10 @@
 
                 <div class="mt-4 row">
                     <div class="col-12">
+                        <a href="javascript:void(0);" class="cursor-pointer justify-content-center me-2 d-flex align-items-center btn btn-sm btn-success fw-light ms-1 " data-bs-toggle="modal" data-bs-target="#commentModal" id="#modalCenter"><iconify-icon icon="solar:chat-line-line-duotone" class="fs-6 me-2"></iconify-icon> Comment on task</a>
+
+                        @include('tasks.comments.add')
+
                         <div class="gap-6 mt-4 d-flex align-items-center justify-content-center">
                             <button type="submit" class="btn btn-sm btn-primary w-30" value="{{ $task->id }}" data-bs-toggle="modal" data-bs-target="#stepModal" id="#modalCenter" onclick="openEditModal('{{ $task->id }}')"><i class="ti ti-plus fs-5 me-1"></i> Step</button>
                             <button type="submit" class="btn btn-sm btn-primary w-30" value="{{ $task->id }}" data-bs-toggle="modal" data-bs-target="#editModal" id="#modalCenter" onclick="openEditModal('{{ $task->id }}')"><i class="ti ti-edit fs-5 me-1"></i> Edit</button>
@@ -117,17 +122,16 @@
         <div class="col-lg-8">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item me-2" role="presentation">
-                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">
+                <button class="nav-link active" id="steps" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">
                   Task Steps
                 </button>
               </li>
-
             </ul>
 
             <div class="mt-3 card">
               <div class="card-body">
                 <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="steps">
                     {{-- <div class="pb-3 mb-4 border-bottom">
                       <h4 class="mb-0 card-title">Task Steps</h4>
                     </div> --}}
@@ -172,19 +176,108 @@
 
                   </div>
 
+                  <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comment">
+                    <div class="pb-3 mb-4 border-bottom">
+                      <h4 class="mb-0 card-title">Comments</h4>
+                    </div>
+                    <div class="pt-3 overflow-x-auto table-responsive">
+                      <table class="table align-middle text-nowrap">
+
+                        <tbody class="border-top">
+                            @foreach ($task->comments as $key => $comment)
+                          <tr>
+                            <td>{{ formatShortDates($comment->created_at) }}</td>
+                            <td>
+                              <p class="mb-0 text-dark fw-normal">
+                                {{ $comment->comment }}
+                              </p>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" class="px-1 shadow-none rounded-circle btn-transparent btn-sm btn">
+                                      <i class="ti ti-dots-vertical fs-4 d-block"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $comment->id }}" data-bs-toggle="modal" data-bs-target="#editStepModal" id="#modalCenter" onclick="openEditStepModal('{{ $comment->id }}')">Edit</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $comment->id }}" data-bs-toggle="modal" data-bs-target="#deleteStepModal" id="#modalCenter" onclick="openDeleteStepModal('{{ $comment->id }}')">Delete</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </td>
+                          </tr>
+                          @endforeach
+
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </div>
+
                 </div>
               </div>
             </div>
-        </div>
+
+            <div class="ps-4 pe-4" >
+                <div class="card-body">
+                    <div class="gap-3 mb-2 d-flex align-items-center">
+                        <h5 class="mb-0">Comments</h5>
+                        <span class="px-6 py-8 rounded badge bg-success-subtle text-success fs-4 fw-semibold">{{ $countComments }}</span>
+                    </div>
+
+                  <div class="position-relative">
+                    @foreach ($task->comments as $key => $comment)
+
+                    <div class="p-3 mb-2 rounded-4 text-bg-light">
+                      <div class="gap-3 d-flex align-items-center justify-content-between">
+                        <div class="gap-3 d-flex align-items-center">
+                            {{-- <img src="../assets/images/profile/user-2.jpg" alt="spike-img" class="rounded-circle" width="33" height="33"> --}}
+                            <h6 class="mb-0 fs-4">{{ $comment->user->name }}</h6>
+                            <span class="p-1 text-bg-muted rounded-circle d-inline-block"></span>
+                            <span>{{ formatShortDates($comment->created_at) }}</span>
+                        </div>
+                        <div class="dropdown">
+                            <button id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" class="px-1 shadow-none rounded-circle btn-transparent btn-sm btn">
+                              <i class="ti ti-dots-vertical fs-4 d-block"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                                <li>
+                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $comment->id }}" data-bs-toggle="modal" data-bs-target="#editCommentModal" id="#modalCenter" onclick="openEditCommentModal('{{ $comment->id }}')">Edit</a>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $comment->id }}" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" id="#modalCenter" onclick="openDeleteCommentModal('{{ $comment->id }}')">Delete</a>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                      </div>
+                      <p class="pt-2 my-0">{{ $comment->comment }}
+                      </p>
+
+                    </div>
+                    @endforeach
+
+                  </div>
+                </div>
+            </div>
 
 
-        @include('tasks.assign')
-        @include('tasks.remove')
-        @include('tasks.edit')
-        @include('tasks.delete')
-        @include('tasks.steps.add')
-        @include('tasks.steps.edit')
-        @include('tasks.steps.delete')
+            @include('tasks.assign')
+            @include('tasks.remove')
+            @include('tasks.edit')
+            @include('tasks.delete')
+            @include('tasks.steps.add')
+            @include('tasks.steps.edit')
+            @include('tasks.steps.delete')
+            @include('tasks.comments.edit')
+            @include('tasks.comments.delete')
+
 
 
         </div>
@@ -223,6 +316,40 @@
                 success: function(response) {
                     // Update the modal content with the fetched department details
                     $('#del_step_selectedId').val(response.id);
+                },
+                error: function(xhr) {
+                    // Handle error case
+                    console.log(xhr);
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function openEditCommentModal(id) {
+            $.ajax({
+                url: '/comment/' + id, // Replace with the appropriate route for fetching department details
+                type: 'GET',
+                success: function(response) {
+                    // Update the modal content with the fetched department details
+                    $('#ed_comment').val(response.comment);
+                    $('#ed_comment_selectedId').val(response.id);
+
+                },
+                error: function(xhr) {
+                    // Handle error case
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function openDeleteCommentModal(id) {
+            $.ajax({
+                url: '/comment/' + id, // Replace with the appropriate route for fetching department details
+                type: 'GET',
+                success: function(response) {
+                    // Update the modal content with the fetched department details
+                    $('#del_comment_selectedId').val(response.id);
                 },
                 error: function(xhr) {
                     // Handle error case
@@ -330,6 +457,5 @@
             });
         }
     </script>
-
 
 @endsection

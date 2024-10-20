@@ -15,14 +15,18 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('church_id')->constrained('churches')->onDelete('cascade');
             $table->foreignUuid('church_branch_id')->nullable()->constrained('church_branches')->onDelete('set null');
-            $table->string('subject');
+            $table->string('batch')->nullable();
+            $table->string('title');
             $table->string('recipient');
             $table->string('message');
             $table->string('sender');
-            $table->string('type');
+            $table->enum('type', ['quick', 'scheduled','bulk'])->defualt('quick');
+            $table->enum('mode', ['single', 'bulk']);
             $table->integer('credits')->nullable();
             $table->string('response')->nullable();
-            $table->date('schedule')->nullable();
+            $table->datetime('send_at')->nullable();
+            $table->string('repeat')->nullable();
+            $table->enum('status', ['pending', 'sent', 'failed'])->default('pending');
             $table->timestamps();
         });
     }

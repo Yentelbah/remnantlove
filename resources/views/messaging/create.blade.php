@@ -1,5 +1,5 @@
 <div class="modal fade" id="singleSMSModal" tabindex="-1" role="dialog"daria-labelledby="Edit Group" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalCenterTitle">Send SMS</h5>
@@ -10,32 +10,54 @@
                 <form action="{{ route('sms.sendSingle') }}" method="POST">
                 @csrf
 
-                <input hidden type="text" name="sender" value="{{ Auth()->user()->name }}">
-
                 <div class="row">
+                    <div id="custom-sms">
+
+                        <div class="mb-3">
+                            <label for="title"  class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" placeholder="Title" required>
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label for="message" class="form-label" >Message</label>
+                            <textarea id="message_input" class="form-control" name="message" placeholder="Message" required></textarea>
+                            <label id="charCount" class="mt-1 fs-2 text-info"></label>
+                            <input type="hidden" id="numberOfPages" name="numberOfPages">
+                        </div>
+
+                    </div>
+
                     <div class="mb-3">
-                        <label for="subject"  class="form-label">Subject</label>
-                        <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+                        <label for="phone_number" class="form-label">Recipeint Phone Number</label>
+                        <input style="margin-top: 5px;" id="phone_number" type="text" class="form-control" name="phone_number" placeholder="Recipient" required>
+                        <label class="mt-1 mb-1 fs-2 text-info">Phone numbers should be followed by a comma(,) and space if more than one. </label>
                     </div>
+
                     <div class="mb-3">
-
-                        <label for="phone_number" class="form-label">Phone Number</label>
-                        <input style="margin-top: 5px;" id="phone_number" type="text" class="form-control" name="phone_number" placeholder="E.g. 0200000000, 0240000000" required>
-
-                        <label style="font-size: 12px; text-align:right; margin-top: 6px; color:rgb(137, 189, 238); margin-bottom: 8px;">Phone numbers should be followed by a comma(,) and space if more than one. </label>
-
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" id="schedule" class="form-check-input"  value="schedule" name="schedule">Schedule
+                            </label>
+                        </div>
                     </div>
-                    <div class="">
-                        <label for="message" class="form-label" >Message</label>
-                        <textarea style="margin-top: 5px;" id="message_input" class="form-control" name="message" required></textarea>
-                        <label id="charCount" style="font-size: 12px; text-align:right; margin-top: 6px; color:darkcyan;"></label>
-                        <input type="hidden" id="numberOfPages" name="numberOfPages">
+
+                    <div class="mb-3">
+                        <div id="schedule_input" style="display: none;">
+                            <input name="delivery_date" type="datetime-local" id="delivery_date" class="form-control @error('delivery_date') is-invalid @enderror" value="{{ old('delivery_date') }}">
+                            @error('delivery_date')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
                     </div>
+
                 </div>
                 <div class="col-12">
                     <div class="gap-6 d-flex align-items-center justify-content-end">
-                        <button class="btn btn-primary" type="submit" >Send</button>
                         <button class="btn bg-danger-subtle text-danger" type="button" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit" >Send</button>
                     </div>
                 </div>
             </form>
@@ -65,3 +87,23 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Retrieve the checkbox and the schedule_input div
+        var scheduleCheckbox = document.getElementById('schedule');
+        var scheduleInput = document.getElementById('schedule_input');
+
+        // Add event listener to the checkbox
+        scheduleCheckbox.addEventListener('change', function () {
+            // If the checkbox is checked, display the schedule_input div, otherwise hide it
+            if (scheduleCheckbox.checked) {
+                scheduleInput.style.display = 'block';
+            } else {
+                scheduleInput.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+

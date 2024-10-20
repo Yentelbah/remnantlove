@@ -35,14 +35,17 @@ use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\LiabilityController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PastorController;
 use App\Http\Controllers\PreferencesController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\RevenueContrller;
+use App\Http\Controllers\ScheduleMessageController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TaskCategoryController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Route;
@@ -342,6 +345,12 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
         Route::delete('/step', [TaskController::class, 'destroyStep'])->name('step.destroy');  // Delete a convert
         Route::post('/add-step', [TaskController::class, 'addStep'])->name('step.store');  // Store a new convert
 
+        //Task Comments
+        Route::get('/comment/{id}', [TaskController::class, 'comment']);
+        Route::put('/comment', [TaskController::class, 'updateComment'])->name('comment.update');
+        Route::delete('/comment', [TaskController::class, 'destroyComment'])->name('comment.destroy');
+        Route::post('/add-comment', [TaskController::class, 'addComment'])->name('comment.store');
+
 
         //Task Category
 
@@ -420,6 +429,21 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::post('/sms/send-bulk', [CommunicationController::class, 'sendBulk'])->name('sms.sendBulk');
     Route::get('/sms/{sentId}/details', [CommunicationController::class, 'getSentDetails']);
     Route::delete('/sms',[CommunicationController::class, 'delete'] )->name('sms.delete');
+
+        //MESSAGE SEND
+        Route::post('/messages', [MessageController::class, 'send'])->name('message.send');
+
+        //MESSAGE TEMPLATES
+        Route::post('/message-templates', [TemplateController::class, 'create'])->name('templates.create');
+        Route::get('/template/{id}', [TemplateController::class, 'details']);
+        Route::delete('/template',[TemplateController::class, 'delete'] )->name('template.delete');
+        Route::put('/template', [TemplateController::class, 'update'])->name('template.update');
+
+        //SCHEDULE MESSAGE
+        Route::post('/schedule-message', [ScheduleMessageController::class, 'scheduleMessage'])->name('schedule.message');
+        Route::get('/schedule/{id}', [ScheduleMessageController::class, 'details']);
+        Route::delete('/schedule',[ScheduleMessageController::class, 'delete'] )->name('schedule.delete');
+        Route::put('/schedule', [ScheduleMessageController::class, 'update'])->name('schedule.update');
 
     //SMS Credit purchas
     Route::post('/sms/credit', [CreditsController::class, 'purchaseCredits'])->name('purchase.credits');

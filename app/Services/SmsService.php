@@ -4,10 +4,10 @@ namespace App\Services;
 
 class SmsService
 {
-    public function sendSMS($recepient, $sender_id, $message, $schedule_message = false, $delivery_date = null)
+    public function sendSMS($recepient, $sender_id, $message, $schedule, $delivery_date)
     {
         // Handle Message Schedule if $schedule_message is true *requires delivery_date value, default value is null.
-        $schedule_message = filter_var($schedule_message, FILTER_VALIDATE_BOOLEAN);
+        $schedule_message = filter_var($schedule, FILTER_VALIDATE_BOOLEAN);
 
         // Set Url endpoint for sending SMS
         $endPoint = 'https://api.mnotify.com/api/sms/quick';

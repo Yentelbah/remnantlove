@@ -123,22 +123,44 @@ class UserController extends Controller
         }
 
         $member = Member::find($request->member_id);
+        $oldAccount = User::where('member_id', $request->member_id)->first();
 
-        $password = $this->generateRandomString();
+        // dd($oldAccount);
 
-        $user = User::create([
-            'name' => $request['name'],
-            'email' => $member->email,
-            'password' => Hash::make($password),
-            'phone' => $member->phone,
-            'church_role_id' => $request->role,
-            'church_id' => $user->church_id,
-            'church_branch_id' => $user->church_branch_id,
-            'member_id' =>$member->id,
-        ]);
+        if($oldAccount == null)
+        {
+            $password = $this->generateRandomString();
 
-        $message = 'Welcome to Faithflow!. An account has been created for you. You account details are: Email: ' . $user->email . ' Password: ' . $password . ' Thank you.';
-        $creditsUsed = 1;
+            $userAccount = User::create([
+                'name' => $request['name'],
+                'email' => $member->email,
+                'password' => Hash::make($password),
+                'phone' => $member->phone,
+                'church_role_id' => $request->role,
+                'church_id' => $user->church_id,
+                'church_branch_id' => $user->church_branch_id,
+                'member_id' =>$member->id,
+            ]);
+
+            $message = 'Welcome to Faithflow' . $userAccount->name . '!. An account has been created for you. You account details are: Email: ' . $userAccount->email . ' Password: ' . $password . '. Visit: www.faithflow.yensoftgh.com. Thank you.';
+                        //Log
+                        $description = "User ". $user->id . " created a user account ". $userAccount->id;
+                        $action = "Update";
+
+        }else{
+            $oldAccount->is_deleted = false;
+            $oldAccount->status = 'active';
+            $oldAccount->save();
+
+            $message = 'Welcome Back ' . $oldAccount->name . '!. Your account has been restored. You details are: Email: ' . $oldAccount->email . ' Update or use your old password. Visit: www.faithflow.yensoftgh.com Thank you.';
+
+                        //Log
+                        $description = "User ". $user->id . " updated a user account ". $oldAccount->id;
+                        $action = "Update";
+
+        }
+
+        $creditsUsed = 2;
 
         $account = CreditsAccount::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->first();
         $new_balance = $account->balance - $creditsUsed;
@@ -155,20 +177,20 @@ class UserController extends Controller
             'uniqueId' => $uniqueNumber
         ]);
 
+        $schdule=false;
+        $delivery = null;
+        $senderID = $account->senderID;
+
         try {
             // Assuming ReminderNotification has a method to send SMS directly
-            (new accountCreationNotification($user->phone, $message))->sendSMS();
+            (new accountCreationNotification($user->phone, $senderID, $message, $schdule, $delivery))->sendSMS();
 
         } catch (\Exception $e) {
             // Handle notification sending failure
             return redirect()->back()->with('error', 'Failed to send notification: ' . $e->getMessage());
         }
 
-
-
             //Log
-            $description = "User ". $user->id . " add a user account ". $user->id;
-            $action = "Update";
 
             $log = Log::create([
                 'church_id' => $user->church_id,
@@ -178,7 +200,7 @@ class UserController extends Controller
                 'description' => $description,
             ]);
 
-        return redirect()->route('user.index')->with('success', 'User role changed successfully.');
+        return redirect()->route('user.index')->with('success', 'User role created successfully.');
 
     }
 

@@ -9,7 +9,9 @@ use App\Models\Log;
 use App\Models\Member;
 use App\Models\Message;
 use App\Models\Pastor;
+use App\Models\SenderID;
 use App\Models\Staff;
+use App\Models\Template;
 use App\Notifications\reminderNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -29,7 +31,10 @@ class CommunicationController extends Controller
         $sent_messages = Message::orderBy('created_at', 'desc')->take(7)->where('church_branch_id', $user->church_branch_id)->where('sender', $user->id)->get();
         $credits = CreditsAccount::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->first();
         $groups = Group::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->get();
-        return view('messaging.index', compact('sent_messages','credits', 'groups'));
+
+        $senderID = SenderID::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->get();
+        $templates = Template::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->where('user_id', $user->id)->get();
+        return view('messaging.index', compact('sent_messages','credits', 'groups','senderID', 'templates'));
     }
 
     public function sendSingle(Request $request)
@@ -41,7 +46,7 @@ class CommunicationController extends Controller
 
         $contactNumbers = $request->input('phone_number');
         $message = $request->input('message');
-        $subject =  $request->input('subject');
+        $subject =  $request->input('title');
         $sender =  $user->id;
         $messageLenght = $request->input('numberOfPages');
         $numbers = explode(', ', $contactNumbers);
@@ -62,11 +67,36 @@ class CommunicationController extends Controller
 
         $uniqueNumber = $this->uniqueNumber();
 
+        if($request->schedule == 'schedule')
+        {
+            $schdule=true;
+            $delivery = $request->delivery_date;
+        }else{
+
+            $schdule=false;
+            $delivery = null;
+        }
+
+
+        $sent = new Message;
+        $sent->church_id =  $user->church_id;
+        $sent->church_branch_id =  $user->church_branch_id;
+        $sent->recipient = $request->input('phone_number');
+        $sent->content = $message;
+        $sent->title = $subject;
+        $sent->sender = $sender;
+        $sent->credits = $creditsUsed;
+        $sent->type = "quick";
+        $sent->mode = "single";
+        $sent->status = "sent";
+        $sent->send_at = now();
+        $sent->save();
+
         foreach ($numbers as $phoneNumber) {
             // $sendSMS = sendSMS($phoneNumber, $senderID , $message);
             try {
                 // Assuming ReminderNotification has a method to send SMS directly
-                (new reminderNotification($phoneNumber, $message))->sendSMS();
+                (new reminderNotification($phoneNumber, $message, $senderID, $schdule, $delivery))->sendSMS();
 
                 // Log success or perform other actions as needed
                 // Log::info('SMS sent successfully to ' . $phone);
@@ -76,17 +106,6 @@ class CommunicationController extends Controller
             }
 
         }
-
-        $sent = new Message;
-        $sent->church_id =  $user->church_id;
-        $sent->church_branch_id =  $user->church_branch_id;
-        $sent->recipient = $request->input('phone_number');
-        $sent->message = $message;
-        $sent->subject = $subject;
-        $sent->sender = $sender;
-        $sent->credits = $creditsUsed;
-        $sent->type = "Single";
-        $sent->save();
 
         CreditsTransaction::create([
             'church_id' => $user->church_id,
@@ -124,24 +143,32 @@ class CommunicationController extends Controller
     public function sendBulk(Request $request)
     {
         $user = Auth()->user();
-
         $account = CreditsAccount::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->first();
         $availableCredit = $account->balance;
         $senderID = $account->senderID;
 
-        $validator = Validator::make($request->all(), [
-            'group' => 'required',
-            'message' => 'required'
-        ], [
-            'group.required' => 'Choose a group',
-            'message.required' => 'Ples provide a message',
-        ]);
+        // dd($request);
+        $smsType = $request->type;
 
-        if ($validator->fails()) {
-            return redirect()->back()
-            ->withErrors($validator)
-            ->withInput()
-            ->with('error', 'Check your inputs.');
+        if($smsType == 'custom')
+        {
+            $validator = Validator::make($request->all(), [
+            'group' => 'required',
+            'message' => 'required',
+            'title' => 'required',
+            ], [
+                'group.required' => 'Choose a group',
+                'title.required' => 'State state the title',
+                'message.required' => 'Include a message',
+            ]);
+
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Check your inputs.');
+            }
         }
 
         $group = $request->group;
@@ -153,10 +180,10 @@ class CommunicationController extends Controller
             ->where('church_branch_id', $user->church_branch_id)
             ->whereRaw('LENGTH(phone) >= 9')
             ->distinct('phone')
-            ->pluck('phone');
+            ->get();
 
             $group == "members";
-            $contactNumbers = str_replace(['[', ']', '"'], '', $contacts);
+            $contactNumbers = $contacts->count();
             $recipient = "Members: ";
         }
 
@@ -167,10 +194,10 @@ class CommunicationController extends Controller
             ->where('pastors.church_branch_id', $user->church_branch_id)
             ->whereRaw('LENGTH(members.phone) >= 9')
             ->distinct()
-            ->pluck('members.phone');
+            ->get();
 
             $group == "pastors";
-            $contactNumbers = str_replace(['[', ']', '"'], '', $contacts);
+            $contactNumbers = $contacts->count();
             $recipient = "Pastors: ";
         }
 
@@ -181,11 +208,11 @@ class CommunicationController extends Controller
                 ->where('staff.church_branch_id', $user->church_branch_id)
                 ->whereRaw('LENGTH(members.phone) >= 9')
                 ->distinct()
-                ->pluck('members.phone');
+                ->get();
 
 
             $group == "staff";
-            $contactNumbers = str_replace(['[', ']', '"'], '', $contacts);
+            $contactNumbers = $contacts->count();
             $recipient = "Staff: ";
         }
 
@@ -200,21 +227,37 @@ class CommunicationController extends Controller
                 ->where('m.church_branch_id', $user->church_branch_id)
                 ->whereRaw('LENGTH(m.phone) >= 9')
                 ->distinct()
-                ->pluck('m.phone');
+                ->get();
 
             $group = $groupContacts->name;
-            $contactNumbers = str_replace(['[', ']', '"'], '', $contacts);
-            $recipient = "Suppliers: ";
+            $contactNumbers = $contacts->count();
+            $recipient = "$group";
+        };
+
+        if($smsType == "template")
+        {
+            $template = Template::find($request->template_id);
+            $messageContent = $template->content;
+            $subject = $template->title;
+
+            $maxLength = 160;
+            $Length = strlen($messageContent);
+            $numberOfPages = ceil($Length / $maxLength);
+            $messageLenght = $numberOfPages;
+
+        }
+        else
+        {
+
+            $messageContent = $request->input('message');
+            $subject =  $request->input('title');
+            $messageLenght = $request->input('numberOfPages');
+
         }
 
-        $message = $request->input('message');
-        $messageLenght = $request->input('numberOfPages');
+        $message = $messageContent;
 
-        $numbers = explode(',', $contactNumbers);
-
-        $count = count($numbers);
-
-        $creditsUsed = $count*$messageLenght;
+        $creditsUsed = $contactNumbers*$messageLenght;
 
         if($availableCredit == 0 || $availableCredit < $creditsUsed){
             return redirect()->back()
@@ -230,11 +273,36 @@ class CommunicationController extends Controller
 
         $uniqueNumber = $this->uniqueNumber();
 
-        foreach ($numbers as $phoneNumber) {
-            // $sendSMS = sendSMS($phoneNumber, $senderID , $message);
+        foreach ($contacts as $contact) {
+            // Split the name by space
+            $nameParts = explode(' ', $contact->name);
+
+            // Extract first name and last name
+            $firstName = $nameParts[0];
+            $lastName = isset($nameParts[1]) ? implode(' ', array_slice($nameParts, 1)) : ''; // Handle single name case
+
+            if (strpos($message, '{{ first_name }}') !== false || strpos($message, '{{ last_name }}') !== false) {
+
+                $personalizedMessage = str_replace(['{{ first_name }}', '{{ last_name }}'], [$firstName, $lastName], $message);
+            } else {
+                $personalizedMessage = $message;
+            }
+
+            if($request->schedule == 'schedule')
+            {
+                $schdule=true;
+                $delivery = $request->delivery_date;
+            }else{
+
+                $schdule=false;
+                $delivery = null;
+            }
+
+            $phoneNumber = $contact->phone;
+
             try {
                 // Assuming ReminderNotification has a method to send SMS directly
-                (new reminderNotification($phoneNumber, $message))->sendSMS();
+                (new reminderNotification($phoneNumber, $personalizedMessage, $senderID, $schdule, $delivery))->sendSMS();
 
                 // Log success or perform other actions as needed
                 // Log::info('SMS sent successfully to ' . $phone);
@@ -245,15 +313,20 @@ class CommunicationController extends Controller
 
         }
 
+
         $sent = new Message;
         $sent->church_id =  $user->church_id;
         $sent->church_branch_id =  $user->church_branch_id;
-        $sent->recipient = $recipient . '('. $count. ')';
-        $sent->message = $request->input('message');
-        $sent->subject = $request->input('subject');
+        $sent->recipient = $recipient . '('. $contactNumbers. ')';
+        $sent->content = $message;
+        $sent->title = $subject;
         $sent->sender = $user->id;
         $sent->credits = $creditsUsed;
-        $sent->type = "Bulk";
+        $sent->type = "bulk";
+        $sent->mode = "bulk";
+        $sent->send_at = now();
+        $sent->status = "sent";
+
 
         $sent->save();
 
@@ -265,7 +338,7 @@ class CommunicationController extends Controller
             'uniqueId' => $uniqueNumber
         ]);
 
-        $description = "User ". $user->id . " sent a bulk message : ". $sent->id;
+        $description = "User ". $user->id . " sent a bulk message to " . $group. ". Message: ". $sent->id;
         $action = "SMS Sending";
 
         $log = Log::create([

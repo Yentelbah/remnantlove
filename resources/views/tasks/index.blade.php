@@ -33,17 +33,6 @@
             <div class="connect-sorting connect-sorting-inprogress">
               <div class="task-container-header">
                 <h6 class="mb-0 item-head fs-4 fw-semibold">Not Started</h6>
-                <div class="gap-2 hstack">
-                  <div class="dropdown">
-                    <a class="dropdown-toggle" href="javascript:void(0)" role="button" id="dropdownMenuLink-1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                      <i class="ti ti-dots-vertical text-dark"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink-1">
-                      <a class="dropdown-item list-edit" href="javascript:void(0);">Manage Tasks</a>
-                      <a class="dropdown-item list-clear-all" href="javascript:void(0);">Hide All</a>
-                    </div>
-                  </div>
-                </div>
               </div>
               <div class="connect-sorting-content">
                 @if($tasks->has('to_do'))
@@ -104,17 +93,6 @@
             <div class="connect-sorting connect-sorting-pending">
               <div class="task-container-header">
                 <h6 class="mb-0 item-head fs-4 fw-semibold">In Progress</h6>
-                <div class="gap-2 hstack">
-                  <div class="dropdown">
-                    <a class="dropdown-toggle" href="javascript:void(0)" role="button" id="dropdownMenuLink-1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                      <i class="ti ti-dots-vertical text-dark"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink-1">
-                      <a class="dropdown-item list-edit" href="javascript:void(0);">Manage Tasks</a>
-                      <a class="dropdown-item list-clear-all" href="javascript:void(0);">Clear All</a>
-                    </div>
-                  </div>
-                </div>
               </div>
               <div class="connect-sorting-content" data-sortable="true">
                 @if($tasks->has('in_progress'))
@@ -176,17 +154,6 @@
             <div class="connect-sorting connect-sorting-done">
               <div class="task-container-header">
                 <h6 class="mb-0 item-head fs-4 fw-semibold">Completed</h6>
-                <div class="gap-2 hstack">
-                  <div class="dropdown">
-                    <a class="dropdown-toggle" href="javascript:void(0)" role="button" id="dropdownMenuLink-1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                      <i class="ti ti-dots-vertical text-dark"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink-1">
-                      <a class="dropdown-item list-edit" href="javascript:void(0);">Manage Tasks</a>
-                      <a class="dropdown-item list-clear-all" href="javascript:void(0);">Clear All</a>
-                    </div>
-                  </div>
-                </div>
               </div>
               <div class="connect-sorting-content" data-sortable="true">
                 @if($tasks->has('completed'))

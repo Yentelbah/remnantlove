@@ -12,11 +12,16 @@
       </div>
       <div class="modal-body">
         <div class="row">
+            <div class="mb-3">
+                <label for="subject">Subject</label>
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Reminder" required>
+            </div>
 
-            <p><strong>To: </strong> <span name="recipient" id="recipient"></span></p>
-            <p><strong>Subject: </strong> <span name="subject" id="subject"></span></p>
-            <p><strong>Message: </strong><br> <span name="message" id="message"></span></p>
-            <p><strong>Date: </strong><span name="created_at" id="created_at"></span></p>
+            <div class="mb-3">
+
+                <label for="message">Message</label>
+                <textarea style="margin-top: 5px;" class="form-control" id="message" name="body" required></textarea>
+            </div>
 
         </div>
         </div>
