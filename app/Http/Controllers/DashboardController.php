@@ -375,9 +375,12 @@ class DashboardController extends Controller
     private function getMembersWithBirthdays()
     {
         $currentMonth = Carbon::now()->month;
+        $user = Auth()->user();
 
         // Query members whose birthdays are in the current month
         $members = Member::whereMonth('dob', $currentMonth)
+            ->where('church_id', $user->church_id)
+            ->where('church_branch_id', $user->church_branch_id)
             ->orderByRaw("DATE_FORMAT(dob, '%m-%d')") // Order by the nearest birthday (day of the month)
             ->get();
 
