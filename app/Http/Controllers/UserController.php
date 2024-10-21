@@ -142,21 +142,23 @@ class UserController extends Controller
                 'member_id' =>$member->id,
             ]);
 
-            $message = 'Welcome to Faithflow' . $userAccount->name . '!. An account has been created for you. You account details are: Email: ' . $userAccount->email . ' Password: ' . $password . '. Visit: www.faithflow.yensoftgh.com. Thank you.';
+            $phone = $userAccount->phone;
+            $message = 'Welcome to Faithflow ' . $userAccount->name . '!. An account has been created for you. You account details are: Email: ' . $userAccount->email . ' Password: ' . $password . '. Visit: www.faithflow.yensoftgh.com. Thank you.';
                         //Log
                         $description = "User ". $user->id . " created a user account ". $userAccount->id;
-                        $action = "Update";
+                        $action = "Account creation";
 
         }else{
             $oldAccount->is_deleted = false;
             $oldAccount->status = 'active';
             $oldAccount->save();
 
+            $phone = $oldAccount->phone;
             $message = 'Welcome Back ' . $oldAccount->name . '!. Your account has been restored. You details are: Email: ' . $oldAccount->email . ' Update or use your old password. Visit: www.faithflow.yensoftgh.com Thank you.';
 
                         //Log
                         $description = "User ". $user->id . " updated a user account ". $oldAccount->id;
-                        $action = "Update";
+                        $action = "Account restoration";
 
         }
 
@@ -183,7 +185,7 @@ class UserController extends Controller
 
         try {
             // Assuming ReminderNotification has a method to send SMS directly
-            (new accountCreationNotification($user->phone, $senderID, $message, $schdule, $delivery))->sendSMS();
+            (new accountCreationNotification($phone, $senderID, $message, $schdule, $delivery))->sendSMS();
 
         } catch (\Exception $e) {
             // Handle notification sending failure

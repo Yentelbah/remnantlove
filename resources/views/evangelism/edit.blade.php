@@ -43,7 +43,7 @@
                         <div class="mt-6 col-md-12">
                             <div>
                             <label class="form-label">Description</label>
-                            <input id="ed_description" name="description" type="text" class="form-control  @error('description') is-invalid @enderror" />
+                            <textarea id="ed_description" name="description" type="text" class="form-control  @error('description') is-invalid @enderror"></textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

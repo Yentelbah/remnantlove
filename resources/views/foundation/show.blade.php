@@ -43,7 +43,7 @@
             <div class="ms-0 ms-md-3 mb-9 mb-md-0">
               <div class="mb-1 d-flex align-items-center justify-content-center justify-content-md-start">
                 <h4 class="mb-0 me-7 fs-7">{{ $foundationSchool->convert->name }}</h4>
-                <span class="border badge fs-2 fw-bold rounded-pill bg-primary-subtle text-primary border-primary">Student</span>
+                <span class="border badge fs-2 fw-bold rounded-pill bg-primary-subtle text-primary border-primary">Foundation School Student</span>
               </div>
               <div class="d-flex align-items-center justify-content-center justify-content-md-start">
                 <span class="p-1 bg-primary rounded-circle"></span>

@@ -28,7 +28,7 @@ class CommunicationController extends Controller
         $user = Auth()->user();
         $role = $user->role;
         // dd($role);
-        $sent_messages = Message::orderBy('created_at', 'desc')->take(7)->where('church_branch_id', $user->church_branch_id)->where('sender', $user->id)->get();
+        $sent_messages = Message::where('church_branch_id', $user->church_branch_id)->where('sender', $user->id)->orderBy('created_at', 'desc')->get();
         $credits = CreditsAccount::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->first();
         $groups = Group::where('church_id', $user->church_id)->where('church_branch_id', $user->church_branch_id)->get();
 

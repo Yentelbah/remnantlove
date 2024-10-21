@@ -149,8 +149,8 @@
                     <div class="pb-3 mb-4 border-bottom">
                         <h4 class="card-title">Message Templates</h4>
                     </div>
-                    <div class="mt-1 table-responsive">
-                        <table class="table align-middle search-table text-wrap" id="multi_col_order">
+                    <div class="pb-3 table-responsive">
+                        <table class="table align-middle text-wrap" id="templates">
 
                             <thead>
                             <tr>
@@ -424,5 +424,11 @@
 
 
     </script>
+
+<script>
+    $("#templates").DataTable({
+    });
+</script>
+
 
 @endsection

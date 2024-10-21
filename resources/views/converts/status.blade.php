@@ -16,25 +16,31 @@
                 <div class="row">
 
                     <div class="col-md-12">
-                        <div class="mb-3 form-group">
+
+                        <div class="mb-3">
                             <label class="form-label">What is the current status of <strong><span name="name" id="sta_name"></span></strong>?</label>
-                            <select class="form-control @error('status') is-invalid @enderror" id="status" name="status">
-                                <option value="">Select status</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Joined">Joined</option>
-                                <option value="Not Interested">Not Interested</option>
-                            </select>
-                            @error('status')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                          </div>
+
+                            <div>
+                                <input type="radio" id="custom-bulk" name="status" value="Pending">
+                                <label for="custom">Pending</label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="custom-bulk" name="status" value="Joined">
+                                <label for="custom">Joined</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="custom-bulk" name="status" value="Not Interested">
+                                <label for="custom">Not Interested</label>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
                 <div class="col-12">
                     <div class="gap-6 mt-4 d-flex align-items-center justify-content-end">
-                        <button class="btn btn-primary" type="submit" >Save</button>
                         <button class="btn bg-danger-subtle text-danger" type="button" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit" >Save</button>
                     </div>
                 </div>
             </form>

@@ -94,8 +94,8 @@
 
                       <div class="col-12">
                         <div class="gap-6 mt-4 d-flex align-items-center justify-content-end">
-                          <button class="btn btn-success" type="submit">Save</button>
                           <button class="btn bg-danger-subtle text-danger" type="button" data-bs-dismiss="modal">Cancel</button>
+                          <button class="btn btn-success" type="submit">Save</button>
                         </div>
                     </div>
                     </section>

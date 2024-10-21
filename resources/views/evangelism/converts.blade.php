@@ -10,7 +10,7 @@
 
     <div class="mb-3 overflow-hidden position-relative">
         <div class="px-3 d-sm-flex align-items-center justify-content-between">
-        <h4 class="mb-0 fs-6">Souls Won </h4>
+        <h4 class="mb-0 fs-6">{{ $evangelism->event_name }}</h4>
         <nav aria-label="breadcrumb">
             <ol class="mb-0 breadcrumb">
             <li class="breadcrumb-item">
@@ -29,7 +29,7 @@
         <div class="col col-lg-4">
             <div class="card ">
                 <div class="pt-4 pb-1 card-body">
-                  <h4 class="mb-2 fs-6">{{ $evangelism->event_name }}</h4>
+                  <h4 class="mb-2 fs-6">Event Details</h4>
                   <div class="py-9 border-top">
 
                     <div class="mt-1 mb-4 border-bottom">
@@ -78,7 +78,7 @@
                     <a data-bs-toggle="modal" data-bs-target="#createModal" id="#modalCenter" class="px-4 mb-1 btn bg-success-subtle text-success fs-4 ms-auto me-1">Add Soul</a>
 
                     </div>
-                    <div class="p-3 table-responsive">
+                    <div class="p-1 table-responsive">
                         <table class="table align-items-center table-flush table-hover" id="events">
                         <thead class="thead-light">
                             <tr>
@@ -136,8 +136,6 @@
             </div>
         </div>
     </div>
-
-
 
 @endsection
 

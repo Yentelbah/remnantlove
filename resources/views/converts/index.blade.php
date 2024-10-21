@@ -8,13 +8,13 @@
 @section('content')
 <div class="mb-3 overflow-hidden position-relative">
     <div class="px-3 d-sm-flex align-items-center justify-content-between">
-      <h4 class="mb-0 fs-6">Converts</h4>
+      <h4 class="mb-0 fs-6">Souls Won</h4>
       <nav aria-label="breadcrumb">
         <ol class="mb-0 breadcrumb">
           <li class="breadcrumb-item">
             <a href="{{ route('dashboard') }}">Dashboard</a>
           </li>
-          <li class="breadcrumb-item" aria-current="page">Converts</li>
+          <li class="breadcrumb-item" aria-current="page">Souls Won</li>
         </ol>
       </nav>
     </div>
@@ -23,10 +23,10 @@
   <div class="card">
     <div class="card-body">
       <div class="justify-between mb-2 d-flex">
-        <h4 class="mb-0 card-title">Converts</h4>
+        <h4 class="mb-0 card-title">Souls Won</h4>
 
         <div class="ms-auto">
-            <a data-bs-toggle="modal" data-bs-target="#createModal" id="#modalCenter" class="px-4 mb-1 btn bg-success-subtle text-success fs-4 ms-auto me-1">Add Convert</a>
+            <a data-bs-toggle="modal" data-bs-target="#createModal" id="#modalCenter" class="px-4 mb-1 btn bg-success-subtle text-success fs-4 ms-auto me-1">Add Soul</a>
         </div>
       </div>
     <div class="mb-3 row">
@@ -127,13 +127,21 @@
 
         function openStatusModal(id) {
             $.ajax({
-                url: '/converts/' + id, // Replace with the appropriate route for fetching department details
+                url: '/converts/' + id, // Replace with the appropriate route for fetching details
                 type: 'GET',
                 success: function(response) {
-                    // Update the modal content with the fetched department details
+                    // Update the modal content with the fetched details
                     $('#sta_name').text(response.name);
-                    $('#status').val(response.status);
                     $('#sta_selectedId').val(response.id);
+
+                    // Check the radio button that corresponds to the fetched status
+                    if (response.status === 'Pending') {
+                        $('#custom-bulk[value="Pending"]').prop('checked', true);
+                    } else if (response.status === 'Joined') {
+                        $('#custom-bulk[value="Joined"]').prop('checked', true);
+                    } else if (response.status === 'Not Interested') {
+                        $('#custom-bulk[value="Not Interested"]').prop('checked', true);
+                    }
                 },
                 error: function(xhr) {
                     // Handle error case
@@ -141,6 +149,7 @@
                 }
             });
         }
+
 
         function openDeleteModal(id) {
             $.ajax({
