@@ -82,7 +82,7 @@ class CommunicationController extends Controller
         $sent->church_id =  $user->church_id;
         $sent->church_branch_id =  $user->church_branch_id;
         $sent->recipient = $request->input('phone_number');
-        $sent->content = $message;
+        $sent->message = $message;
         $sent->title = $subject;
         $sent->sender = $sender;
         $sent->credits = $creditsUsed;

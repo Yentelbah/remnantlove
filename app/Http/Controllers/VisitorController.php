@@ -56,6 +56,10 @@ class VisitorController extends Controller
             'date_visited' => $request->date_visited,
             'location' => $request->location,
             'email'=>$request->email,
+            'dob'=>$request->dob,
+            'occupation'=>$request->occupation,
+            'preferred_contact'=>$request->preferred_contact,
+            'best_time' =>$request->best_time,
             'church_id' => $user->church_id,
             'church_branch_id' => $user->church_branch_id,
         ]);
@@ -82,7 +86,7 @@ class VisitorController extends Controller
         return response()->json($result);
     }
 
-    // Update an evangelism event
+    // Update a visitor
     public function update(Request $request)
     {
         $user = Auth()->user();
@@ -102,12 +106,12 @@ class VisitorController extends Controller
             ->with('error', 'Some inputs are missing.');
         }
 
-        $event = Visitor::findOrFail($request->selectedId);
-        $event->update($request->all());
+        $visitor = Visitor::findOrFail($request->selectedId);
+        $visitor->update($request->all());
 
         //LOG
 
-        $description = "User ". $user->id . " updated a visitor information:  ". $event->id;
+        $description = "User ". $user->id . " updated a visitor information:  ". $visitor->id;
         $action = "Update";
 
         $log = Log::create([
@@ -145,6 +149,10 @@ class VisitorController extends Controller
             'gender' =>  $visitor->gender, // This should be collected from user input
             'email' => $visitor->email, // This should be collected from user input
             'phone' => $visitor->phone,
+            'dob'=>$visitor->dob,
+            'occupation'=>$visitor->occupation,
+            'preferred_contact'=>$visitor->preferred_contact,
+            'best_time' =>$visitor->best_time,
             'location' => $visitor->location,
             'is_deleted' => false,
         ]);

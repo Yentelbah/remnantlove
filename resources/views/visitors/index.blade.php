@@ -38,6 +38,7 @@
                   <th>#</th>
                   <th>Name</th>
                   <th>Phone</th>
+                  <th>Pref Contact</th>
                   <th>Location</th>
                   <th>Date Visited</th>
                   <td>Action</td>
@@ -49,6 +50,7 @@
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $value->name }}</td>
                     <td>{{ $value->phone }}</td>
+                    <td>{{ $value->preferred_contact }}</td>
                     <td>{{ $value->location }}</td>
                     <td class="px-0">{{ formatShortDates($value->date_visited) }}</td>
 
@@ -59,7 +61,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                               <li>
-                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#followModal" id="#modalCenter" onclick="openFollowupModal('{{ $value->id }}')">Follow-up</a>
+                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#followupModal" id="#modalCenter" onclick="openFollowupModal('{{ $value->id }}')">Follow-up</a>
                               </li>
                               <li>
                                 <form action="{{ route('visitors.convert', $value->id) }}" method="POST">
@@ -91,6 +93,8 @@
 
       @include('visitors.edit')
       @include('visitors.delete')
+      @include('followup.add')
+
   </div>
 
 @endsection
@@ -98,6 +102,23 @@
 @section('scripts')
 
     <script>
+        function openFollowupModal(id) {
+            $.ajax({
+                url: '/visitors/' + id, // Replace with the appropriate route for fetching department details
+                type: 'GET',
+                success: function(response) {
+                    // Update the modal content with the fetched department details
+                    $('#fl_name').text(response.name);
+                    $('#fl_origin').val('visitor');
+                    $('#fl_selectedId').val(response.id);
+                },
+                error: function(xhr) {
+                    // Handle error case
+                    console.log(xhr);
+                }
+            });
+        }
+
         function openEditModal(id) {
             $.ajax({
                 url: '/visitors/' + id, // Replace with the appropriate route for fetching department details
@@ -110,6 +131,10 @@
                     $('#ed_phone').val(response.phone);
                     $('#ed_email').val(response.email);
                     $('#ed_location').val(response.location);
+                    $('#ed_dob').val(response.dob);
+                    $('#ed_occupation').val(response.occupation);
+                    $('#ed_preferred_contact').val(response.preferred_contact);
+                    $('#ed_best_time').val(response.best_time);
                     $('#selectedId').val(response.id);
                 },
                 error: function(xhr) {

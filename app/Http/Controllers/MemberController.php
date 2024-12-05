@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Exports\MembersExport;
 use App\Models\Church;
+use App\Models\Family;
+use App\Models\FamilyMember;
+use App\Models\FollowUp;
 use App\Models\GroupLeader;
 use App\Models\GroupMember;
 use App\Models\Log;
 use App\Models\Member;
 use App\Models\Pastor;
 use App\Models\Staff;
+use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -157,7 +162,9 @@ class MemberController extends Controller
         $result->address = $request->address;
         $result->location = $request->location;
         $result->email = $request->email;
-
+        $result->occupation = $request->occupation;
+        $result->preferred_contact = $request->preferred_contact;
+        $result->best_time = $request->best_time;
         $result->save();
 
             //LOG
@@ -230,31 +237,52 @@ class MemberController extends Controller
         $user = Auth()->user();
 
         $query = $request->get('query');
-
         $member = Member::find($query);
+        $user = User::where('member_id', $member->id)->first();
 
         $groups = GroupMember::where('member_id', $query)->count();
         $groupDetails = GroupMember::with('group')->where('member_id', $query)->get();
+        if($user){
+            $tasks = DB::table('task_assignees')->where('user_id', $user->id)->count();
+        }else{
+            $tasks = 0;
+        }
 
-        // dd($groupDetails);
+        $follow_ups = FollowUp::where('contact_id', $query)->get();
 
-        return view('member.member_details', compact('member', 'groups', 'groupDetails'));
+        $familyDetails = FamilyMember::with('family')->where('member_id', $query)->get();
+
+        return view('member.member_details', compact('member', 'groups', 'groupDetails', 'familyDetails', 'tasks', 'follow_ups'));
     }
 
-    public function uploadImage(Request $request)
+    public function checkMember(Request $request)
     {
-        $path = 'files/';
-        if (!File::exists(public_path($path))) {
-             File::makeDirectory(public_path($path),0777,true);
+
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+
+        $member = Member::where('email', $email)->orWhere('phone', $phone)->first();
+        $familyDetails = FamilyMember::with('family')->where('member_id', $member->id)->first();
+
+        $thisFamily = Family::find($familyDetails->family->id);
+
+        $familyMembers = $thisFamily->members()
+            ->leftJoin('members as m', 'family_members.member_id', '=', 'm.id')
+            ->select('family_members.*', 'm.id', 'm.name', 'm.member_number')
+            ->where('m.id', '!=', $member->id)  // Exclude the current member by their ID
+            ->get();
+
+        if (!$member) {
+            return response()->json(['status' => 'not_found', 'message' => 'Member not found.']);
         }
-        $file = $request->file('file');
-        $new_image_name = 'UIMG'.date('Ymd').uniqid().'.jpg';
-        $upload = $file->move(public_path($path), $new_image_name);
-        if($upload){
-            return response()->json(['status'=>1, 'msg'=>'Image has been cropped successfully.', 'name'=>$new_image_name]);
-        }else{
-              return response()->json(['status'=>0, 'msg'=>'Something went wrong, try again later']);
-        }
+
+
+        return response()->json([
+            'status' => 'found',
+            'member' => $member,
+            'family_members' =>$familyMembers,
+        ]);
+
     }
 
 }

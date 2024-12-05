@@ -155,6 +155,10 @@
                 $('#ed_email').val(response.email);
                 $('#ed_shepherd').val(response.shepherd_id);
                 $('#ed_description').val(response.description);
+                $('#ed_dob').val(response.dob);
+                $('#ed_occupation').val(response.occupation);
+                $('#ed_preferred_contact').val(response.preferred_contact);
+                $('#ed_best_time').val(response.best_time);
                 $('#ed_selectedId').val(response.id);
             },
             error: function(xhr) {

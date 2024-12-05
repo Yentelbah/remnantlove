@@ -246,7 +246,7 @@ class FamilyController extends Controller
         $user = Auth()->user();
 
         // Get the selected family
-        $familyId = $request->input('FamilyId');
+        $familyId = $request->input('familyID');
         $family = Family::findOrFail($familyId);
         $memberIds = explode(',', $request->input('members'));
 
@@ -269,6 +269,48 @@ class FamilyController extends Controller
             ]);
 
         return redirect()->back()->with('success', 'Members remove from the family successfully.');
+    }
+
+    public function update_member_relation(Request $request)
+    {
+        $user = Auth()->user();
+
+        // Get the selected family
+        $familyId = $request->input('familyId');
+        $family = Family::find($familyId);
+        $result = FamilyMember::where('family_id', $familyId)->where('member_id', $request->member_id)->first();
+        $result->relation = $request->relation;
+        $result->save();
+
+            //LOG
+            $description = "User ". $user->id . " updated the member relation in a family:  ". $family->name;
+            $action = "Change family relationship";
+
+            $log = Log::create([
+                'user_id' => $user->id,
+                'church_id' => $user->church_id,
+                'church_branch_id' => $user->church_branch_id,
+                'action' => $action,
+                'description' => $description,
+            ]);
+
+        return redirect()->back()->with('success', 'Member relationship in family updated successfully.');
+    }
+
+    public function relation_details($id)
+    {
+        $result = Member::find($id);
+        $family = FamilyMember::where('member_id', $result->id)->first();
+
+        $memberName = $result->name;
+        $memberId = $result->id;
+        $relation = $family->relation;
+
+        return response()->json([
+            'memberName' => $memberName,
+            'memberId' => $memberId,
+            'relation' => $relation,
+        ]);
     }
 
 }

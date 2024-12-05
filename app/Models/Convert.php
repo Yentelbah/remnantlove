@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Ramsey\Uuid\Uuid;
 
 class Convert extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected static function boot()
     {
@@ -49,7 +50,7 @@ class Convert extends Model
         'status', // e.g., 'joined', 'pending', 'not_interested'
         'joined_at',
         'follow_up_status',
-        'notes', 'shepherd_id',
+        'notes', 'shepherd_id', 'dob', 'occupation', 'preferred_contact', 'best_time',
         'church_id','church_branch_id'
     ];
 

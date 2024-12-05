@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
-class FamilyMember extends Model
+class ChurchServiceAttendance extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['family_id', 'member_id', 'relation', 'parent_id', 'church_branch_id'];
+    protected $fillable = ['service_id', 'church_id', 'attendee_id','invitee', 'date', 'is_member','church_branch_id'];
 
     protected static function boot()
     {
@@ -44,23 +44,12 @@ class FamilyMember extends Model
         return false;
     }
 
-    public function member()
+
+    public function service()
     {
-        return $this->belongsTo(Member::class);
+        return $this->belongsTo(ChurchService::class);
     }
 
-    public function parent()
-    {
-        return $this->belongsTo(FamilyMember::class, 'parent_id');
-    }
 
-    public function children()
-    {
-        return $this->hasMany(FamilyMember::class, 'parent_id');
-    }
 
-    public function family()
-    {
-        return $this->belongsTo(Family::class);
-    }
 }

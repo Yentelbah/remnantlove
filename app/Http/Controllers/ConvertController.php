@@ -17,8 +17,6 @@ class ConvertController extends Controller
     {
         $user = Auth()->user();
 
-
-
         $converts = Convert::where('church_id', $user->church_id)
         ->where('church_branch_id', $user->church_branch_id)
         ->where('status', '!=', 'Joined')
@@ -119,6 +117,10 @@ class ConvertController extends Controller
             $member['phone']= $convert->phone;
             $member['email']= $convert->email;
             $member['location']= $convert->location;
+            $member['dob']= $convert->dob;
+            $member['occupation']= $convert->occupation;
+            $member['preferred_contact']= $convert->preferred_contact;
+            $member['best_time']= $convert->best_time;
             $member['church_id'] = $user->church_id;
             $member['church_branch_id'] = $user->church_branch_id;
 

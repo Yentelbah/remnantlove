@@ -41,7 +41,7 @@
                         <div class="mb-3 col-lg-6">
                             <label class="form-label" for="group">Select Group</label>
                             <select class="form-select" id="group" name="group_id">
-                                <option value="">Select existing member</option>
+                                <option value="">Select existing group</option>
                                 @foreach ($groups as $result)
                                     <option value="{{ $result->id }}">{{ $result->name }}</option>
                                 @endforeach

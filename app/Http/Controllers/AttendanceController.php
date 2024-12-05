@@ -5,10 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Church;
 use App\Models\ChurchService;
+use App\Models\ChurchServiceAttendance;
+use App\Models\FamilyMember;
 use App\Models\Log;
+use App\Models\Member;
+use App\Models\Visitor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class AttendanceController extends Controller
 {
     public function index()
@@ -50,8 +56,15 @@ class AttendanceController extends Controller
                 'total_attendance' => $totalAttendance,
             ];
         }
+        $church_id = Auth::user()->church_id;
+        $church_branch_id = Auth::user()->church_branch_id;
+        $attendanceLink = route('attendance.form', [
+            'churchId' => $church_id,
+            // 'churchBranchId' => $church_branch_id
+        ]);
+        $image = QrCode::size(200)->generate($attendanceLink);
 
-        return view('attendance.index', compact('attendances', 'statistics','services', 'chartData'));
+        return view('attendance.index', compact('attendances', 'statistics','services', 'chartData', 'image', 'church_id',));
     }
 
     public function store(Request $request)
@@ -234,6 +247,195 @@ class AttendanceController extends Controller
         ]);
 
         return redirect()->route('attendance.index')->with('success', 'Service deleted successfully');
+    }
+
+    public function showAttendanceForm($churchId)
+    {
+        $date = Carbon::today()->toDateString();
+        $service = ChurchService::where('service_date', $date)->get();
+        return view('attendance.form', compact('service', 'churchId',));
+    }
+
+    public function recordAttendance(Request $request)
+    {
+        $request->validate([
+            'church_id' => 'required|exists:churches,id',
+            'is_member' => 'required|in:yes,no',
+            'family_members' => 'array', // Validate family_members as an array if provided
+        ]);
+
+        $service = ChurchService::find($request->service);
+        $attendee_id = null;
+        $is_member = false;
+
+        if ($request->is_member == 'yes') {
+            // Find or create member
+            $member = Member::where('email', $request->member_email)
+                ->orWhere('phone', $request->member_phone)
+                ->first();
+
+            if (!$member) {
+                $member = Member::create([
+                    'name' => $request->member_name,
+                    'phone' => $request->member_phone,
+                    'email' => $request->member_email,
+                    'church_id' => $request->church_id,
+                    'church_branch_id' => $service->church_branch_id,
+                ]);
+            }
+
+            // Process family members
+            if ($request->family_members) {
+                foreach ($request->family_members as $familyMemberId) {
+                    // Find the family member by their ID
+                    $familyMember = Member::find($familyMemberId);
+
+                    // Check if the family member exists
+                    if ($familyMember) {
+                        $alreadyMarked = ChurchServiceAttendance::where('attendee_id', $familyMember->id)
+                            ->whereDate('created_at', Carbon::today())
+                            ->exists();
+
+                        if ($alreadyMarked) {
+                            continue; // Skip this family member if attendance is already marked
+                        }
+
+                        // Record attendance for each family member
+                        ChurchServiceAttendance::create([
+                            'attendee_id' => $familyMember->id, // Use the family member's ID
+                            'date' => Carbon::now(),
+                            'is_member' => true, // Assuming all family members are members
+                            'service_id' => $service->id,
+                            'church_id' => $request->church_id,
+                            'church_branch_id' => $service->church_branch_id,
+                        ]);
+                    }
+                }
+            }
+
+            $attendee_id = $member->id;
+            $is_member = true;
+        }
+
+        if ($request->is_member == 'no') {
+            // Find or create visitor
+            $visitor = Visitor::where('church_id', $request->church_id)
+                ->where(function ($query) use ($request) {
+                    $query->where('email', $request->email)
+                          ->orWhere('phone', $request->phone);
+                })
+                ->first();
+
+            if (!$visitor) {
+                $visitor = Visitor::create([
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'gender' => $request->gender,
+                    'date_visited' => Carbon::now(),
+                    'location' => $request->location,
+                    'email' => $request->email,
+                    'dob' => $request->dob,
+                    'occupation' => $request->occupation,
+                    'preferred_contact' => $request->preferred_contact,
+                    'best_time' => $request->best_time,
+                    'church_id' => $request->church_id,
+                    'invitee' => $request->invitee,
+                    'church_branch_id' => $service->church_branch_id,
+                ]);
+            }
+
+            $attendee_id = $visitor->id;
+            $is_member = false;
+        }
+
+        // Check if attendance is already marked today for the main attendee
+        $alreadyMarked = ChurchServiceAttendance::where('attendee_id', $attendee_id)
+            ->whereDate('created_at', Carbon::today())
+            ->exists();
+
+        if ($alreadyMarked) {
+            return back()->with('error', 'Attendance has already been registered for today.');
+        }
+
+        // Record attendance for the main attendee
+        ChurchServiceAttendance::create([
+            'attendee_id' => $attendee_id,
+            'date' => Carbon::now(),
+            'is_member' => $is_member,
+            'service_id' => $service->id,
+            'church_id' => $request->church_id,
+            'church_branch_id' => $service->church_branch_id,
+        ]);
+
+        return back()->with('status', 'Your attendance has been recorded successfully.');
+    }
+
+    public function service_attendance($id)
+    {
+        // Initialize counters
+        $adultMaleCount = 0;
+        $adultFemaleCount = 0;
+        $childMaleCount = 0;
+        $childFemaleCount = 0;
+        $result = ChurchService::findOrFail($id);
+
+
+        // Fetch all attendance records for the given service
+        $attendances = ChurchServiceAttendance::where('service_id', $id)->get();
+
+        foreach ($attendances as $attendance) {
+            if ($attendance->is_member) {
+                // Fetch attendee details from the members table
+                $member = Member::find($attendance->attendee_id);
+
+                if ($member) {
+                    $age = Carbon::parse($member->dob)->age; // Assuming `dob` (date of birth) is in the `members` table
+                    if ($age >= 18) {
+                        if (strtolower($member->gender) == 'male') {
+                            $adultMaleCount++;
+                        } elseif (strtolower($member->gender) == 'female') {
+                            $adultFemaleCount++;
+                        }
+                    } else {
+                        if (strtolower($member->gender) == 'male') {
+                            $childMaleCount++;
+                        } elseif (strtolower($member->gender) == 'female') {
+                            $childFemaleCount++;
+                        }
+                    }
+                }
+            } else {
+                // Fetch attendee details from the visitors table
+                $visitor = Visitor::find($attendance->attendee_id);
+
+                if ($visitor) {
+                    $age = Carbon::parse($visitor->dob)->age; // Assuming `dob` (date of birth) is in the `visitors` table
+                    if ($age >= 18) {
+                        if (strtolower($visitor->gender) == 'male') {
+                            $adultMaleCount++;
+                        } elseif (strtolower($visitor->gender) == 'female') {
+                            $adultFemaleCount++;
+                        }
+                    } else {
+                        if (strtolower($visitor->gender) == 'male') {
+                            $childMaleCount++;
+                        } elseif (strtolower($visitor->gender) == 'female') {
+                            $childFemaleCount++;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Return the counts as JSON for the modal
+        return response()->json([
+            'adult_male_count' => $adultMaleCount,
+            'adult_female_count' => $adultFemaleCount,
+            'child_male_count' => $childMaleCount,
+            'child_female_count' => $childFemaleCount,
+            'service_name'=> $result->name,
+            'service_id' =>$result->id,
+        ]);
     }
 
 }

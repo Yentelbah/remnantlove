@@ -65,6 +65,11 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::get('/attendance-form/{churchId}', [AttendanceController::class, 'showAttendanceForm'])->name('attendance.form');
+Route::post('/attendance/record', [AttendanceController::class, 'recordAttendance'])->name('attendance.record');
+Route::post('/check-member', [MemberController::class, 'checkMember'])->name('check.member');
+
+
 Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified', ])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'displayDashboard'])->name('dashboard');
@@ -117,6 +122,8 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
         Route::get('/family_members/{id}', [FamilyController::class, 'members'])->name('family.members.list');
         Route::post('/family/add_member', [FamilyController::class, 'add_member'])->name('family.member');
         Route::post('/family/remove_member', [FamilyController::class, 'remove_member'])->name('family.member.remove');
+        Route::get('/family_members_details/{id}', [FamilyController::class, 'relation_details']);
+        Route::put('/family_relation_update', [FamilyController::class, 'update_member_relation'])->name('family.relation.update');
 
         Route::post('/family/add_leader', [FamilyController::class, 'add_leader'])->name('family.leader');
         Route::post('/family/revoke_leader', [FamilyController::class, 'revoke_leader'])->name('family.leader.revoke');
@@ -362,11 +369,9 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
 
     // Follow-Up Routes
     Route::get('/follow-ups', [FollowUpController::class, 'index'])->name('follow-ups.index');  // List all follow-ups
-    Route::get('/follow-ups/create', [FollowUpController::class, 'create'])->name('follow-ups.create');  // Show form to schedule a new follow-up
     Route::post('/follow-ups', [FollowUpController::class, 'store'])->name('follow-ups.store');  // Store a new follow-up
-    Route::get('/follow-ups/{id}', [FollowUpController::class, 'show'])->name('follow-ups.show');  // View a specific follow-up
-    Route::get('/follow-ups/{id}/edit', [FollowUpController::class, 'edit'])->name('follow-ups.edit');  // Edit a follow-up
-    Route::put('/follow-ups/{id}', [FollowUpController::class, 'update'])->name('follow-ups.update');  // Update a follow-up
+    Route::get('/follow-ups/{id}', [FollowUpController::class, 'show']);  // View a specific follow-up
+    Route::put('/follow-ups', [FollowUpController::class, 'update'])->name('follow-ups.update');  // Update a follow-up
     Route::delete('/follow-ups/{id}', [FollowUpController::class, 'destroy'])->name('follow-ups.destroy');  // Delete a follow-up
 
 
@@ -417,6 +422,7 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::get('/church_service/{id}', [AttendanceController::class, 'service_details']);
     Route::put('/church_service', [AttendanceController::class, 'service_update'])->name('service.update');
     Route::delete('/church_service',[AttendanceController::class, 'service_delete'] )->name('service.delete');
+    Route::get('/church_service_att/{id}', [AttendanceController::class, 'service_attendance']);
 
     //Legal Routes
     Route::get('privacy_policy', [LegalController::class, 'privacy_policy'])->name('privacy_policy');
@@ -458,6 +464,4 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::put('/client',[ClientController::class, 'clientUpdate'] )->name('client.update');
 
 });
-
-
 

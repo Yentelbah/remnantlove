@@ -86,7 +86,7 @@ class ChurchController extends Controller
         // Upload the new logo
         if ($request->hasFile('logo')) {
 
-            $churchFolderPath = "companies/{$church->churchId}/logo";
+            $churchFolderPath = "churches/{$church->churchId}/logo";
             $imagePath = $request->file('logo')->store("public/{$churchFolderPath}");
             $church->logo = str_replace('public/', '', $imagePath);
             $church->save();

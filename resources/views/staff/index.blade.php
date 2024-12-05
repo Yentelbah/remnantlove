@@ -69,6 +69,9 @@
                                     </form>
 
                                 </li>
+                                <li>
+                                    <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->member->id }}" data-bs-toggle="modal" data-bs-target="#followupModal" id="#modalCenter" onclick="openFollowupModal('{{ $value->member->id }}')">Follow-up</a>
+                                </li>
                                 @if ($nonExistingUsers->contains('member_id', $value->member_id))
                                 <li>
                                     <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#createModal" id="#modalCenter" onclick="openUserAccountModal('{{ $value->id }}')">+ User Account</a>
@@ -99,6 +102,7 @@
     @include('staff.edit')
     @include('staff.delete')
     @include('leader.account')
+    @include('followup.add')
 
 
 @endsection
@@ -106,6 +110,24 @@
 @section('scripts')
 
     <script>
+        function openFollowupModal(id) {
+            $.ajax({
+                url: '/members/' + id, // Replace with the appropriate route for fetching department details
+                type: 'GET',
+                success: function(response) {
+                    // Update the modal content with the fetched department details
+                    $('#fl_name').text(response.name);
+                    $('#fl_origin').val('member');
+                    $('#fl_selectedId').val(response.id);
+
+                },
+                error: function(xhr) {
+                    // Handle error case
+                    console.log(xhr);
+                }
+            });
+        }
+
         function openEditModal(id) {
             $.ajax({
                 url: '/staff/' + id, // Replace with the appropriate route for fetching department details

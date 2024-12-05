@@ -117,6 +117,10 @@
 
                             </li>
                             <li>
+                                <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#followupModal" id="#modalCenter" onclick="openFollowupModal('{{ $value->id }}')">Follow-up</a>
+                              </li>
+
+                            <li>
                                 <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#editModal" id="#modalCenter" onclick="openEditModal('{{ $value->id }}')">Edit</a>
                             </li>
                             <li>
@@ -143,6 +147,7 @@
       @include('member.edit')
       @include('member.delete')
       @include('member.download')
+      @include('followup.add')
 
     </div>
   </div>
@@ -152,6 +157,24 @@
 @section('scripts')
 
     <script>
+        function openFollowupModal(id) {
+            $.ajax({
+                url: '/members/' + id, // Replace with the appropriate route for fetching department details
+                type: 'GET',
+                success: function(response) {
+                    // Update the modal content with the fetched department details
+                    $('#fl_name').text(response.name);
+                    $('#fl_origin').val('member');
+                    $('#fl_selectedId').val(response.id);
+
+                },
+                error: function(xhr) {
+                    // Handle error case
+                    console.log(xhr);
+                }
+            });
+        }
+
         function openEditModal(id) {
             $.ajax({
                 url: '/members/' + id, // Replace with the appropriate route for fetching department details
@@ -165,6 +188,9 @@
                     $('#ed_address').val(response.address);
                     $('#ed_location').val(response.location);
                     $('#ed_email').val(response.email);
+                    $('#ed_occupation').val(response.occupation);
+                    $('#ed_preferred_contact').val(response.preferred_contact);
+                    $('#ed_best_time').val(response.best_time);
                     $('#selectedId').val(response.id);
                 },
                 error: function(xhr) {

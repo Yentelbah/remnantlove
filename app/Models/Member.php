@@ -58,7 +58,7 @@ class Member extends Model
         'address',
         'location',
         'photo',
-        'dob', 'gender',
+        'dob', 'gender', 'occupation', 'preferred_contact', 'best_time',
         'church_id', 'church_branch_id', 'user_id'
     ];
 

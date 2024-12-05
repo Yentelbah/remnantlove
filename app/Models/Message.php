@@ -11,7 +11,7 @@ class Message extends Model
     protected $table = 'messages';
 
     protected $fillable = [
-        'recipient','content', 'schedule', 'sender', 'title', 'type', 'credits', 'response', 'church_id','church_branch_id','send_at',
+        'recipient','message', 'schedule', 'sender', 'title', 'type', 'credits', 'response', 'church_id','church_branch_id','send_at',
     ];
 
     protected static function boot()

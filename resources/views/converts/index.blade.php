@@ -90,7 +90,7 @@
             @include('converts.edit')
             @include('converts.status')
             @include('converts.delete')
-            @include('converts.follow_up')
+            @include('followup.add')
 
           </div>
         </div>
@@ -103,6 +103,25 @@
 @section('scripts')
 
     <script>
+
+        function openFollowupModal(id) {
+            $.ajax({
+                url: '/converts/' + id, // Replace with the appropriate route for fetching department details
+                type: 'GET',
+                success: function(response) {
+                    // Update the modal content with the fetched department details
+                    $('#fl_name').text(response.name);
+                    $('#fl_origin').val('convert');
+                    $('#fl_selectedId').val(response.id);
+
+                },
+                error: function(xhr) {
+                    // Handle error case
+                    console.log(xhr);
+                }
+            });
+        }
+
         function openEditModal(id) {
             $.ajax({
                 url: '/converts/' + id, // Replace with the appropriate route for fetching department details
@@ -116,6 +135,11 @@
                     $('#ed_email').val(response.email);
                     $('#ed_shepherd').val(response.shepherd_id);
                     $('#ed_description').val(response.description);
+                    $('#ed_dob').val(response.dob);
+                    $('#ed_occupation').val(response.occupation);
+                    $('#ed_preferred_contact').val(response.preferred_contact);
+                    $('#ed_best_time').val(response.best_time);
+
                     $('#ed_selectedId').val(response.id);
                 },
                 error: function(xhr) {

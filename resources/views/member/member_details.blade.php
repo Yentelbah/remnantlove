@@ -109,10 +109,21 @@
                         <p class="mb-0">{{ $member->dob ?? '' }}</p>
                         </div>
                     </div>
+
+                    <div class="d-flex align-items-center mb-9">
+                        <div class="bg-danger-subtle text-danger fs-14 round-40 rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="ti ti-dongbel"></i>
+                        </div>
+                        <div class="ms-6">
+                            <h6 class="mb-1">Occupation</h6>
+                            <p class="mb-0">{{ $member->occupation ?? '' }}</p>
+                        </div>
+                        </div>
                 </div>
 
                 <div class="py-9 border-top">
                     <h5 class="mb-9">Contact</h5>
+                    <p>Preferred contact <b> {{ $member->preferred_contact ?? '' }}</b>; Best time: <b>{{ $member->best_time ?? '' }}</b></p>
                     <div class="d-flex align-items-center mb-9">
                     <div class="bg-danger-subtle text-danger fs-14 round-40 rounded-circle d-flex align-items-center justify-content-center">
                         <i class="ti ti-phone"></i>
@@ -195,7 +206,7 @@
                         <i class="ti ti-layout-grid-add"></i>
                         </div>
                         <div class="ms-6">
-                        <h6 class="mb-1 fs-6">0</h6>
+                        <h6 class="mb-1 fs-6">{{ $tasks }}</h6>
                         <p class="mb-0">Tasks</p>
                         </div>
                     </div>
@@ -227,15 +238,57 @@
             </div>
 
             <div class="card">
-                <div class="p-4 card-body">
+                <div class="card-body">
+                <h5 class="mb-9">Family details</h5>
 
+                @foreach($familyDetails as $value)
+                <div class="d-flex align-items-center mb-9">
+                    <div class="bg-info-subtle text-info fs-14 round-40 rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="ti ti-user-plus"></i></div>
+                    <div class="ms-6">
+                        <h6 class="mb-1">{{ $value->family->name }}</h6>
+                        <p class="mb-0">{{ $value->family->description }}</p>
+                    </div>
                 </div>
+
+                <a class="p-2 text-primary d-flex align-items-center justify-content-center fs-3 rounded-circle fw-semibold" href="{{ route('family.members.list', $value->family->id) }}">See family members</a>
+
+                @endforeach
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title fw-semibold mb-7">Follow Ups</h4>
+                    <ul class="mb-0 timeline-widget position-relative mb-n4">
+                        @foreach($follow_ups as $value)
+
+                      <li class="overflow-hidden timeline-item d-flex position-relative">
+                        <div class="flex-shrink-0 timeline-time mt-n1 text-muted text-end">{{ $value->follow_up_date }}
+                        </div>
+                        <div class="timeline-badge-wrap d-flex flex-column align-items-center">
+                          <span class="flex-shrink-0 mt-2 timeline-badge bg-primary"></span>
+                          <span class="flex-shrink-0 timeline-badge-border d-block"></span>
+                        </div>
+                        <div class="timeline-desc fs-3 text-dark mt-n1">{{ $value->message }} <br>
+                            <span class="text-primary">{{ $value->notes }}</span> <br>
+                            <span class="fs-2"><a href="" data-bs-toggle="modal" data-bs-target="#noteModal" id="#modalCenter" onclick="openResponseModal('{{ $value->id }}')" >Response</a></span>
+                        </div>
+
+                      </li>
+                      @endforeach
+
+                    </ul>
+                  </div>
+
+
             </div>
             </div>
         </div>
     </div>
 </div>
 
+@include('followup.note')
 
 
 @endsection
@@ -256,6 +309,9 @@
                     $('#ed_address').val(response.address);
                     $('#ed_location').val(response.location);
                     $('#ed_email').val(response.email);
+                    $('#ed_occupation').val(response.occupation);
+                    $('#ed_preferred_contact').val(response.preferred_contact);
+                    $('#ed_best_time').val(response.best_time);
                     $('#selectedId').val(response.id);
                 },
                 error: function(xhr) {
@@ -264,6 +320,23 @@
                 }
             });
         }
+
+        function openResponseModal(id) {
+            $.ajax({
+                url: '/follow-ups/' + id, // Replace with the appropriate route for fetching department details
+                type: 'GET',
+                success: function(response) {
+                    // Update the modal content with the fetched department details
+                    $('#fn_note').val(response.notes);
+                    $('#fn_selectedId').val(response.id);
+                },
+                error: function(xhr) {
+                    // Handle error case
+                    console.log(xhr);
+                }
+            });
+        }
+
 
         function openDeleteModal(id) {
             $.ajax({

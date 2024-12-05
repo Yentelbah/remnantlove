@@ -12,12 +12,9 @@ class Visitor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id',
-        'name',
-        'phone', 'gender',
-        'date_visited',
-        'location',
-        'church_id', 'church_branch_id', 'email'
+        'id', 'name', 'phone', 'gender', 'date_visited',
+        'location', 'dob', 'occupation', 'preferred_contact', 'best_time',
+        'church_id', 'church_branch_id', 'email', 'invitee'
     ];
 
             /**

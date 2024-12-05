@@ -127,7 +127,6 @@ class TaskController extends Controller
                 'message' => 'A new task has been assigned to you: ' . $task->title,
                 'church_id' => auth()->user()->church_id,
                 'church_branch_id' => auth()->user()->church_branch_id,
-
             ]);
 
             if ($request->set_reminder == 'set'){

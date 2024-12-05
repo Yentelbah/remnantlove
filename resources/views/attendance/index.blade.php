@@ -133,6 +133,17 @@
 
             </div>
         </div>
+
+
+        <div class="pt-8 mb-6 text-center border rounded-3">
+            <br>
+            {!! QrCode::size(300)->generate(route('attendance.form', [
+                'churchId' => $church_id, // Replace with the variable holding the church ID
+            ])) !!}
+                    <p class="mt-3">Service Attendance Form</p>
+
+        </div>
+
     </div>
     <div class="col-md-7 col-lg-8">
         <div class="card">
@@ -178,7 +189,7 @@
                             <span class="usr-location" data-location="{{ $item->children_females }}">{{ $item->children_females }}</span>
                         </td>
                             <td>
-                            <span class="usr-location" data-location="{{ $item->adult_males }}">{{ $item->adult_males }}</span>
+                            <span>{{ $item->adult_males }}</span>
                             </td>
 
                             <td>
@@ -338,15 +349,17 @@
 
     function openRecordModal(id) {
         $.ajax({
-            url: '/church_service/' + id, // Replace with the appropriate route for fetching department details
+            url: '/church_service_att/' + id,
             type: 'GET',
             success: function(response) {
-                // Update the modal content with the fetched department details
-                $('#ser_name').text(response.name);
-                $('#ser_selectedId').val(response.id);
+                $('#children_males').val(response.child_male_count);
+                $('#children_females').val(response.child_female_count);
+                $('#adult_males').val(response.adult_male_count);
+                $('#adult_females').val(response.adult_female_count);
+                $('#ser_name').text(response.service_name);
+                $('#ser_selectedId').val(response.service_id);
             },
             error: function(xhr) {
-                // Handle error case
                 console.log(xhr);
             }
         });

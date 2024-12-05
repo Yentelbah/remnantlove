@@ -2,7 +2,7 @@
 @extends('layouts.flow')
 
 @section('title')
-    <title>FaithFlow -- Group Details</title>
+    <title>Family Members</title>
 @endsection
 
 @section('content')
@@ -29,7 +29,7 @@
             <form action="{{ route('family.member.remove') }}" method="POST" id="removeMemberForm">
                 @csrf
 
-                <input hidden type="text" name="GroupId" value="{{ $thisFamily->id }}">
+                <input hidden type="text" name="familyID" value="{{ $thisFamily->id }}">
                 <input hidden type="text" name="members" id="selected_members">
 
                 <div class="d-sm-flex justify-content-between align-items-start">
@@ -78,11 +78,11 @@
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
 
                                           <li>
-                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#updatePosition" id="#modalCenter" onclick="updateLeader('{{ $value->id }}')">Relation</a>
+                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#updateRelation" id="#modalCenter" onclick="updateRelation('{{ $value->id }}')">Relation</a>
                                           </li>
 
                                           <li>
-                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#revokePosition" id="#modalCenter" onclick="revokeLeader('{{ $value->id }}')">Delete</a>
+                                            <a href="javascript:void(0)" class="dropdown-item" value="{{ $value->id }}" data-bs-toggle="modal" data-bs-target="#removeModal" id="#modalCenter" onclick="removeMember('{{ $value->id }}')">Remove</a>
                                           </li>
 
                                         </ul>
@@ -99,9 +99,8 @@
         </div>
     </div>
 
-    {{-- @include('family.addPosition')
-    @include('family.revokePosition')
-    @include('family.updatePosition') --}}
+    @include('family.updateRelation')
+    @include('family.removeMember')
 
 @endsection
 
@@ -109,13 +108,13 @@
 
 <script>
 
-    function makeLeader(id) {
+    function removeMember(id) {
         $.ajax({
-            url: '/members/' + id, // Replace with the appropriate route for fetching department details
+            url: '/members/' + id,
             type: 'GET',
             success: function(response) {
-                $('#le_name').val(response.name);
-                $('#le_selectedId').val(response.id);
+                $('#remove_name').text(response.name);
+                $('#remove_selectedId').val(response.id);
             },
             error: function(xhr) {
                 // Handle error case
@@ -124,28 +123,14 @@
         });
     }
 
-    function revokeLeader(id) {
+    function updateRelation(id) {
         $.ajax({
-            url: '/members/' + id, // Replace with the appropriate route for fetching department details
+            url: '/family_members_details/' + id,
             type: 'GET',
             success: function(response) {
-                $('#revoke_name').val(response.name);
-                $('#revoke_selectedId').val(response.id);
-            },
-            error: function(xhr) {
-                // Handle error case
-                console.log(xhr);
-            }
-        });
-    }
-
-    function updateLeader(id) {
-        $.ajax({
-            url: '/members/' + id, // Replace with the appropriate route for fetching department details
-            type: 'GET',
-            success: function(response) {
-                $('#update_name').val(response.name);
-                $('#update_selectedId').val(response.id);
+                $('#rel_name').val(response.memberName);
+                $('#rel_relation').val(response.relation);
+                $('#update_selectedId').val(response.memberId);
             },
             error: function(xhr) {
                 // Handle error case

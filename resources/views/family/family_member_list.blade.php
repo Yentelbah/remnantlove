@@ -63,6 +63,7 @@
                                         <td>
                                             <select class="relation-select" style="border:none; background: none;">
                                                 <option value="">Select</option>
+                                                <option value="Head">Head</option>
                                                 <option value="Spouse">Spouse</option>
                                                 <option value="Child">Child</option>
                                                 <option value="Parent">Parent</option>
