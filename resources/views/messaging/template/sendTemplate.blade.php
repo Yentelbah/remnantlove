@@ -25,9 +25,9 @@
                                 <option value="members">Members</option>
                                 <option value="pastors">Pastors</option>
                                 <option value="staff">Staff</option>
-                                <option value="students">Students</option>
+                                {{-- <option value="students">Students</option>
                                 <option value="converts">Converts</option>
-                                <option value="visitors">Visitors</option>
+                                <option value="visitors">Visitors</option> --}}
                                 @foreach($groups as $key => $group)
                                     <option value="{{ $group->id }}">{{ $group->name }} </option>
                                 @endforeach
