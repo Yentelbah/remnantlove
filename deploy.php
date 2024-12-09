@@ -8,7 +8,7 @@ set('ssh_type', 'native');
 set('ssh_multiplexing', false);
 set('git_tty', false);
 
-set('repository', 'https://Yentelbah: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@github.com/Yentelbah/faithflow.git');
+set('repository', 'https://Yentelbah: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@github.com/Yentelbah/remnantlove.git');
 
 add('shared_files', []);
 add('shared_dirs', []);
